@@ -52,7 +52,7 @@ app.get("/login", (req, res) => {
 
     const result = bcrypt.compareSync(inputPassword, data[0].Password);
     if (result) {
-      return res.status(200).send("FUCK YOU");
+      return res.status(200).send("login successfully");
     }
     return res.status(401).send("Invalid email or password");
   });
@@ -97,7 +97,7 @@ app.get("/doctor/:ID", (req, res) => {
   });
 });
 
-app.put("/update/:ID", (req, res) => {
+app.put("/Doctor/update/:ID", (req, res) => {
   const sql = `
     UPDATE doctor 
     SET Doctor_id = ?, name = ?, Patient_name = ?, degree = ?, department = ?, phone_number = ?
@@ -187,7 +187,7 @@ app.post("/patient", (req, res) => {
   });
 });
 
-app.put("/update/:ID", (req, res) => {
+app.put("/patient/update/:ID", (req, res) => {
   const sql = `
     UPDATE patient 
     SET Patient_id = ?, name = ?, drugs = ?, blood_type = ?, bill = ?, insurance = ?
@@ -276,7 +276,7 @@ app.post("/nurse", (req, res) => {
   });
 });
 
-app.put("/update/:ID", (req, res) => {
+app.put("/nurse/update/:ID", (req, res) => {
   const sql = `
     UPDATE nurse 
     SET Nurse_id = ?, name = ?, ward = ?, Room = ?, Patient_name = ?

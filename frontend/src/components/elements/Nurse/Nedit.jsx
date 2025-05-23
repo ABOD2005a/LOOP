@@ -24,7 +24,7 @@ function Nedit() {
   const handleEdit = (event) => {
     event.preventDefault();
     axios
-      .put("http://localhost:8081/update/" + ID, values)
+      .put("http://localhost:8081/nurse/update/" + ID, values)
       .then((res) => {
         console.log(res.data);
         setValues(res.data);
