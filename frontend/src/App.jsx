@@ -10,8 +10,8 @@ import Login from "./components/Login_Signup/Login";
 import { AnimatePresence } from "framer-motion";
 import Home from "./components/Login_Signup/Home";
 import Doctor from "./components/elements/Doctor/Doctor";
-import Patient from "./components/elements/Patient";
-import Nurse from "./components/elements/Nurse";
+import Patient from "./components/elements/Patient/Patient";
+import Nurse from "./components/elements/Nurse/Nurse";
 import Dcreate from "./components/elements/Doctor/Dcreate";
 
 function AnimatedRoutes() {

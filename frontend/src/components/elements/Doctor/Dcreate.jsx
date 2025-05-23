@@ -9,6 +9,7 @@ function Dcreate() {
     Patient_name: "",
     department: "",
     age: "",
+    disease: ''
   });
 
 const navigate = useNavigate();
@@ -20,7 +21,13 @@ const navigate = useNavigate();
       .then((res) => {
         console.log(res)
         navigate("/Doctor");
-        setValues({ name: "", Patient_name: "", department: "", age: "" });
+        setValues({
+          name: "",
+          Patient_name: "",
+          department: "",
+          age: "",
+          disease :'',
+        });
       })
       .catch((err) => console.error("Error:", err));
   };
@@ -72,6 +79,17 @@ const navigate = useNavigate();
               placeholder="Enter age"
               value={values.age}
               onChange={(e) => setValues({ ...values, age: e.target.value })}
+            />
+          </div>
+          <div className="form-group">
+            <label>disease</label>
+            <input
+              type="text"
+              placeholder="Enter disease"
+              value={values.disease}
+              onChange={(e) =>
+                setValues({ ...values, disease: e.target.value })
+              }
             />
           </div>
 

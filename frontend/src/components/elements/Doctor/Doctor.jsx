@@ -30,6 +30,7 @@ function Doctor() {
               <th>Patient_name</th>
               <th>Department</th>
               <th>Age</th>
+              <th>disease</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -41,6 +42,7 @@ function Doctor() {
                 <td>{doctor.Patient_name}</td>
                 <td>{doctor.department}</td>
                 <td>{doctor.age}</td>
+                <td>{doctor.disease}</td>
                 <div className="button">
                   <Link to={`/edit/${doctor.ID}`} className="btn edit-btn">
                     Edit

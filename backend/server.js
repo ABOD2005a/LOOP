@@ -69,12 +69,13 @@ app.get("/Doctor",
 
 app.post("/Doctor", (req, res) => {
   const sql =
-    "INSERT INTO Doctor (`name`,`Patient_name`,`department`,`age`) VALUES (?, ?, ?, ?)";
+    "INSERT INTO Doctor (`name`,`Patient_name`,`department`,`age`,`disease`) VALUES (?, ?, ?, ?,?)";
   const values = [
     req.body.name,
     req.body.Patient_name,
     req.body.department,
     req.body.age,
+    req.body.disease,
   ];
   db.query(sql, values, (err, result) => {
     if (err) {
