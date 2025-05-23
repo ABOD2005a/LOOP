@@ -9,9 +9,10 @@ import Signup from "./components/Login_Signup/Signup";
 import Login from "./components/Login_Signup/Login";
 import { AnimatePresence } from "framer-motion";
 import Home from "./components/Login_Signup/Home";
-import Doctor from "./components/elements/Doctor";
+import Doctor from "./components/elements/Doctor/Doctor";
 import Patient from "./components/elements/Patient";
 import Nurse from "./components/elements/Nurse";
+import Dcreate from "./components/elements/Doctor/Dcreate";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -25,6 +26,9 @@ function AnimatedRoutes() {
         <Route path="/Doctor" element={<Doctor />} />
         <Route path="/Patient" element={<Patient />} />
         <Route path="/Nurse" element={<Nurse />} />
+        <Route path="/Dcreate" element={<Dcreate />} />
+        {/* <Route path="/Nurse" element={<Pcreate />} />
+        <Route path="/Nurse" element={<Ncreate />} /> */}
       </Routes>
     </AnimatePresence>
   );

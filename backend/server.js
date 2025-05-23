@@ -58,14 +58,33 @@ app.get("/login", (req, res) => {
   });
 });
 
+app.get("/Doctor",
+  (req, res) => {
+    const sql = "SELECT * FROM Doctor";
+    db.query(sql, (err, data) => {
+      if (err) return res.json("ERROR");
+      return res.json(data);
+    });
+  });
 
-app.get("/Doctor"),(req,res)=>{
-  const sql = "SELECT * FROM Doctor";
-  db.query(sql,(err,data)=>{
-    if(err) return res.json("ERROR")
-      return res.json(data)
-  })
-}
+app.post("/Doctor", (req, res) => {
+  const sql =
+    "INSERT INTO Doctor (`name`,`Patient_name`,`department`,`age`) VALUES (?, ?, ?, ?)";
+  const values = [
+    req.body.name,
+    req.body.Patient_name,
+    req.body.department,
+    req.body.age,
+  ];
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      console.log(values);
+      return res.status(500).json(err);
+    }
+    return res.json(result);
+  });
+});
 
 app.listen(8081, () => {
   console.log("Server listening on port 8081");
