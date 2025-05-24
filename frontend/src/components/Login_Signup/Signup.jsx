@@ -10,6 +10,7 @@ function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -23,7 +24,7 @@ function Signup() {
       .then((response) => {
         alert("Signup successful");
         console.log(response.data);
-        navigate("/"); 
+        navigate("/");
       })
       .catch((error) => {
         alert("Signup failed");
@@ -42,6 +43,7 @@ function Signup() {
       <div className="form-box signup">
         <form onSubmit={handleSubmit}>
           <h1 style={{ textAlign: "center", fontSize: "36px" }}>Sign up</h1>
+
           <div className="input-box">
             <input
               type="text"
@@ -52,6 +54,7 @@ function Signup() {
             />
             <FaUser className="icon" />
           </div>
+
           <div className="input-box">
             <input
               type="email"
@@ -62,6 +65,7 @@ function Signup() {
             />
             <FaEnvelope className="icon" />
           </div>
+
           <div className="input-box">
             <input
               type="password"
@@ -72,12 +76,22 @@ function Signup() {
             />
             <FaLock className="icon" />
           </div>
+
           <div className="remember-forget">
             <label>
-              <input type="checkbox" /> I agree to the terms & conditions
+              <input
+                type="checkbox"
+                checked={agreeTerms}
+                onChange={(e) => setAgreeTerms(e.target.checked)}
+              />{" "}
+              I agree to the terms & conditions
             </label>
           </div>
-          <button type="submit">Sign up</button>
+
+          <button type="submit" disabled={!agreeTerms}>
+            Sign up
+          </button>
+
           <div className="signup-link">
             <p>
               Already have an account? <Link to="/">Login</Link>

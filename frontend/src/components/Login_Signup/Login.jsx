@@ -9,12 +9,15 @@ import "./Login_Signup.css";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
     axios
-      .get("http://localhost:8081/login",{params:{Email:username , Password:password}})
+      .get("http://localhost:8081/login", {
+        params: { Email: username, Password: password },
+      })
       .then((response) => {
         alert(response.data);
         navigate("/Home");
@@ -36,6 +39,7 @@ function Login() {
       <div className="form-box login">
         <form onSubmit={handleLogin}>
           <h1 style={{ textAlign: "center", fontSize: "36px" }}>Login</h1>
+
           <div className="input-box">
             <input
               type="text"
@@ -46,6 +50,7 @@ function Login() {
             />
             <FaUser className="icon" />
           </div>
+
           <div className="input-box">
             <input
               type="password"
@@ -56,13 +61,23 @@ function Login() {
             />
             <FaLock className="icon" />
           </div>
+
           <div className="remember-forget">
             <label>
-              <input type="checkbox" /> Remember me
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />{" "}
+              Remember me
             </label>
             <a href="#">Forget Password?</a>
           </div>
-          <button type="submit">Login</button>
+
+          <button type="submit" disabled={!rememberMe}>
+            Login
+          </button>
+
           <div className="signup-link">
             <p>
               Don't have an account? <Link to="/signup">Signup</Link>

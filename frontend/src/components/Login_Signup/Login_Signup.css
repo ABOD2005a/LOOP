@@ -6,14 +6,15 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url(../Assets/background.jpg) no-repeat;
-  background-size: cover;
-  background-position: center;
+  background: url(../Assets/background.jpg) no-repeat center/cover;
+  margin: 0;
+  padding: 0;
 }
 
 .wrapper {
   position: relative;
   width: 100%;
+  max-width: 400px;
   height: 470px;
   background: transparent;
   border-radius: 20px;
@@ -21,9 +22,10 @@ body {
   align-items: center;
   border: 2px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(30px);
-  border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 0.8s ease-in-out;
 }
+
 .wrapper .form-box {
   background: transparent;
   width: 100%;
@@ -39,27 +41,33 @@ form .input-box {
 }
 
 .input-box input {
-  width: 120%;
+  width: 100%;
   height: 100%;
   background: transparent;
-  border: none;
-  outline: none;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   font-size: 15px;
-  color: #fff;  
-  padding-left: 10px;
+  color: #fff;
+  /* padding: 0 10px; */
+  outline: none;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
 .input-box input::placeholder {
-  color: #fff;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.input-box input:focus {
+  border-color: #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
 }
 
 .input-box .icon {
   position: absolute;
-  right: -45px;
+  right: -1px;
   top: 18px;
   font-size: 16px;
+  color: #fff;
 }
 
 form .remember-forget {
@@ -67,6 +75,7 @@ form .remember-forget {
   justify-content: space-between;
   font-size: 14.5px;
   margin: -16px 0 15px;
+  color: #fff;
 }
 
 .remember-forget label input {
@@ -84,23 +93,30 @@ form .remember-forget {
 }
 
 form button {
-  width: 120%;
+  width: 100%;
   height: 45px;
   background: #fff;
   border: none;
-  outline: none;
   border-radius: 40px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   font-size: 16px;
   color: #333;
   font-weight: 700;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+form button:hover {
+  background: #f0f0f0;
+  color: #000;
+  transform: scale(1.02);
 }
 
 form .signup-link {
   font-size: 17.5px;
   text-align: center;
   margin: 20px 0 15px;
+  color: #fff;
 }
 
 .signup-link p a {
@@ -113,17 +129,6 @@ form .signup-link {
   text-decoration: underline;
 }
 
-
-.button-container {
-  display: flex;
-  gap: 25px;
-  justify-content: center;
-  margin-top: 60px;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-}
-
 .button-container {
   display: flex;
   gap: 60px;
@@ -131,27 +136,24 @@ form .signup-link {
   margin-top: 60px;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.8);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.8);
 }
 
 .button-container button {
-  /* background: linear-gradient(85deg, #7FFFD4, #800020); */
   background: #800020;
   border: none;
   color: #fff;
   padding: 14px 36px;
   font-size: 18px;
   font-weight: 600;
-  border-radius:30px;
+  border-radius: 30px;
   cursor: pointer;
-  /* box-shadow: 0 5px 15px rgba(255, 0, 0, 0.6); */
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.4s ease;
 }
 
 .button-container button:hover {
   background: linear-gradient(45deg, #800020, #7FFFD4);
   transform: scale(1.05);
-  /* box-shadow: 0 8px 25px rgba(255, 0, 0, 0.9); */
 }
 
 .button-container button:active {
@@ -163,4 +165,69 @@ form .signup-link {
   outline: none;
   box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.7);
 }
+
+@media (max-width: 480px) {
+  .wrapper {
+    height: auto;
+    padding: 20px 10px;
+    border-radius: 15px;
+  }
+
+  .wrapper .form-box {
+    padding: 20px;
+  }
+
+  .button-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .button-container button {
+    width: 100%;
+  }
+
+  .input-box .icon {
+    right: -20px;
+    top: 14px;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+form button {
+  width: 100%;
+  height: 45px;
+  background: #fff;
+  border: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 700;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+form button:hover:enabled {
+  background: #f0f0f0;
+  color: #000;
+  transform: scale(1.02);
+}
+
+form button:disabled {
+  background: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
 
