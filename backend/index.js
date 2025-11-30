@@ -230,7 +230,6 @@ app.delete("/patient/:ID", (req, res) => {
   });
 });
 
-/*NURSE*/
 app.get("/nurse", (req, res) => {
   const sql = "SELECT * FROM nurse";
   db.query(sql, (err, result) => {
