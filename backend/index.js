@@ -141,7 +141,6 @@ app.delete("/doctor/:ID", (req, res) => {
   });
 });
 
-/*patient*/
 app.get("/patient", (req, res) => {
   const sql = "SELECT * FROM patient";
   db.query(sql, (err, result) => {
