@@ -169,23 +169,6 @@ export default function SignUp() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Phone Number</label>
-                <input
-                  type="tel"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleChange}
-                  className={`form-input ${
-                    errors.phoneNumber ? "form-input-error" : ""
-                  }`}
-                  placeholder="+20 1012345678"
-                />
-                {errors.phoneNumber && (
-                  <p className="form-error">{errors.phoneNumber}</p>
-                )}
-              </div>
-
-              <div className="form-group">
                 <label className="form-label">Password</label>
                 <div className="password-wrapper">
                   <input
