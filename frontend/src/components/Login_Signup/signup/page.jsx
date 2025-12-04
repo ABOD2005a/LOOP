@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Eye, EyeOff, Check } from "lucide-react";
 import "./SignUp.css";
 import Navbar from "../../Header_Footer/Navbar/page";
+import Footer from "../../Header_Footer/Footer/page";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -93,6 +94,7 @@ export default function SignUp() {
   };
 
   return (
+   
     <div className="signup-container">
       <Navbar />
       <div className="signup-wrapper">
@@ -254,9 +256,10 @@ export default function SignUp() {
                 <span className="signin-link">Sign In</span>
               </p>
             </div>
-          </div>
+          </div> 
         )}
       </div>
     </div>
+   
   );
 }
