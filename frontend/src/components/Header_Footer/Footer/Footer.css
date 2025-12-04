@@ -54,6 +54,7 @@ body {
   background: var(--dark);
   color: white;
   padding: 4rem 0 2rem;
+  margin: -10px;
 }
 .footer-content {
   max-width: 1200px;

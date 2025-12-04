@@ -9,7 +9,6 @@ export default function SignUp() {
     firstName: "",
     lastName: "",
     email: "",
-    phoneNumber: "",
     password: "",
     confirmPassword: "",
     agreeToTerms: false,
@@ -81,7 +80,6 @@ export default function SignUp() {
           firstName: "",
           lastName: "",
           email: "",
-          phoneNumber: "",
           password: "",
           confirmPassword: "",
           agreeToTerms: false,
@@ -259,6 +257,7 @@ export default function SignUp() {
           </div> 
         )}
       </div>
+      <Footer/>
     </div>
    
   );
