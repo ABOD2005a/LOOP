@@ -6,6 +6,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import SignUp from "./components/Login_Signup/signup/page";
 
 
 
@@ -15,6 +16,7 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </AnimatePresence>
   );
