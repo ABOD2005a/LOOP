@@ -3,6 +3,7 @@ import { Eye, EyeOff, Check } from "lucide-react";
 import "./login.css";
 import Navbar from "../../Header_Footer/Navbar/page";
 import Footer from "../../Header_Footer/Footer/page";
+import { Navigate } from "react-router-dom";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -154,7 +155,12 @@ export default function Login() {
 
               <p className="signup-text">
                 Don't have an account?{" "}
-                <span className="signup-link">Sign Up</span>
+                <span
+                  className="signup-link"
+                  onClick={() => Navigate("../signup")}
+                >
+                  Sign Up
+                </span>
               </p>
             </div>
           </div>
