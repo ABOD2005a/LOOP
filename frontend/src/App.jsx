@@ -9,7 +9,7 @@ import { AnimatePresence } from "framer-motion";
 import SignUp from "./components/Login_Signup/signup/page";
 import Navbar from "./components/Header_Footer/Navbar/page";
 import Footer from "./components/Header_Footer/Footer/page";
-
+import Login from "./components/Login_Signup/login/page";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -20,6 +20,7 @@ function AnimatedRoutes() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/Navbar" element={<Navbar />} />
         <Route path="/Footer" element={<Footer />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </AnimatePresence>
   );

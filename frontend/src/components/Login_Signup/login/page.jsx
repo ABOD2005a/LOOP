@@ -1,1 +1,166 @@
-// amr is bitch
+import { useState } from "react";
+import { Eye, EyeOff, Check } from "lucide-react";
+import "./login.css";
+import Navbar from "../../Header_Footer/Navbar/page";
+import Footer from "../../Header_Footer/Footer/page";
+
+export default function Login() {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    rememberMe: false,
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+    }
+
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newErrors = validateForm();
+
+    if (Object.keys(newErrors).length === 0) {
+      setSubmitted(true);
+      console.log("Form submitted:", formData);
+      setTimeout(() => {
+        setFormData({
+          email: "",
+          password: "",
+          rememberMe: false,
+        });
+        setSubmitted(false);
+      }, 3000);
+    } else {
+      setErrors(newErrors);
+    }
+  };
+
+  return (
+    <div className="login-container">
+      <Navbar />
+      <div className="login-wrapper">
+        {submitted ? (
+          <div className="login-card success-card">
+            <div className="success-icon">
+              <Check size={32} />
+            </div>
+            <h2 className="success-title">Welcome back!</h2>
+            <p className="success-text">You have successfully logged in.</p>
+            <p className="success-redirect">Redirecting you in a moment...</p>
+          </div>
+        ) : (
+          <div className="login-card">
+            <div className="login-header">
+              <h1 className="login-title">Sign In</h1>
+              <p className="login-subtitle">
+                Welcome back! Please login to your account
+              </p>
+            </div>
+
+            <div className="login-form">
+              <div className="form-group">
+                <label className="form-label">Email Address</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={`form-input ${
+                    errors.email ? "form-input-error" : ""
+                  }`}
+                  placeholder="john@example.com"
+                />
+                {errors.email && <p className="form-error">{errors.email}</p>}
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Password</label>
+                <div className="password-wrapper">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className={`form-input ${
+                      errors.password ? "form-input-error" : ""
+                    }`}
+                    placeholder="At least 8 characters"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="password-toggle"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="form-error">{errors.password}</p>
+                )}
+              </div>
+
+              <div className="remember-wrapper">
+                <input
+                  type="checkbox"
+                  name="rememberMe"
+                  checked={formData.rememberMe}
+                  onChange={handleChange}
+                  className="remember-checkbox"
+                  id="remember"
+                />
+                <label htmlFor="remember" className="remember-label">
+                  Remember me
+                </label>
+                <a href="#" className="forgot-link">
+                  Forgot Password?
+                </a>
+              </div>
+
+              <button onClick={handleSubmit} className="submit-btn">
+                Sign In
+              </button>
+
+              <p className="signup-text">
+                Don't have an account?{" "}
+                <span className="signup-link">Sign Up</span>
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+      <Footer />
+    </div>
+  );
+}
