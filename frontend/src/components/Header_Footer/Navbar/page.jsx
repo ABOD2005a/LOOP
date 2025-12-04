@@ -25,9 +25,9 @@ function Navbar() {
             isMenuOpen ? "active" : ""
           }`}
         >
-          <li>
+          {/* <li>
             <a href="#home">Home</a>
-          </li>
+          </li> */}
           <li>
             <a href="#how">How it Works</a>
           </li>
