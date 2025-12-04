@@ -7,26 +7,26 @@
   --danger: #ef4444;
   --warning: #f59e0b;
   --success: #10b981;
-  
+
   --dark: #0f172a;
   --dark-light: #1e293b;
   --text: #1e293b;
   --text-light: #64748b;
   --text-lighter: #94a3b8;
-  
+
   --bg: #ffffff;
   --bg-gray: #f8fafc;
   --bg-dark: #f1f5f9;
-  
+
   --border: #e2e8f0;
   --border-light: #f1f5f9;
-  
+
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  
+
   --gradient-primary: linear-gradient(135deg, #ffffff 0%, #10b981 100%);
   --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   --gradient-rainbow: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -39,7 +39,8 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
   line-height: 1.6;
   color: var(--text);
 }
@@ -50,11 +51,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 10px;
   width: 100%;
   margin: 0;
   position: fixed;
-  top: 0;
+  top: 20px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -78,9 +79,10 @@ body {
 }
 
 .signup-card {
+  height: 800px;
   background: var(--bg);
   border-radius: 16px;
-  padding: 40px;
+  padding: 30px;
   box-shadow: var(--shadow-xl);
   animation: slideIn 0.5s ease-out;
 }
@@ -123,7 +125,7 @@ body {
 .signup-form {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
 }
 
 .form-row {
@@ -135,7 +137,7 @@ body {
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px;
 }
 
 .form-label {
