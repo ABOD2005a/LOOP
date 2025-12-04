@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff, Check } from "lucide-react";
 import "./SignUp.css";
-import "../../Header_Footer/Navbar/page";
 import Navbar from "../../Header_Footer/Navbar/page";
 
 export default function SignUp() {
