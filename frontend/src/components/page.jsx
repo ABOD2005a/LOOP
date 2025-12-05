@@ -214,7 +214,6 @@ export default function Home() {
 
         <div className="hero__content">
           <div className="hero__badge">
-            <i className="fas fa-star"></i>
             <span>Egypt's Leading Recycling Platform</span>
           </div>
 
