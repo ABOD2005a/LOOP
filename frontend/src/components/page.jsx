@@ -1,461 +1,347 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-// CO2 savings per kg (approximate values)
 const CO2_SAVINGS = {
   metal: 2.5,
   paper: 1.2,
   plastic: 1.8
 };
 
-// Water savings per kg (liters)
 const WATER_SAVINGS = {
   metal: 40,
   paper: 15,
   plastic: 25
 };
 
-// Trees equivalent per kg
 const TREES_EQUIV = {
   metal: 0.02,
   paper: 0.017,
   plastic: 0.015
 };
 
-const LoopRecyclingApp = () => {
-  const [selectedMaterial, setSelectedMaterial] = useState(null);
-  const [pricePerKg, setPricePerKg] = useState(0);
-  const [weight, setWeight] = useState('');
-  const [multiItems, setMultiItems] = useState([]);
-  const [showLoginForm, setShowLoginForm] = useState(true);
-  const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
-  const [calculationResults, setCalculationResults] = useState({
-    total: 0,
-    co2: 0,
-    water: 0,
-    trees: 0,
-    showDetails: false
-  });
+const materialData = [
+  {
+    id: 'metal',
+    name: 'Metal',
+    price: 15,
+    icon: 'fa-toolbox',
+    tags: ['High Value', 'Premium'],
+    gradient: 'from-slate-500 to-slate-600'
+  },
+  {
+    id: 'paper',
+    name: 'Paper',
+    price: 3,
+    icon: 'fa-newspaper',
+    tags: ['Eco-Friendly', 'Common'],
+    gradient: 'from-amber-500 to-amber-600'
+  },
+  {
+    id: 'plastic',
+    name: 'Plastic',
+    price: 8,
+    icon: 'fa-bottle-water',
+    tags: ['Popular', 'Easy'],
+    gradient: 'from-blue-500 to-blue-600'
+  }
+];
 
-  const totalAmountRef = useRef(null);
+function AnimatedCounter({ end, duration = 2000 }) {
+  const [count, setCount] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const ref = useRef(null);
 
   useEffect(() => {
-    animateStatsOnScroll();
-    setupSmoothScroll();
-  }, []);
-
-  const animateValue = (element, start, end, duration) => {
-    if (!element) return;
-    const range = end - start;
-    const increment = range / (duration / 16);
-    let current = start;
-    
-    const timer = setInterval(() => {
-      current += increment;
-      if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
-        current = end;
-        clearInterval(timer);
-      }
-      if (element) {
-        element.textContent = Math.round(current);
-      }
-    }, 16);
-  };
-
-  const animateStatsOnScroll = () => {
-    const statValues = document.querySelectorAll('.stat-value');
-    
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const target = parseInt(entry.target.dataset.target);
-          animateValue(entry.target, 0, target, 2000);
-          observer.unobserve(entry.target);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          let start = 0;
+          const increment = end / (duration / 16);
+          const timer = setInterval(() => {
+            start += increment;
+            if (start >= end) {
+              setCount(end);
+              clearInterval(timer);
+            } else {
+              setCount(Math.floor(start));
+            }
+          }, 16);
+          return () => clearInterval(timer);
         }
-      });
-    }, { threshold: 0.5 });
-    
-    statValues.forEach(stat => observer.observe(stat));
-  };
+      },
+      { threshold: 0.5 }
+    );
 
-  const setupSmoothScroll = () => {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      });
-    });
-  };
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [end, duration, hasAnimated]);
 
-  const handleMaterialSelect = (material, price) => {
-    setSelectedMaterial(material);
-    setPricePerKg(price);
-    if (weight) {
-      calculatePrice(material, price, parseFloat(weight));
+  return <span ref={ref}>{count.toLocaleString()}</span>;
+}
+
+function Notification({ message, type, show, onHide }) {
+  useEffect(() => {
+    if (show) {
+      const timer = setTimeout(onHide, 4000);
+      return () => clearTimeout(timer);
     }
+  }, [show, onHide]);
+
+  const icons = {
+    success: 'fa-check-circle',
+    error: 'fa-times-circle',
+    warning: 'fa-exclamation-circle'
   };
 
-  const handleWeightChange = (value) => {
-    setWeight(value);
-    if (selectedMaterial && value) {
-      calculatePrice(selectedMaterial, pricePerKg, parseFloat(value));
-    }
+  const colors = {
+    success: 'bg-green-500',
+    error: 'bg-red-500',
+    warning: 'bg-amber-500'
   };
 
-  const calculatePrice = (material, price, weightValue) => {
-    if (!material) {
-      showNotificationMessage('Please select a material type', 'warning');
+  return (
+    <div className={`fixed top-6 right-6 ${colors[type]} text-white px-6 py-4 rounded-lg shadow-2xl flex items-center gap-3 transition-all duration-300 z-50 ${show ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}>
+      <i className={`fas ${icons[type]} text-xl`}></i>
+      <span className="font-medium">{message}</span>
+    </div>
+  );
+}
+
+export default function LoopRecyclingApp() {
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
+  const [weight, setWeight] = useState('');
+  const [multiItems, setMultiItems] = useState([]);
+  const [calculatedTotal, setCalculatedTotal] = useState(0);
+  const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
+
+  const showNotification = (message, type = 'success') => {
+    setNotification({ show: true, message, type });
+  };
+
+  const hideNotification = () => {
+    setNotification(prev => ({ ...prev, show: false }));
+  };
+
+  const calculatePrice = () => {
+    if (!selectedMaterial) {
+      showNotification('Please select a material type', 'warning');
       return;
     }
-    
-    if (!weightValue || weightValue <= 0) {
-      showNotificationMessage('Please enter a valid weight', 'warning');
+
+    const weightNum = parseFloat(weight);
+    if (!weightNum || weightNum <= 0) {
+      showNotification('Please enter a valid weight', 'warning');
       return;
     }
-    
-    const total = weightValue * price;
-    const co2SavedValue = weightValue * CO2_SAVINGS[material];
-    const waterSavedValue = weightValue * WATER_SAVINGS[material];
-    const treesEquivValue = weightValue * TREES_EQUIV[material];
-    
-    setCalculationResults({
-      total,
-      co2: co2SavedValue,
-      water: waterSavedValue,
-      trees: treesEquivValue,
-      showDetails: true
-    });
 
-    if (totalAmountRef.current) {
-      animateValue(totalAmountRef.current, 0, total, 500);
-    }
+    const material = materialData.find(m => m.id === selectedMaterial);
+    const total = weightNum * material.price;
+    setCalculatedTotal(total);
   };
 
-  const handleAddMore = () => {
-    const weightValue = parseFloat(weight);
-    
-    if (!selectedMaterial || !weightValue || weightValue <= 0) {
-      showNotificationMessage('Please complete the calculation first', 'warning');
+  useEffect(() => {
+    if (selectedMaterial && weight) {
+      calculatePrice();
+    }
+  }, [selectedMaterial, weight]);
+
+  const addItem = () => {
+    const weightNum = parseFloat(weight);
+    if (!selectedMaterial || !weightNum || weightNum <= 0) {
+      showNotification('Please complete the calculation first', 'warning');
       return;
     }
-    
+
+    const material = materialData.find(m => m.id === selectedMaterial);
     const item = {
       material: selectedMaterial,
-      weight: weightValue,
-      pricePerKg: pricePerKg,
-      total: weightValue * pricePerKg
+      materialName: material.name,
+      weight: weightNum,
+      pricePerKg: material.price,
+      total: weightNum * material.price,
+      icon: material.icon,
+      gradient: material.gradient
     };
-    
+
     setMultiItems([...multiItems, item]);
     resetCalculator();
-    showNotificationMessage('Item added to calculation', 'success');
-  };
-
-  const handleClearAll = () => {
-    if (multiItems.length === 0) return;
-    
-    if (window.confirm('Are you sure you want to clear all items?')) {
-      setMultiItems([]);
-      showNotificationMessage('All items cleared', 'success');
-    }
+    showNotification('Item added to calculation', 'success');
   };
 
   const resetCalculator = () => {
     setSelectedMaterial(null);
-    setPricePerKg(0);
     setWeight('');
-    setCalculationResults({
-      total: 0,
-      co2: 0,
-      water: 0,
-      trees: 0,
-      showDetails: false
-    });
+    setCalculatedTotal(0);
   };
 
-  const showNotificationMessage = (message, type = 'success') => {
-    setNotification({ show: true, message, type });
-    setTimeout(() => {
-      setNotification({ show: false, message: '', type: 'success' });
-    }, 4000);
-  };
-
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
-    const email = e.target.loginEmail.value;
-    const password = e.target.loginPassword.value;
-    
-    if (email && password) {
-      showNotificationMessage('Login successful! Welcome back.', 'success');
-      e.target.reset();
+  const clearAll = () => {
+    if (multiItems.length === 0) return;
+    if (window.confirm('Are you sure you want to clear all items?')) {
+      setMultiItems([]);
+      showNotification('All items cleared', 'success');
     }
-  };
-
-  const handleSignupSubmit = (e) => {
-    e.preventDefault();
-    const name = e.target.signupName.value;
-    const phone = e.target.signupPhone.value;
-    const email = e.target.signupEmail.value;
-    const password = e.target.signupPassword.value;
-    const confirm = e.target.signupConfirm.value;
-    const city = e.target.signupCity.value;
-    const agreeTerms = e.target.agreeTerms.checked;
-    
-    if (phone.length !== 11 || !/^\d+$/.test(phone)) {
-      showNotificationMessage('Please enter a valid 11-digit phone number', 'warning');
-      return;
-    }
-    
-    if (password !== confirm) {
-      showNotificationMessage('Passwords do not match', 'error');
-      return;
-    }
-    
-    if (!agreeTerms) {
-      showNotificationMessage('Please agree to the Terms & Conditions', 'warning');
-      return;
-    }
-    
-    if (name && phone && email && password && city) {
-      showNotificationMessage('Account created successfully! Welcome to Loop.', 'success');
-      e.target.reset();
-      setTimeout(() => {
-        setShowLoginForm(true);
-      }, 2000);
-    }
-  };
-
-  const materialNames = {
-    metal: 'Metal',
-    paper: 'Paper',
-    plastic: 'Plastic'
-  };
-
-  const materialIcons = {
-    metal: 'fa-toolbox',
-    paper: 'fa-newspaper',
-    plastic: 'fa-bottle-water'
-  };
-
-  const materialGradients = {
-    metal: 'linear-gradient(135deg, #64748b 0%, #475569 100%)',
-    paper: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-    plastic: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
   };
 
   const grandTotal = multiItems.reduce((sum, item) => sum + item.total, 0);
 
+  const material = selectedMaterial ? materialData.find(m => m.id === selectedMaterial) : null;
+  const weightNum = parseFloat(weight) || 0;
+  const co2SavedValue = material ? weightNum * CO2_SAVINGS[material.id] : 0;
+  const waterSavedValue = material ? weightNum * WATER_SAVINGS[material.id] : 0;
+  const treesEquivValue = material ? weightNum * TREES_EQUIV[material.id] : 0;
+
   return (
-    <>
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-green-50 font-['Plus_Jakarta_Sans']">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+      
+      <Notification {...notification} onHide={hideNotification} />
 
       {/* Hero Section */}
-      <section id="home" className="hero">
-        <div className="hero__background">
-          <div className="hero__shapes">
-            <div className="shape shape-1"></div>
-            <div className="shape shape-2"></div>
-            <div className="shape shape-3"></div>
-          </div>
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-green-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-purple-400/20 rounded-full blur-3xl animate-pulse delay-2000"></div>
         </div>
-        <div className="hero__content">
-          <div className="hero__badge">
-            <span>Egypt's Leading Recycling Platform</span>
+
+        <div className="relative z-10 max-w-6xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg mb-8 animate-fade-in">
+            <span className="text-sm font-semibold text-slate-700">Egypt's Leading Recycling Platform</span>
           </div>
-          <h1 className="hero__title">
-            Transform Your <span className="gradient-text">Recyclables</span><br/>
-            Into Real <span className="gradient-text">Money</span>
+
+          <h1 className="text-5xl md:text-7xl font-bold text-slate-900 mb-6 leading-tight">
+            Transform Your <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Recyclables</span><br/>
+            Into Real <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">Money</span>
           </h1>
-          <p className="hero__description">
+
+          <p className="text-xl text-slate-600 mb-12 max-w-2xl mx-auto">
             Join thousands of Egyptians making money while saving the planet. 
             Get instant cash for metal, paper, and plastic recyclables.
           </p>
-          <div className="hero__actions">
-            <a href="#calculator" className="btn btn-primary">
+
+          <div className="flex flex-wrap gap-4 justify-center mb-16">
+            <a href="#calculator" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center gap-2">
               <i className="fas fa-calculator"></i>
               <span>Start Earning Now</span>
             </a>
-            <a href="#how" className="btn btn-secondary">
+            <a href="#how" className="px-8 py-4 bg-white text-slate-700 font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center gap-2">
               <i className="fas fa-info-circle"></i>
               <span>See How it Works</span>
             </a>
           </div>
-          <div className="hero__stats">
-            <div className="hero__stat">
-              <div className="stat-value" data-target="50000">0</div>
-              <div className="stat-label">Active Users</div>
-            </div>
-            <div className="hero__stat">
-              <div className="stat-value" data-target="500">0</div>
-              <div className="stat-label">Tons Recycled</div>
-            </div>
-            <div className="hero__stat">
-              <div className="stat-value" data-target="2000000">0</div>
-              <div className="stat-label">EGP Distributed</div>
-            </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {[
+              { value: 50000, label: 'Active Users' },
+              { value: 500, label: 'Tons Recycled' },
+              { value: 2000000, label: 'EGP Distributed' }
+            ].map((stat, i) => (
+              <div key={i} className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl">
+                <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+                  <AnimatedCounter end={stat.value} />
+                </div>
+                <div className="text-slate-600 font-medium mt-2">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Features */}
-      <section className="features">
-        <div className="container">
-          <div className="features__grid">
-            <div className="feature-card">
-              <div className="feature-icon">
-                <i className="fas fa-bolt"></i>
+      <section className="py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: 'fa-bolt', title: 'Instant Payment', desc: 'Get paid immediately in cash or direct bank transfer' },
+              { icon: 'fa-shield-halved', title: 'Secure & Trusted', desc: 'Licensed and certified by Egyptian authorities' },
+              { icon: 'fa-truck', title: 'Free Pickup', desc: 'Schedule free collection from your doorstep' },
+              { icon: 'fa-chart-line', title: 'Best Rates', desc: 'Competitive prices that beat the market average' }
+            ].map((feature, i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all">
+                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-green-500 rounded-xl flex items-center justify-center text-white text-2xl mb-4">
+                  <i className={`fas ${feature.icon}`}></i>
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-2">{feature.title}</h3>
+                <p className="text-slate-600">{feature.desc}</p>
               </div>
-              <h3>Instant Payment</h3>
-              <p>Get paid immediately in cash or direct bank transfer</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">
-                <i className="fas fa-shield-halved"></i>
-              </div>
-              <h3>Secure & Trusted</h3>
-              <p>Licensed and certified by Egyptian authorities</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">
-                <i className="fas fa-truck"></i>
-              </div>
-              <h3>Free Pickup</h3>
-              <p>Schedule free collection from your doorstep</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">
-                <i className="fas fa-chart-line"></i>
-              </div>
-              <h3>Best Rates</h3>
-              <p>Competitive prices that beat the market average</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Calculator Section */}
-      <section id="calculator" className="calculator">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-badge">Instant Calculator</span>
-            <h2 className="section-title">Calculate Your Earnings</h2>
-            <p className="section-description">See how much money you can make from your recyclables</p>
+      {/* Calculator */}
+      <section id="calculator" className="py-20 px-6 bg-white/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full font-semibold text-sm mb-4">Instant Calculator</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Calculate Your Earnings</h2>
+            <p className="text-xl text-slate-600">See how much money you can make from your recyclables</p>
           </div>
 
-          <div className="calculator__wrapper">
+          <div className="grid lg:grid-cols-2 gap-8">
             {/* Material Selection */}
-            <div className="calculator__materials">
-              <div className="materials-header">
-                <h3>Select Material</h3>
-                <span className="material-count" id="materialCount">Choose one</span>
-              </div>
-              
-              <div className="material-grid">
-                <div 
-                  className={`material-card ${selectedMaterial === 'metal' ? 'active' : ''}`}
-                  data-material="metal" 
-                  data-price="15"
-                  onClick={() => handleMaterialSelect('metal', 15)}
-                >
-                  <div className="material-icon metal">
-                    <i className="fas fa-toolbox"></i>
-                  </div>
-                  <div className="material-content">
-                    <h4>Metal</h4>
-                    <div className="material-price">
-                      <span className="price-value">15</span>
-                      <span className="price-unit">EGP/kg</span>
-                    </div>
-                    <div className="material-tags">
-                      <span className="tag">High Value</span>
-                      <span className="tag">Premium</span>
-                    </div>
-                  </div>
-                  <div className="material-check">
-                    <i className="fas fa-check"></i>
-                  </div>
-                </div>
-
-                <div 
-                  className={`material-card ${selectedMaterial === 'paper' ? 'active' : ''}`}
-                  data-material="paper" 
-                  data-price="3"
-                  onClick={() => handleMaterialSelect('paper', 3)}
-                >
-                  <div className="material-icon paper">
-                    <i className="fas fa-newspaper"></i>
-                  </div>
-                  <div className="material-content">
-                    <h4>Paper</h4>
-                    <div className="material-price">
-                      <span className="price-value">3</span>
-                      <span className="price-unit">EGP/kg</span>
-                    </div>
-                    <div className="material-tags">
-                      <span className="tag">Eco-Friendly</span>
-                      <span className="tag">Common</span>
-                    </div>
-                  </div>
-                  <div className="material-check">
-                    <i className="fas fa-check"></i>
-                  </div>
-                </div>
-
-                <div 
-                  className={`material-card ${selectedMaterial === 'plastic' ? 'active' : ''}`}
-                  data-material="plastic" 
-                  data-price="8"
-                  onClick={() => handleMaterialSelect('plastic', 8)}
-                >
-                  <div className="material-icon plastic">
-                    <i className="fas fa-bottle-water"></i>
-                  </div>
-                  <div className="material-content">
-                    <h4>Plastic</h4>
-                    <div className="material-price">
-                      <span className="price-value">8</span>
-                      <span className="price-unit">EGP/kg</span>
-                    </div>
-                    <div className="material-tags">
-                      <span className="tag">Popular</span>
-                      <span className="tag">Easy</span>
-                    </div>
-                  </div>
-                  <div className="material-check">
-                    <i className="fas fa-check"></i>
-                  </div>
-                </div>
+            <div className="bg-white rounded-2xl p-8 shadow-xl">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-bold text-slate-900">Select Material</h3>
+                <span className="text-sm text-slate-500">{selectedMaterial ? '1 selected' : 'Choose one'}</span>
               </div>
 
-              <div className="weight-input">
-                <label>Enter Weight (kg)</label>
-                <div className="input-wrapper">
-                  <input 
-                    type="number" 
-                    id="weight" 
-                    placeholder="0.0" 
-                    min="0" 
-                    step="0.1"
+              <div className="space-y-4 mb-8">
+                {materialData.map((mat) => (
+                  <div
+                    key={mat.id}
+                    onClick={() => setSelectedMaterial(mat.id)}
+                    className={`relative p-6 rounded-xl border-2 cursor-pointer transition-all ${
+                      selectedMaterial === mat.id
+                        ? 'border-blue-500 bg-blue-50 shadow-lg'
+                        : 'border-slate-200 hover:border-slate-300 hover:shadow-md'
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={`w-16 h-16 bg-gradient-to-br ${mat.gradient} rounded-xl flex items-center justify-center text-white text-2xl`}>
+                        <i className={`fas ${mat.icon}`}></i>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-xl font-bold text-slate-900">{mat.name}</h4>
+                        <div className="text-2xl font-bold text-slate-700 mt-1">
+                          {mat.price} <span className="text-sm text-slate-500">EGP/kg</span>
+                        </div>
+                        <div className="flex gap-2 mt-2">
+                          {mat.tags.map((tag, i) => (
+                            <span key={i} className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-full">{tag}</span>
+                          ))}
+                        </div>
+                      </div>
+                      {selectedMaterial === mat.id && (
+                        <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                          <i className="fas fa-check"></i>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-3">Enter Weight (kg)</label>
+                <div className="relative">
+                  <input
+                    type="number"
                     value={weight}
-                    onChange={(e) => handleWeightChange(e.target.value)}
+                    onChange={(e) => setWeight(e.target.value)}
+                    placeholder="0.0"
+                    min="0"
+                    step="0.1"
+                    className="w-full px-4 py-4 pr-12 border-2 border-slate-200 rounded-xl text-lg focus:border-blue-500 focus:outline-none"
                   />
-                  <span className="input-icon">kg</span>
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">kg</span>
                 </div>
-                <div className="quick-weights">
-                  {[5, 10, 25, 50, 100].map(w => (
-                    <button 
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {[5, 10, 25, 50, 100].map((w) => (
+                    <button
                       key={w}
-                      className="quick-btn" 
-                      data-weight={w}
-                      onClick={() => handleWeightChange(w.toString())}
+                      onClick={() => setWeight(w.toString())}
+                      className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-all"
                     >
                       {w} kg
                     </button>
@@ -464,67 +350,69 @@ const LoopRecyclingApp = () => {
               </div>
             </div>
 
-            {/* Results Panel */}
-            <div className="calculator__result">
-              <div className="result-card">
-                <div className="result-header">
-                  <div className="result-icon">
+            {/* Results */}
+            <div className="space-y-6">
+              <div className="bg-gradient-to-br from-blue-600 to-green-600 rounded-2xl p-8 text-white shadow-xl">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl">
                     <i className="fas fa-money-bill-wave"></i>
                   </div>
-                  <span>Your Earnings</span>
-                </div>
-                
-                <div className="result-amount">
-                  <span className="currency">EGP</span>
-                  <span className="amount" id="totalAmount" ref={totalAmountRef}>{Math.round(calculationResults.total)}</span>
+                  <span className="text-lg font-semibold">Your Earnings</span>
                 </div>
 
-                <div className={`result-details ${calculationResults.showDetails ? 'show' : ''}`} id="resultDetails">
-                  <div className="detail-item">
-                    <span className="detail-label">Material</span>
-                    <span className="detail-value" id="materialName">{selectedMaterial ? materialNames[selectedMaterial] : '-'}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Weight</span>
-                    <span className="detail-value" id="materialWeight">{weight || 0} kg</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Rate</span>
-                    <span className="detail-value" id="pricePerKg">{pricePerKg} EGP/kg</span>
-                  </div>
-                  <div className="detail-item highlight">
-                    <span className="detail-label">CO₂ Saved</span>
-                    <span className="detail-value" id="co2Saved">{calculationResults.co2.toFixed(2)} kg</span>
-                  </div>
+                <div className="text-6xl font-bold mb-8">
+                  {Math.round(calculatedTotal)} <span className="text-3xl">EGP</span>
                 </div>
 
-                <div className="result-actions">
-                  <button className="btn btn-outline btn-block" id="addMoreBtn" onClick={handleAddMore}>
-                    <i className="fas fa-plus"></i>
-                    <span>Add Another Item</span>
-                  </button>
-                </div>
+                {material && weight && (
+                  <div className="space-y-3 bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+                    <div className="flex justify-between">
+                      <span className="text-white/80">Material</span>
+                      <span className="font-semibold">{material.name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/80">Weight</span>
+                      <span className="font-semibold">{weightNum} kg</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/80">Rate</span>
+                      <span className="font-semibold">{material.price} EGP/kg</span>
+                    </div>
+                    <div className="flex justify-between border-t border-white/20 pt-3">
+                      <span className="text-white/80">CO₂ Saved</span>
+                      <span className="font-semibold">{co2SavedValue.toFixed(2)} kg</span>
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  onClick={addItem}
+                  className="w-full mt-6 px-6 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
+                >
+                  <i className="fas fa-plus"></i>
+                  <span>Add Another Item</span>
+                </button>
               </div>
 
               {/* Environmental Impact */}
-              <div className="impact-card">
-                <div className="impact-header">
-                  <i className="fas fa-leaf"></i>
-                  <h4>Environmental Impact</h4>
+              <div className="bg-white rounded-2xl p-6 shadow-xl">
+                <div className="flex items-center gap-3 mb-4">
+                  <i className="fas fa-leaf text-green-600 text-2xl"></i>
+                  <h4 className="text-xl font-bold text-slate-900">Environmental Impact</h4>
                 </div>
-                <div className="impact-stats">
-                  <div className="impact-stat">
-                    <i className="fas fa-tree"></i>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <i className="fas fa-tree text-green-600 text-2xl"></i>
                     <div>
-                      <span className="impact-value" id="treesEquiv">{calculationResults.trees.toFixed(1)}</span>
-                      <span className="impact-label">Trees Saved</span>
+                      <div className="text-2xl font-bold text-slate-900">{treesEquivValue.toFixed(1)}</div>
+                      <div className="text-slate-600">Trees Saved</div>
                     </div>
                   </div>
-                  <div className="impact-stat">
-                    <i className="fas fa-droplet"></i>
+                  <div className="flex items-center gap-4">
+                    <i className="fas fa-droplet text-blue-600 text-2xl"></i>
                     <div>
-                      <span className="impact-value" id="waterSaved">{calculationResults.water.toFixed(0)}L</span>
-                      <span className="impact-label">Water Saved</span>
+                      <div className="text-2xl font-bold text-slate-900">{waterSavedValue.toFixed(0)}L</div>
+                      <div className="text-slate-600">Water Saved</div>
                     </div>
                   </div>
                 </div>
@@ -532,34 +420,34 @@ const LoopRecyclingApp = () => {
             </div>
           </div>
 
-          {/* Multi Item Summary */}
+          {/* Multi Summary */}
           {multiItems.length > 0 && (
-            <div className="multi-summary show" id="multiSummary">
-              <div className="summary-header">
-                <h3>Transaction Summary</h3>
-                <button className="btn-text" id="clearAll" onClick={handleClearAll}>
+            <div className="mt-8 bg-white rounded-2xl p-8 shadow-xl">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-bold text-slate-900">Transaction Summary</h3>
+                <button onClick={clearAll} className="text-red-600 hover:text-red-700 font-semibold flex items-center gap-2">
                   <i className="fas fa-trash"></i> Clear All
                 </button>
               </div>
-              <div className="summary-items" id="summaryItems">
-                {multiItems.map((item, index) => (
-                  <div key={index} className="summary-item">
-                    <div className="summary-item__info">
-                      <div className="summary-item__icon" style={{ background: materialGradients[item.material] }}>
-                        <i className={`fas ${materialIcons[item.material]}`}></i>
+              <div className="space-y-4 mb-6">
+                {multiItems.map((item, i) => (
+                  <div key={i} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 bg-gradient-to-br ${item.gradient} rounded-xl flex items-center justify-center text-white`}>
+                        <i className={`fas ${item.icon}`}></i>
                       </div>
-                      <div className="summary-item__content">
-                        <h4>{materialNames[item.material]}</h4>
-                        <p>{item.weight} kg × {item.pricePerKg} EGP/kg</p>
+                      <div>
+                        <h4 className="font-bold text-slate-900">{item.materialName}</h4>
+                        <p className="text-sm text-slate-600">{item.weight} kg × {item.pricePerKg} EGP/kg</p>
                       </div>
                     </div>
-                    <div className="summary-item__price">{item.total.toFixed(2)} EGP</div>
+                    <div className="text-xl font-bold text-slate-900">{item.total.toFixed(2)} EGP</div>
                   </div>
                 ))}
               </div>
-              <div className="summary-total">
-                <span>Grand Total</span>
-                <span className="total-value" id="grandTotal">{grandTotal.toFixed(2)} EGP</span>
+              <div className="flex justify-between items-center pt-6 border-t-2 border-slate-200">
+                <span className="text-xl font-bold text-slate-900">Grand Total</span>
+                <span className="text-3xl font-bold text-green-600">{grandTotal.toFixed(2)} EGP</span>
               </div>
             </div>
           )}
@@ -567,111 +455,80 @@ const LoopRecyclingApp = () => {
       </section>
 
       {/* How it Works */}
-      <section id="how" className="how-it-works">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-badge">Simple Process</span>
-            <h2 className="section-title">How Loop Works</h2>
-            <p className="section-description">Four easy steps to turn your recyclables into cash</p>
+      <section id="how" className="py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full font-semibold text-sm mb-4">Simple Process</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">How Loop Works</h2>
+            <p className="text-xl text-slate-600">Four easy steps to turn your recyclables into cash</p>
           </div>
 
-          <div className="steps-container">
-            <div className="step-card">
-              <div className="step-number">01</div>
-              <div className="step-icon">
-                <i className="fas fa-box-open"></i>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { num: '01', icon: 'fa-box-open', title: 'Collect & Sort', desc: 'Gather your metal, paper, or plastic recyclables and separate them by type' },
+              { num: '02', icon: 'fa-calculator', title: 'Calculate Value', desc: 'Use our instant calculator to see exactly how much you\'ll earn' },
+              { num: '03', icon: 'fa-truck-fast', title: 'Schedule Pickup', desc: 'Choose delivery to our branch or free pickup from your location' },
+              { num: '04', icon: 'fa-money-bill-wave', title: 'Get Paid Instantly', desc: 'Receive immediate payment via cash, bank transfer, or mobile wallet' }
+            ].map((step, i) => (
+              <div key={i} className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all">
+                <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-br from-blue-600 to-green-600 rounded-xl flex items-center justify-center text-white font-bold text-lg">
+                  {step.num}
+                </div>
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-green-100 rounded-xl flex items-center justify-center text-blue-600 text-3xl mb-4 mt-4">
+                  <i className={`fas ${step.icon}`}></i>
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-2">{step.title}</h3>
+                <p className="text-slate-600">{step.desc}</p>
               </div>
-              <h3>Collect & Sort</h3>
-              <p>Gather your metal, paper, or plastic recyclables and separate them by type</p>
-            </div>
-
-            <div className="step-card">
-              <div className="step-number">02</div>
-              <div className="step-icon">
-                <i className="fas fa-calculator"></i>
-              </div>
-              <h3>Calculate Value</h3>
-              <p>Use our instant calculator to see exactly how much you'll earn</p>
-            </div>
-
-            <div className="step-card">
-              <div className="step-number">03</div>
-              <div className="step-icon">
-                <i className="fas fa-truck-fast"></i>
-              </div>
-              <h3>Schedule Pickup</h3>
-              <p>Choose delivery to our branch or free pickup from your location</p>
-            </div>
-
-            <div className="step-card">
-              <div className="step-number">04</div>
-              <div className="step-icon">
-                <i className="fas fa-money-bill-wave"></i>
-              </div>
-              <h3>Get Paid Instantly</h3>
-              <p>Receive immediate payment via cash, bank transfer, or mobile wallet</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Impact Stats */}
-      <section id="impact" className="impact-section">
-        <div className="container">
-          <div className="impact-grid">
-            <div className="impact-content">
-              <span className="section-badge light">Our Impact</span>
-              <h2>Making Egypt Greener, Together</h2>
-              <p>Every kilogram you recycle makes a difference. Join our community in creating a sustainable future for Egypt.</p>
-              
-              <div className="impact-metrics">
-                <div className="metric">
-                  <div className="metric-icon">
-                    <i className="fas fa-leaf"></i>
+      {/* Impact Section */}
+      <section id="impact" className="py-20 px-6 bg-gradient-to-br from-green-600 to-blue-600 text-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <span className="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full font-semibold text-sm mb-4">Our Impact</span>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">Making Egypt Greener, Together</h2>
+              <p className="text-xl text-white/90 mb-8">Every kilogram you recycle makes a difference. Join our community in creating a sustainable future for Egypt.</p>
+
+              <div className="space-y-6">
+                {[
+                  { icon: 'fa-leaf', value: '500+ Tons', label: 'Recycled This Year' },
+                  { icon: 'fa-tree', value: '8,500 Trees', label: 'Equivalent Saved' },
+                  { icon: 'fa-cloud', value: '1,200 Tons', label: 'CO₂ Emissions Reduced' }
+                ].map((metric, i) => (
+                  <div key={i} className="flex items-center gap-4 bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                    <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center text-2xl">
+                      <i className={`fas ${metric.icon}`}></i>
+                    </div>
+                    <div>
+                      <h4 className="text-2xl font-bold">{metric.value}</h4>
+                      <p className="text-white/80">{metric.label}</p>
+                    </div>
                   </div>
-                  <div className="metric-content">
-                    <h4>500+ Tons</h4>
-                    <p>Recycled This Year</p>
-                  </div>
-                </div>
-                <div className="metric">
-                  <div className="metric-icon">
-                    <i className="fas fa-tree"></i>
-                  </div>
-                  <div className="metric-content">
-                    <h4>8,500 Trees</h4>
-                    <p>Equivalent Saved</p>
-                  </div>
-                </div>
-                <div className="metric">
-                  <div className="metric-icon">
-                    <i className="fas fa-cloud"></i>
-                  </div>
-                  <div className="metric-content">
-                    <h4>1,200 Tons</h4>
-                    <p>CO₂ Emissions Reduced</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
-            
-            <div className="impact-visual">
-              <div className="circular-progress">
-                <svg viewBox="0 0 200 200">
-                  <circle cx="100" cy="100" r="90" className="progress-bg"></circle>
-                  <circle cx="100" cy="100" r="90" className="progress-bar"></circle>
+
+            <div className="flex justify-center">
+              <div className="relative w-64 h-64">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
+                  <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="20" />
+                  <circle cx="100" cy="100" r="90" fill="none" stroke="white" strokeWidth="20" strokeDasharray="565" strokeDashoffset="141" strokeLinecap="round" />
                 </svg>
-                <div className="progress-content">
-                  <div className="progress-value">75%</div>
-                  <div className="progress-label">Recycling Goal</div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <div className="text-6xl font-bold">75%</div>
+                  <div className="text-lg text-white/80">Recycling Goal</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
-};
+}
 
-export default LoopRecyclingApp;
