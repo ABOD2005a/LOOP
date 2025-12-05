@@ -3,7 +3,7 @@ import { Eye, EyeOff, Check } from "lucide-react";
 import "./login.css";
 import Navbar from "../../Header_Footer/Navbar/page";
 import Footer from "../../Header_Footer/Footer/page";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -67,6 +67,8 @@ export default function Login() {
       setErrors(newErrors);
     }
   };
+
+  const navigate = useNavigate();
 
   return (
     <div className="login-container">
@@ -157,7 +159,7 @@ export default function Login() {
                 Don't have an account?{" "}
                 <span
                   className="signup-link"
-                  onClick={() => Navigate("../signup")}
+                  onClick={() => navigate("/signup")}
                 >
                   Sign Up
                 </span>

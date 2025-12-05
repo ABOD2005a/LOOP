@@ -1,30 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
 import "./nav.css";
 import logoImage from "../../../assets/loopNav.png";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const navigate = useNavigate();
 
   return (
     <nav className="navbar">
       <div className="navbar__container">
         <div className="navbar__logo">
           <div className="logo-icon">
-            <img src={logoImage} alt="Loop logo" className="logo-image" />
+            <img
+              src={logoImage}
+              alt="Loop logo"
+              className="logo-image"
+              onClick={() => navigate("/Home")}
+            />
           </div>
           {/* <span className="logo-text">Loop</span> */}
         </div>
 
         {/* left side nav */}
-        <ul
-          className={`navbar__links navbar__links--left ${
-            isMenuOpen ? "active" : ""
-          }`}
-        >
+        <ul className="navbar__links navbar__links--left">
           {/* <li>
             <a href="#home">Home</a>
           </li> */}
@@ -40,9 +38,7 @@ function Navbar() {
         </ul>
 
         {/* right side auth */}
-        <ul
-          className={`navbar__links navbar__auth ${isMenuOpen ? "active" : ""}`}
-        >
+        <ul className="navbar__links navbar__auth">
           <li>
             <a href="./login" className="nav-login">
               Login
@@ -54,17 +50,6 @@ function Navbar() {
             </a>
           </li>
         </ul>
-
-        <button
-          className={`navbar__toggle ${isMenuOpen ? "active" : ""}`}
-          id="navToggle"
-          onClick={toggleMenu}
-          aria-label="Toggle navigation menu"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
       </div>
     </nav>
   );
