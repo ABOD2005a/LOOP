@@ -1,4 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect, useRef } from 'react';
+import "./home.css"
 
 const CO2_SAVINGS = {
   metal: 2.5,
@@ -79,6 +82,7 @@ function AnimatedCounter({ end, duration = 2000 }) {
   return <span ref={ref}>{count.toLocaleString()}</span>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function Notification({ message, type, show, onHide }) {
   useEffect(() => {
     if (show) {
@@ -107,7 +111,7 @@ function Notification({ message, type, show, onHide }) {
   );
 }
 
-export default function LoopRecyclingApp() {
+export default function Home() {
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [weight, setWeight] = useState('');
   const [multiItems, setMultiItems] = useState([]);

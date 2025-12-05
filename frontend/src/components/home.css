@@ -136,7 +136,7 @@ body {
   inset: 0;
   background: 
     linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)),
-    url(./img/wmremove-transformed.jpeg);
+    url(.././assets/wmremove-transformed.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -1038,7 +1038,7 @@ body {
   background: 
     linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     var(--gradient-primary),
-    url(./img/Mnemonic\ Device\ \(2\).jpg);
+    url(.././assets/Mnemonic-Device.png);
   background-size: cover;
   background-position: center;
   background-blend-mode: multiply;
