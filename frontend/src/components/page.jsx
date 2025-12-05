@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./home.css";
+import Navbar from "./Header_Footer/Navbar/page";
+import Footer from "./Header_Footer/Footer/page";
 
 const CO2_SAVINGS = {
   metal: 2.5,
@@ -201,7 +203,7 @@ export default function Home() {
       />
 
       <Notification {...notification} onHide={hideNotification} />
-
+<Navbar/>
       <section className="hero">
         <div className="hero__background"/>
         <div className="hero__shapes">
@@ -606,6 +608,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <Footer/>
     </>
   );
 }
