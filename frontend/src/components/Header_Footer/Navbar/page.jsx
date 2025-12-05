@@ -15,7 +15,7 @@ function Navbar() {
               src={logoImage}
               alt="Loop logo"
               className="logo-image"
-              onClick={() => navigate("/Home")}
+              onClick={() => navigate("/")}
             />
           </div>
           {/* <span className="logo-text">Loop</span> */}
