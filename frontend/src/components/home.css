@@ -148,6 +148,7 @@ body {
   overflow: hidden;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)),
     url(.././assets/wmremove-transformed.png);
+    background-position: center;
 }
 
 .shape {
