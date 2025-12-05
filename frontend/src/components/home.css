@@ -13,33 +13,34 @@
   --danger: #ef4444;
   --warning: #f59e0b;
   --success: #10b981;
-  
+
   --dark: #0f172a;
   --dark-light: #1e293b;
   --text: #1e293b;
   --text-light: #64748b;
   --text-lighter: #94a3b8;
-  
+
   --bg: #ffffff;
   --bg-gray: #f8fafc;
   --bg-dark: #f1f5f9;
-  
+
   --border: #e2e8f0;
   --border-light: #f1f5f9;
-  
+
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  
+
   --gradient-primary: linear-gradient(135deg, #10b981 0%, #059669 100%);
   --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   --gradient-rainbow: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
   color: var(--text);
   background: var(--bg);
   line-height: 1.6;
@@ -53,7 +54,6 @@ body {
 }
 
 /* Navigation */
-
 
 /* Buttons */
 .btn {
@@ -132,11 +132,10 @@ body {
 }
 
 .hero__background {
- position: absolute;
+  position: absolute;
   inset: 0;
-  background: 
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)),
-    url(.././assets/wmremove-transformed.png);
+  /* background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)),
+    url(.././assets/wmremove-transformed.png); */
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -147,6 +146,8 @@ body {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)),
+    url(.././assets/wmremove-transformed.png);
 }
 
 .shape {
@@ -185,9 +186,16 @@ body {
 }
 
 @keyframes float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(50px, -50px) scale(1.1); }
-  66% { transform: translate(-50px, 50px) scale(0.9); }
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(50px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-50px, 50px) scale(0.9);
+  }
 }
 
 .hero__content {
@@ -463,7 +471,7 @@ body {
 }
 
 .material-card::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: var(--gradient-primary);
@@ -731,8 +739,14 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .detail-item {
@@ -1032,13 +1046,11 @@ body {
   overflow: hidden;
 }
 .impact-section::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: 
-    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    var(--gradient-primary),
-    url(.././assets/Mnemonic-Device.png);
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    var(--gradient-primary), url(.././assets/Mnemonic-Device.png);
   background-size: cover;
   background-position: center;
   background-blend-mode: multiply;
@@ -1151,8 +1163,12 @@ body {
 }
 
 @keyframes progressAnim {
-  from { stroke-dashoffset: 565; }
-  to { stroke-dashoffset: 141; }
+  from {
+    stroke-dashoffset: 565;
+  }
+  to {
+    stroke-dashoffset: 141;
+  }
 }
 
 .progress-content {
@@ -1323,7 +1339,7 @@ body {
 }
 
 .auth-divider::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 50%;
@@ -1415,7 +1431,6 @@ body {
 
 /* Footer */
 
-
 /* Notification Toast */
 .notification {
   position: fixed;
@@ -1469,21 +1484,21 @@ body {
   .calculator__wrapper {
     grid-template-columns: 1fr;
   }
-  
+
   .impact-grid {
     grid-template-columns: 1fr;
     gap: 3rem;
   }
-  
+
   .circular-progress {
     width: 300px;
     height: 300px;
   }
-  
+
   .auth-wrapper {
     grid-template-columns: 1fr;
   }
-  
+
   .footer-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -1493,40 +1508,40 @@ body {
   .hero__title {
     font-size: 2.5rem;
   }
-  
+
   .hero__description {
     font-size: 1.1rem;
   }
-  
+
   .hero__stats {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  
+
   .section-title {
     font-size: 2rem;
   }
-  
+
   .features__grid {
     grid-template-columns: 1fr;
   }
-  
+
   .steps-container {
     grid-template-columns: 1fr;
   }
-  
+
   .quick-weights {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
   }
-  
+
   .footer-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .nav-links {
     display: none;
   }
@@ -1536,11 +1551,11 @@ body {
   .hero__title {
     font-size: 2rem;
   }
-  
+
   .amount {
     font-size: 3rem;
   }
-  
+
   .notification {
     bottom: 1rem;
     right: 1rem;
