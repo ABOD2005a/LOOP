@@ -19,6 +19,9 @@ export default function SignUp() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -45,13 +48,6 @@ export default function SignUp() {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Please enter a valid email";
     }
-    if (!formData.phoneNumber.trim()) {
-      newErrors.phoneNumber = "Phone number is required";
-    } else if (
-      !/^[0-9\s\-()]{10,}$/.test(formData.phoneNumber.replace(/\s/g, ""))
-    ) {
-      newErrors.phoneNumber = "Please enter a valid phone number";
-    }
     if (!formData.password) {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 8) {
@@ -69,30 +65,57 @@ export default function SignUp() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
 
     if (Object.keys(newErrors).length === 0) {
-      setSubmitted(true);
-      console.log("Form submitted:", formData);
-      setTimeout(() => {
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-          agreeToTerms: false,
+      setLoading(true);
+      setErrors({});
+
+      try {
+        // Call backend API
+        const response = await fetch("http://localhost:8081/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            gmail: formData.email,
+            password: formData.password,
+            confirm_password: formData.confirmPassword,
+          }),
         });
-        setSubmitted(false);
-      }, 3000);
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Signup successful
+          setSubmitted(true);
+          console.log("Signup successful:", data);
+
+          setTimeout(() => {
+            navigate("/login");
+          }, 3000);
+        } else {
+          setErrors({
+            general: data.message || "Signup failed. Please try again.",
+          });
+        }
+      } catch (error) {
+        console.error("Signup error:", error);
+        setErrors({
+          general: "Unable to connect to server. Please try again later.",
+        });
+      } finally {
+        setLoading(false);
+      }
     } else {
       setErrors(newErrors);
     }
   };
-
-  const navigate = useNavigate();
 
   return (
     <div className="signup-container">
@@ -107,7 +130,7 @@ export default function SignUp() {
             <p className="success-text">
               Your account has been created successfully.
             </p>
-            <p className="success-redirect">Redirecting you in a moment...</p>
+            <p className="success-redirect">Redirecting you to login page...</p>
           </div>
         ) : (
           <div className="signup-card">
@@ -119,6 +142,10 @@ export default function SignUp() {
             </div>
 
             <div className="signup-form">
+              {errors.general && (
+                <div className="form-error general-error">{errors.general}</div>
+              )}
+
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">First Name</label>
@@ -131,6 +158,7 @@ export default function SignUp() {
                       errors.firstName ? "form-input-error" : ""
                     }`}
                     placeholder="Amr"
+                    disabled={loading}
                   />
                   {errors.firstName && (
                     <p className="form-error">{errors.firstName}</p>
@@ -147,6 +175,7 @@ export default function SignUp() {
                       errors.lastName ? "form-input-error" : ""
                     }`}
                     placeholder="Mohamed"
+                    disabled={loading}
                   />
                   {errors.lastName && (
                     <p className="form-error">{errors.lastName}</p>
@@ -165,6 +194,7 @@ export default function SignUp() {
                     errors.email ? "form-input-error" : ""
                   }`}
                   placeholder="john@example.com"
+                  disabled={loading}
                 />
                 {errors.email && <p className="form-error">{errors.email}</p>}
               </div>
@@ -181,11 +211,13 @@ export default function SignUp() {
                       errors.password ? "form-input-error" : ""
                     }`}
                     placeholder="At least 8 characters"
+                    disabled={loading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="password-toggle"
+                    disabled={loading}
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -207,11 +239,13 @@ export default function SignUp() {
                       errors.confirmPassword ? "form-input-error" : ""
                     }`}
                     placeholder="Re-enter your password"
+                    disabled={loading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="password-toggle"
+                    disabled={loading}
                   >
                     {showConfirmPassword ? (
                       <EyeOff size={18} />
@@ -225,7 +259,6 @@ export default function SignUp() {
                 )}
               </div>
 
-              {/* Terms Checkbox */}
               <div className="terms-wrapper">
                 <input
                   type="checkbox"
@@ -234,6 +267,7 @@ export default function SignUp() {
                   onChange={handleChange}
                   className="terms-checkbox"
                   id="terms"
+                  disabled={loading}
                 />
                 <label htmlFor="terms" className="terms-label">
                   I agree to the{" "}
@@ -245,15 +279,22 @@ export default function SignUp() {
                 <p className="form-error">{errors.agreeToTerms}</p>
               )}
 
-              {/* Submit Button */}
-              <button onClick={handleSubmit} className="submit-btn">
-                Create Account
+              <button
+                onClick={handleSubmit}
+                className="submit-btn"
+                disabled={loading}
+              >
+                {loading ? "Creating Account..." : "Create Account"}
               </button>
 
-              {/* Sign In Link */}
               <p className="signin-text">
                 Already have an account?{" "}
-                <span className="signin-link" onClick={()=> navigate("/login")}>Sign In</span>
+                <span
+                  className="signin-link"
+                  onClick={() => navigate("/login")}
+                >
+                  Sign In
+                </span>
               </p>
             </div>
           </div>

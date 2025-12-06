@@ -1,60 +1,118 @@
 const express = require("express");
-const mysql = require("mysql");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
+const { createClient } = require("@supabase/supabase-js");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const db = mysql.createPool({
-  connectionLimit: 10,
-  host: "127.0.0.1",
-  user: "root",
-  password: "",
-  database: "signup",
-});
+const supabaseUrl =
+  process.env.SUPABASE_URL || "https://xkhhilqskmxxemmcrnmg.supabase.co";
+const supabaseKey =
+  process.env.SUPABASE_ANON_KEY ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhraGhpbHFza214eGVtbWNybm1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjUyNjAsImV4cCI6MjA4MDYwMTI2MH0.xMEI9YPWvtjfIVYM9ImMW6HeZEBsOZ70ef5nQHsOhfg";
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-app.post("/signup", (req, res) => {
-  const sql = "INSERT INTO login (Username, Email, Password) VALUES (?, ?, ?)";
-  const { Username, Email, Password } = req.body;
+app.post("/signup", async (req, res) => {
+  try {
+    const { first_name, last_name, gmail, password, confirm_password } =
+      req.body;
 
-  bcrypt.hash(Password, 10, (err, hash) => {
-    if (err) throw err;
-    console.log(hash);
-    db.query(sql, [Username, Email, hash], (err, _) => {
-      if (err) {
-        console.error("Signup Error:", err);
-        return res.status(500).send("Signup failed");
-      }
-
-      return res.status(200).send("User registered successfully");
-    });
-  });
-});
-
-app.get("/login", (req, res) => {
-  const { Email: inputEmail, Password: inputPassword } = req.query;
-
-  const SQL = "SELECT * FROM login WHERE Email = ?";
-  console.log(inputEmail, inputPassword);
-
-  db.query(SQL, [inputEmail], (err, data) => {
-    if (err) {
-      console.error("Login Error:", err);
-      return res.status(500).send("Login failed due to server error");
+    // Validate input
+    if (!first_name || !last_name || !gmail || !password) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-    console.log(data);
-    if (data.length === 0)
-      return res.status(401).send("Invalid email or password");
+    if (password !== confirm_password) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
 
-    const result = bcrypt.compareSync(inputPassword, data[0].Password);
+    // Hash the password (using 'password' from req.body, not 'Password')
+    const hash = await bcrypt.hash(password, 10);
+    console.log("Password hashed successfully");
+
+    // Insert into Supabase with correct field names
+    const { data, error } = await supabase
+      .from("login")
+      .insert([
+        {
+          first_name,
+          last_name,
+          gmail,
+          password: hash,
+        },
+      ])
+      .select();
+
+    if (error) {
+      console.error("Signup Error:", error);
+      return res
+        .status(500)
+        .json({ message: "Signup failed", error: error.message });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "User registered successfully", data });
+  } catch (err) {
+    console.error("Signup Error:", err);
+    return res
+      .status(500)
+      .json({ message: "Signup failed", error: err.message });
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const { gmail: inputEmail, password: inputPassword } = req.body;
+
+    // Validate input
+    if (!inputEmail || !inputPassword) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
+    }
+
+    console.log("Login attempt:", inputEmail);
+
+    // Query Supabase using 'gmail' field
+    const { data, error } = await supabase
+      .from("login")
+      .select("*")
+      .eq("gmail", inputEmail)
+      .single();
+
+    if (error || !data) {
+      console.error("Login Error:", error);
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    console.log("User found:", data.first_name, data.last_name);
+
+    // Compare password
+    const result = await bcrypt.compare(inputPassword, data.password);
+
     if (result) {
-      return res.status(200).send("login successfully");
+      return res.status(200).json({
+        message: "Login successfully",
+        user: {
+          id: data.id,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          gmail: data.gmail,
+        },
+      });
     }
-    return res.status(401).send("Invalid email or password");
-  });
+
+    return res.status(401).json({ message: "Invalid email or password" });
+  } catch (err) {
+    console.error("Login Error:", err);
+    return res.status(500).json({
+      message: "Login failed due to server error",
+      error: err.message,
+    });
+  }
 });
 
 app.listen(8081, () => {

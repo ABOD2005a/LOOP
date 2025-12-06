@@ -15,6 +15,9 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -48,27 +51,64 @@ export default function Login() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
 
     if (Object.keys(newErrors).length === 0) {
-      setSubmitted(true);
-      console.log("Form submitted:", formData);
-      setTimeout(() => {
-        setFormData({
-          email: "",
-          password: "",
-          rememberMe: false,
+      setLoading(true);
+      setErrors({});
+
+      try {
+        // Call backend API
+        const response = await fetch("http://localhost:8081/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            gmail: formData.email,
+            password: formData.password,
+          }),
         });
-        setSubmitted(false);
-      }, 3000);
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Login successful
+          setSubmitted(true);
+
+          // Store user data in localStorage
+          localStorage.setItem("user", JSON.stringify(data.user));
+
+          if (formData.rememberMe) {
+            localStorage.setItem("rememberMe", "true");
+          }
+
+          console.log("Login successful:", data);
+
+          // Redirect after 2 seconds
+          setTimeout(() => {
+            navigate("/"); // or wherever you want to redirect
+          }, 2000);
+        } else {
+          // Login failed
+          setErrors({
+            general: data.message || "Invalid email or password",
+          });
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        setErrors({
+          general: "Unable to connect to server. Please try again later.",
+        });
+      } finally {
+        setLoading(false);
+      }
     } else {
       setErrors(newErrors);
     }
   };
-
-  const navigate = useNavigate();
 
   return (
     <div className="login-container">
@@ -93,6 +133,10 @@ export default function Login() {
             </div>
 
             <div className="login-form">
+              {errors.general && (
+                <div className="form-error general-error">{errors.general}</div>
+              )}
+
               <div className="form-group">
                 <label className="form-label">Email Address</label>
                 <input
@@ -104,6 +148,7 @@ export default function Login() {
                     errors.email ? "form-input-error" : ""
                   }`}
                   placeholder="john@example.com"
+                  disabled={loading}
                 />
                 {errors.email && <p className="form-error">{errors.email}</p>}
               </div>
@@ -120,11 +165,13 @@ export default function Login() {
                       errors.password ? "form-input-error" : ""
                     }`}
                     placeholder="At least 8 characters"
+                    disabled={loading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="password-toggle"
+                    disabled={loading}
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -142,6 +189,7 @@ export default function Login() {
                   onChange={handleChange}
                   className="remember-checkbox"
                   id="remember"
+                  disabled={loading}
                 />
                 <label htmlFor="remember" className="remember-label">
                   Remember me
@@ -151,8 +199,12 @@ export default function Login() {
                 </a>
               </div>
 
-              <button onClick={handleSubmit} className="submit-btn">
-                Sign In
+              <button
+                onClick={handleSubmit}
+                className="submit-btn"
+                disabled={loading}
+              >
+                {loading ? "Signing In..." : "Sign In"}
               </button>
 
               <p className="signup-text">
