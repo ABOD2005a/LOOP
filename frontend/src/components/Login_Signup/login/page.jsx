@@ -14,7 +14,6 @@ export default function Login() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -75,10 +74,7 @@ export default function Login() {
         const data = await response.json();
 
         if (response.ok) {
-          // Login successful
-          setSubmitted(true);
 
-          // Store user data in localStorage
           localStorage.setItem("user", JSON.stringify(data.user));
 
           if (formData.rememberMe) {
@@ -87,9 +83,8 @@ export default function Login() {
 
           console.log("Login successful:", data);
 
-          // Redirect after 2 seconds
           setTimeout(() => {
-            navigate("/"); // or wherever you want to redirect
+            navigate("/"); 
           }, 2000);
         } else {
           // Login failed
@@ -114,16 +109,6 @@ export default function Login() {
     <div className="login-container">
       <Navbar />
       <div className="login-wrapper">
-        {submitted ? (
-          <div className="login-card success-card">
-            <div className="success-icon">
-              <Check size={32} />
-            </div>
-            <h2 className="success-title">Welcome back!</h2>
-            <p className="success-text">You have successfully logged in.</p>
-            <p className="success-redirect">Redirecting you in a moment...</p>
-          </div>
-        ) : (
           <div className="login-card">
             <div className="login-header">
               <h1 className="login-title">Sign In</h1>
@@ -218,7 +203,6 @@ export default function Login() {
               </p>
             </div>
           </div>
-        )}
       </div>
       <Footer />
     </div>

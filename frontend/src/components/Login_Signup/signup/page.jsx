@@ -18,7 +18,6 @@ export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -92,8 +91,6 @@ export default function SignUp() {
         const data = await response.json();
 
         if (response.ok) {
-          // Signup successful
-          setSubmitted(true);
           console.log("Signup successful:", data);
 
           setTimeout(() => {
@@ -101,7 +98,7 @@ export default function SignUp() {
           }, 3000);
         } else {
           setErrors({
-            general: data.message || "Signup failed. Please try again.",
+            general: data.message,
           });
         }
       } catch (error) {
@@ -121,18 +118,6 @@ export default function SignUp() {
     <div className="signup-container">
       <Navbar />
       <div className="signup-wrapper">
-        {submitted ? (
-          <div className="signup-card success-card">
-            <div className="success-icon">
-              <Check size={32} />
-            </div>
-            <h2 className="success-title">Welcome aboard!</h2>
-            <p className="success-text">
-              Your account has been created successfully.
-            </p>
-            <p className="success-redirect">Redirecting you to login page...</p>
-          </div>
-        ) : (
           <div className="signup-card">
             <div className="signup-header">
               <h1 className="signup-title">Create Account</h1>
@@ -298,7 +283,6 @@ export default function SignUp() {
               </p>
             </div>
           </div>
-        )}
       </div>
       <Footer />
     </div>
