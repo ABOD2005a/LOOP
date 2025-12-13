@@ -11,6 +11,7 @@ import Navbar from "./components/Header_Footer/Navbar/page";
 import Footer from "./components/Header_Footer/Footer/page";
 import Login from "./components/Login_Signup/login/page";
 import Home from "./components/page";
+import NavbarAfter from "./components/Header_Footer/NavbarAfter/page";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -23,6 +24,7 @@ function AnimatedRoutes() {
         <Route path="/Navbar" element={<Navbar />} />
         <Route path="/Footer" element={<Footer />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/NavbarAfter" element={<NavbarAfter />} />
       </Routes>
     </AnimatePresence>
   );
