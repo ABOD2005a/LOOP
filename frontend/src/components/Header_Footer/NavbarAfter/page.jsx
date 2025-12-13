@@ -35,10 +35,7 @@ function NavbarAfter() {
   };
 
   const handleLogout = () => {
-    // Add your logout logic here
     console.log("Logging out...");
-    // Example: Clear tokens, user data, etc.
-    // localStorage.removeItem('token');
     navigate("/");
   };
 
@@ -56,7 +53,6 @@ function NavbarAfter() {
           </div>
         </div>
 
-
         <ul className="navbar__links navbar__links--left">
           <li>
             <a href="#how">How it Works</a>
@@ -70,10 +66,7 @@ function NavbarAfter() {
         </ul>
 
         <div className="navbar__auth">
-          <button 
-            className="btn-book-now"
-            onClick={() => navigate("/booking")}
-          >
+          <button className="btn-book-now" onClick={() => navigate("/booking")}>
             <i className="fas fa-calendar-check"></i>
             <span>Book Now</span>
           </button>
@@ -127,7 +120,10 @@ function NavbarAfter() {
 
                 <div className="dropdown-divider"></div>
 
-                <button className="dropdown-item dropdown-logout" onClick={handleLogout}>
+                <button
+                  className="dropdown-item dropdown-logout"
+                  onClick={handleLogout}
+                >
                   <i className="fas fa-sign-out-alt"></i>
                   <span>Logout</span>
                 </button>
@@ -140,4 +136,4 @@ function NavbarAfter() {
   );
 }
 
-export default NavbarAfter
+export default NavbarAfter;
