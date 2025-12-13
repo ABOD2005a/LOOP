@@ -260,11 +260,12 @@ export default function contact() {
           </div>
         </section>
       </main>
-
-      <div className={`toast ${showToast ? 'show' : ''}`} id="toast">
-        <div className="toast-title">Message Sent!</div>
-        <div className="toast-description">Thank you for reaching out. We'll get back to you soon.</div>
-      </div>
+{showToast && (
+  <div className="toast show" id="toast">
+    <div className="toast-title">Message Sent!</div>
+    <div className="toast-description">Thank you for reaching out. We'll get back to you soon.</div>
+  </div>
+)}
     </div>
   );
 }

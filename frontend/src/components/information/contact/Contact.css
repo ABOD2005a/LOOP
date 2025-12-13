@@ -298,6 +298,7 @@
       transition: all 0.3s;
       z-index: 1000;
       max-width: 350px;
+      max-height: 100px;
     }
 
     .toast.show {
