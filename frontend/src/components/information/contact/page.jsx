@@ -135,7 +135,7 @@ export default function contact() {
                   </svg>
                 </div>
                 <h3>Call Us</h3>
-                <div className="info-value">01023659342</div>
+                <div className="info-value">01234567890</div>
                 <div className="info-description">Mon-Fri, 9am-6pm EST</div>
               </div>
               <div className="info-card">
