@@ -2,11 +2,10 @@
 
 /* Footer */
 .footer {
-  width: 100vw;
   background: var(--dark);
   color: white;
   padding: 4rem 0 2rem;
-  margin: -20px;
+  /* margin: -20px; */
 }
 .footer-content {
   max-width: 1200px;
@@ -57,7 +56,7 @@
 }
 
 /* remove previous boxed/underline styles from small-screen override */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .footer .social-link {
     background: transparent;
     width: auto;
@@ -66,7 +65,7 @@
     border-radius: 4px;
     text-decoration: none;
   }
-}
+} */
 .footer-col h4 {
   font-size: 1.1rem;
   font-weight: 700;
@@ -120,7 +119,7 @@
   color: var(--primary);
 }
 /* Toast Notification */
-.toast {
+/* .toast {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
@@ -191,7 +190,7 @@
 }
 .toast-close:hover {
   color: var(--text);
-}
+} */
 /* Responsive Design */
 @media (max-width: 1024px) {
   .hero__title {
