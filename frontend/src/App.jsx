@@ -14,6 +14,7 @@ import Home from "./components/page";
 import NavbarAfter from "./components/Header_Footer/NavbarAfter/page";
 import Choose from "./components/choose/page";
 import Contact from "./components/information/contact/page";
+import About from "./components/information/about/page";
 
 
 function AnimatedRoutes() {
@@ -30,6 +31,7 @@ function AnimatedRoutes() {
         <Route path="/choose" element={<Choose />} />
         <Route path="/NavbarAfter" element={<NavbarAfter />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/About" element={<About />} />
       </Routes>
     </AnimatePresence>
   );
