@@ -146,57 +146,8 @@ body {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)),
-    url(../../src/assets/hero-forest.jpg);
+  background:  linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(../../src/assets/hero-forest.jpg);
     background-position: center;
-}
-
-.shape {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.3;
-  animation: float 20s infinite ease-in-out;
-}
-
-.shape-1 {
-  width: 500px;
-  height: 500px;
-  background: var(--primary);
-  top: -10%;
-  left: -5%;
-  animation-delay: 0s;
-}
-
-.shape-2 {
-  width: 400px;
-  height: 400px;
-  background: var(--secondary);
-  bottom: -10%;
-  right: -5%;
-  animation-delay: 5s;
-}
-
-.shape-3 {
-  width: 350px;
-  height: 350px;
-  background: var(--accent);
-  top: 50%;
-  right: 10%;
-  animation-delay: 10s;
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(50px, -50px) scale(1.1);
-  }
-  66% {
-    transform: translate(-50px, 50px) scale(0.9);
-  }
 }
 
 .hero__content {
@@ -240,7 +191,7 @@ body {
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 1.5rem;
-  color: var(--primary);
+  color: var(--gradient-primary);
   animation: slideUp 0.8s ease-out 0.2s both;
 }
 
@@ -1053,7 +1004,7 @@ body {
   position: absolute;
   inset: 0;
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    var(--gradient-primary), url(.././assets/Mnemonic-Device.png);
+    /* var(--gradient-primary), */ url(../../src/assets/hand.jpeg);
   background-size: cover;
   background-position: center;
   background-blend-mode: multiply;
