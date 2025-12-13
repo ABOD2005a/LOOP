@@ -6,23 +6,7 @@ import { useNavigate } from "react-router-dom";
 function NavbarAfter() {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [userData, setUserData] = useState(null);
   const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    const userString = localStorage.getItem("user");
-    if (userString) {
-      try {
-        const user = JSON.parse(userString);
-        setUserData(user);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-        navigate("/login"); 
-      }
-    } else {
-      navigate("/login"); 
-    }
-  }, [navigate]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -51,31 +35,12 @@ function NavbarAfter() {
   };
 
   const handleLogout = () => {
+    // Add your logout logic here
     console.log("Logging out...");
-    localStorage.removeItem("user");
+    // Example: Clear tokens, user data, etc.
+    // localStorage.removeItem('token');
     navigate("/");
   };
-
-  const getAvatarUrl = () => {
-    if (!userData || !userData.first_name || !userData.last_name) {
-      return "https://ui-avatars.com/api/?name=User&background=667eea&color=fff&bold=true&size=128";
-    }
-    const fullName = `${userData.first_name} ${userData.last_name}`;
-    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-      fullName
-    )}&background=667eea&color=fff&bold=true&size=128`;
-    console.log("Avatar URL:", avatarUrl); // Debug log
-    return avatarUrl;
-  };
-
-  const getFullName = () => {
-    if (!userData) return "User";
-    return `${userData.first_name} ${userData.last_name}`;
-  };
-
-  if (!userData) {
-    return null;
-  }
 
   return (
     <nav className="navbar">
@@ -91,6 +56,7 @@ function NavbarAfter() {
           </div>
         </div>
 
+
         <ul className="navbar__links navbar__links--left">
           <li>
             <a href="#how">How it Works</a>
@@ -104,7 +70,10 @@ function NavbarAfter() {
         </ul>
 
         <div className="navbar__auth">
-          <button className="btn-book-now" onClick={() => navigate("/booking")}>
+          <button 
+            className="btn-book-now"
+            onClick={() => navigate("/booking")}
+          >
             <i className="fas fa-calendar-check"></i>
             <span>Book Now</span>
           </button>
@@ -112,14 +81,9 @@ function NavbarAfter() {
           <div className="user-menu" ref={dropdownRef}>
             <button className="avatar-button" onClick={toggleDropdown}>
               <img
-                src={getAvatarUrl()}
+                src="https://avatar.iran.liara.run/public/9"
                 alt="User Avatar"
                 className="avatar-image"
-                onError={(e) => {
-                  console.error("Avatar failed to load, using fallback");
-                  e.target.src =
-                    "https://ui-avatars.com/api/?name=U&background=667eea&color=fff&bold=true&size=128";
-                }}
               />
             </button>
 
@@ -128,17 +92,13 @@ function NavbarAfter() {
                 <div className="dropdown-header">
                   <div className="dropdown-avatar">
                     <img
-                      src={getAvatarUrl()}
+                      src="https://avatar.iran.liara.run/public/9"
                       alt="User Avatar"
-                      onError={(e) => {
-                        e.target.src =
-                          "https://ui-avatars.com/api/?name=U&background=667eea&color=fff&bold=true&size=128";
-                      }}
                     />
                   </div>
                   <div className="dropdown-user-info">
-                    <p className="dropdown-name">{getFullName()}</p>
-                    <p className="dropdown-email">{userData.gmail}</p>
+                    <p className="dropdown-name">Amr El-Rotel</p>
+                    <p className="dropdown-email">amr332763@gmail.com</p>
                   </div>
                 </div>
 
@@ -167,10 +127,7 @@ function NavbarAfter() {
 
                 <div className="dropdown-divider"></div>
 
-                <button
-                  className="dropdown-item dropdown-logout"
-                  onClick={handleLogout}
-                >
+                <button className="dropdown-item dropdown-logout" onClick={handleLogout}>
                   <i className="fas fa-sign-out-alt"></i>
                   <span>Logout</span>
                 </button>
@@ -183,4 +140,4 @@ function NavbarAfter() {
   );
 }
 
-export default NavbarAfter;
+export default NavbarAfter
