@@ -106,6 +106,92 @@ function Notification({ message, type, show, onHide }) {
     </div>
   );
 }
+/*how it works */
+const steps = [
+    {
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M16 16h2a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v2"/>
+          <rect width="12" height="12" x="4" y="8" rx="2"/>
+        </svg>
+      ),
+      title: "Collect Recyclables",
+      description: "Gather your metal, paper, and plastic recyclables at home or work.",
+      step: "01"
+    },
+    {
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
+          <path d="M15 18H9"/>
+          <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/>
+          <circle cx="17" cy="18" r="2"/>
+          <circle cx="7" cy="18" r="2"/>
+        </svg>
+      ),
+      title: "Schedule Pickup",
+      description: "Book a free pickup through our app. We come to your doorstep.",
+      step: "02"
+    },
+    {
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <rect width="20" height="14" x="2" y="5" rx="2"/>
+          <path d="M2 10h20"/>
+        </svg>
+      ),
+      title: "Get Paid Instantly",
+      description: "Receive immediate payment via mobile wallet or cash on pickup.",
+      step: "03"
+    },
+    {
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+          <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+        </svg>
+      ),
+      title: "Save the Planet",
+      description: "Track your environmental impact and see how you're making a difference.",
+      step: "04"
+    }
+  ];
+/*CTA*/
+ const buttons = [
+    {
+      text: "Schedule Pickup",
+      href: "/booking.html",
+      type: "primary",
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M5 12h14"/>
+          <path d="m12 5 7 7-7 7"/>
+        </svg>
+      )
+    },
+    {
+      text: "Learn More",
+      href: "/about.html",
+      type: "outline",
+      icon: null
+    }
+  ];
+
+  const badges = [
+    {
+      value: "50K+",
+      label: "Active Collectors"
+    },
+    {
+      value: "2M+",
+      label: "Items Recycled"
+    },
+    {
+      value: "100%",
+      label: "Free to Join"
+    }
+  ];
+
 
 export default function Home() {
   const [selectedMaterial, setSelectedMaterial] = useState(null);
@@ -205,7 +291,6 @@ export default function Home() {
 
       <Notification {...notification} onHide={hideNotification} />
       <NavbarAfter/>
-{/* <Navbar/> */}
       <section className="hero">
         <div className="hero__background"/>
         <div className="hero__shapes">
@@ -257,39 +342,30 @@ export default function Home() {
           </div>
         </div>
       </section>
+  <section id="how-it-works">
+        <div className="bg-decoration-top"></div>
+        <div className="bg-decoration-bottom"></div>
 
-      {/* Features */}
-      <section className="features">
         <div className="container">
-          <div className="features__grid">
-            {[
-              {
-                icon: "fa-bolt",
-                title: "Instant Payment",
-                desc: "Get paid immediately in cash or direct bank transfer",
-              },
-              {
-                icon: "fa-shield-halved",
-                title: "Secure & Trusted",
-                desc: "Licensed and certified by Egyptian authorities",
-              },
-              {
-                icon: "fa-truck",
-                title: "Free Pickup",
-                desc: "Schedule free collection from your doorstep",
-              },
-              {
-                icon: "fa-chart-line",
-                title: "Best Rates",
-                desc: "Competitive prices that beat the market average",
-              },
-            ].map((feature, i) => (
-              <div key={i} className="feature-card">
-                <div className="feature-icon">
-                  <i className={`fas ${feature.icon}`}></i>
+          <div className="section-header">
+            <span className="section-badge">Simple Process</span>
+            <h2 className="section-title">How It Works</h2>
+            <p className="section-description">
+              Turn your recyclables into cash in just a few simple steps. 
+              We make sustainable living rewarding.
+            </p>
+          </div>
+
+          <div className="steps-grid">
+            {steps.map((step, index) => (
+              <div key={index} className="step-card">
+                <div className="step-number">{step.step}</div>
+                <div className="step-icon">
+                  {step.icon}
                 </div>
-                <h3>{feature.title}</h3>
-                <p>{feature.desc}</p>
+                <h3 className="step-title">{step.title}</h3>
+                <p className="step-description">{step.description}</p>
+                {index < steps.length - 1 && <div className="connector-line"></div>}
               </div>
             ))}
           </div>
@@ -500,56 +576,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How it Works */}
-      <section id="how" className="how-it-works">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-badge">Simple Process</span>
-            <h2 className="section-title">How Loop Works</h2>
-            <p className="section-description">
-              Four easy steps to turn your recyclables into cash
-            </p>
-          </div>
-
-          <div className="steps-container">
-            {[
-              {
-                num: "01",
-                icon: "fa-box-open",
-                title: "Collect & Sort",
-                desc: "Gather your metal, paper, or plastic recyclables and separate them by type",
-              },
-              {
-                num: "02",
-                icon: "fa-calculator",
-                title: "Calculate Value",
-                desc: "Use our instant calculator to see exactly how much you'll earn",
-              },
-              {
-                num: "03",
-                icon: "fa-truck-fast",
-                title: "Schedule Pickup",
-                desc: "Choose delivery to our branch or free pickup from your location",
-              },
-              {
-                num: "04",
-                icon: "fa-money-bill-wave",
-                title: "Get Paid Instantly",
-                desc: "Receive immediate payment via cash, bank transfer, or mobile wallet",
-              },
-            ].map((step, i) => (
-              <div key={i} className="step-card">
-                <div className="step-number">{step.num}</div>
-                <div className="step-icon">
-                  <i className={`fas ${step.icon}`}></i>
-                </div>
-                <h3>{step.title}</h3>
-                <p>{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Impact Section */}
       <section id="impact" className="impact-section">
@@ -605,6 +631,58 @@ export default function Home() {
                   <span className="progress-label">Recycling Goal</span>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+      {/* CTa section */}
+    
+      <section className="cta-section">
+        <div className="cta-bg-decoration"></div>
+
+        <div className="container">
+          <div className="glass-card">
+            <div className="cta-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                <path d="M21 3v5h-5"/>
+                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                <path d="M8 16H3v5"/>
+              </svg>
+            </div>
+
+            <h2 className="cta-title">Ready to Start Collecting?</h2>
+
+            <p className="cta-description">
+              Join thousands of collectors who are turning their recyclables into cash. 
+              Schedule your first pickup today and start making a difference.
+            </p>
+
+            <div className="cta-buttons">
+              {buttons.map((button, index) => (
+                <a
+                  key={index}
+                  href={button.href}
+                  className={`btn btn-${button.type}`}
+                >
+                  {button.text}
+                  {button.icon}
+                </a>
+              ))}
+            </div>
+
+            <div className="trust-badges">
+              {badges.map((badge, index) => (
+                <React.Fragment key={index}>
+                  <div className="badge-item">
+                    <div className="badge-value">{badge.value}</div>
+                    <div className="badge-label">{badge.label}</div>
+                  </div>
+                  {index < badges.length - 1 && <div className="badge-divider"></div>}
+                </React.Fragment>
+              ))}
             </div>
           </div>
         </div>
