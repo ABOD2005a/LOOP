@@ -84,13 +84,12 @@ body {
 .signup-card {
   margin-top: 67px;
   margin-bottom: 50px;
-  height: 670px;
   background: var(--bg);
   border-radius: 16px;
   padding: 30px;
   box-shadow: var(--shadow-xl);
   animation: slideIn 0.5s ease-out;
-  height: 750px;
+  min-height: auto;
 }
 
 .signup-card.success-card {
