@@ -293,9 +293,8 @@ export default function Home() {
       <NavbarAfter/>
       <section className="hero">
         <div className="hero__background"/>
-         <div className="hero__shapes">
+        <div className="hero__shapes"/>
   
-        </div> 
 
         <div className="hero__content">
           <div className="hero__badge">
