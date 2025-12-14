@@ -458,7 +458,7 @@ export default function Booking() {
         </div>
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

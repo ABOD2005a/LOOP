@@ -390,7 +390,7 @@ export default function choose() {
         )}
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }
