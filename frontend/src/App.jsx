@@ -32,6 +32,7 @@ function AnimatedRoutes() {
         <Route path="/booking" element={<Booking />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/About" element={<About />} />
+        <Route path="/NavbarAfter" element={<NavbarAfter/>} />
       </Routes>
     </AnimatePresence>
   );
