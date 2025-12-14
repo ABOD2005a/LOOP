@@ -222,19 +222,16 @@ export default function Home() {
 
       <section className="hero">
         <div className="hero__background" />
-        <div className="hero__shapes">
-          <div className="shape shape-1"></div>
-          <div className="shape shape-2"></div>
-          <div className="shape shape-3"></div>
-        </div>
+        <div className="hero__shapes"/>
+
 
         <div className="hero__content">
           <div className="hero__badge">
             <span>Egypt's Leading Recycling Platform</span>
           </div>
 
-          <h1 className="hero__title">
-            Transform Your <span className="gradient-text">Recyclables</span>
+          <h1 className="hero__title gradient-text">
+            Transform Your <span className="">Recyclables</span>
             <br />
             Into Real <span className="gradient-text">Money</span>
           </h1>
@@ -245,11 +242,11 @@ export default function Home() {
           </p>
 
           <div className="hero__actions">
-            <a href="#calculator" className="btn btn-primary">
+            <a href="#cta" className="btn btn-primary">
               <i className="fas fa-calculator"></i>
               <span>Start Earning Now</span>
             </a>
-            <a href="#how" className="btn btn-secondary">
+            <a href="#how-it-works" className="btn btn-secondary">
               <i className="fas fa-info-circle"></i>
               <span>See How it Works</span>
             </a>
@@ -361,7 +358,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="cta-section">
+      <section id= "cta"className="cta-section">
         <div className="cta-bg-decoration"></div>
 
         <div className="container">
