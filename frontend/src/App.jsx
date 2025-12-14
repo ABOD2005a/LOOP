@@ -13,14 +13,11 @@ import Login from "./components/Login_Signup/login/page";
 import Home from "./components/page";
 import NavbarAfter from "./components/Header_Footer/NavbarAfter/page";
 import Choose from "./components/choose/page";
-<<<<<<< HEAD
 import Booking from "./components/booking/page";
 import Address from "./components/Login_Signup/signup/address/page";
-=======
 import Contact from "./components/information/contact/page";
 import About from "./components/information/about/page";
 
->>>>>>> f98df771eb12b15bd61b92bcd021f8896eee6ec6
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -36,12 +33,9 @@ function AnimatedRoutes() {
         <Route path="/choose" element={<Choose />} />
         <Route path="/address" element={<Address />} />
         <Route path="/NavbarAfter" element={<NavbarAfter />} />
-<<<<<<< HEAD
         <Route path="/booking" element={<Booking />} />
-=======
         <Route path="/contact" element={<Contact />} />
         <Route path="/About" element={<About />} />
->>>>>>> f98df771eb12b15bd61b92bcd021f8896eee6ec6
       </Routes>
     </AnimatePresence>
   );
