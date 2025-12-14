@@ -121,7 +121,7 @@ function Footer() {
                   <FontAwesomeIcon icon={faPhone} /> 01234567890
                 </li>
                 <li>
-                  <FontAwesomeIcon icon={faEnvelope} /> info@karakib.com
+                  <FontAwesomeIcon icon={faEnvelope} /> Loop@gmail.com
                 </li>
                 <li>
                   <FontAwesomeIcon icon={faMapMarkerAlt} /> Cairo, Egypt

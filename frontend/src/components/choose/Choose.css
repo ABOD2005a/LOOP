@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 :root {
   --primary: #10b981;
   --primary-dark: #059669;
@@ -46,6 +47,9 @@ body {
   color: var(--text);
   overflow-x: hidden;
 }
+=======
+@import '../../variables.css';
+>>>>>>> f98df771eb12b15bd61b92bcd021f8896eee6ec6
 
 .materials-container {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)),

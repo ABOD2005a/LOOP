@@ -1,60 +1,11 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-:root {
-  --primary: #10b981;
-  --primary-dark: #059669;
-  --primary-light: #d1fae5;
-  --secondary: #3b82f6;
-  --accent: #8b5cf6;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --success: #10b981;
-
-  --dark: #0f172a;
-  --dark-light: #1e293b;
-  --text: #1e293b;
-  --text-light: #64748b;
-  --text-lighter: #94a3b8;
-
-  --bg: #ffffff;
-  --bg-gray: #f8fafc;
-  --bg-dark: #f1f5f9;
-
-  --border: #e2e8f0;
-  --border-light: #f1f5f9;
-
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-
-  --gradient-primary: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  --gradient-rainbow: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-body {
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  color: var(--text);
-  background: var(--bg);
-  line-height: 1.6;
-  overflow-x: hidden;
-  height: 100%;
-}
+@import '../../../variables.css';
 
 /* Footer */
 .footer {
-  width: 100vw;
   background: var(--dark);
   color: white;
   padding: 4rem 0 2rem;
-  margin: -20px;
+  /* margin: -20px; */
 }
 .footer-content {
   max-width: 1200px;
@@ -105,7 +56,7 @@ body {
 }
 
 /* remove previous boxed/underline styles from small-screen override */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .footer .social-link {
     background: transparent;
     width: auto;
@@ -114,7 +65,7 @@ body {
     border-radius: 4px;
     text-decoration: none;
   }
-}
+} */
 .footer-col h4 {
   font-size: 1.1rem;
   font-weight: 700;
@@ -168,7 +119,7 @@ body {
   color: var(--primary);
 }
 /* Toast Notification */
-.toast {
+/* .toast {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
@@ -239,7 +190,7 @@ body {
 }
 .toast-close:hover {
   color: var(--text);
-}
+} */
 /* Responsive Design */
 @media (max-width: 1024px) {
   .hero__title {
