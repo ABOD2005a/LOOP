@@ -18,7 +18,6 @@ import Address from "./components/Login_Signup/signup/address/page";
 import Contact from "./components/information/contact/page";
 import About from "./components/information/about/page";
 
-
 function AnimatedRoutes() {
   const location = useLocation();
 
@@ -27,12 +26,9 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/Navbar" element={<Navbar />} />
-        <Route path="/Footer" element={<Footer />} />
         <Route path="/login" element={<Login />} />
         <Route path="/choose" element={<Choose />} />
         <Route path="/address" element={<Address />} />
-        <Route path="/NavbarAfter" element={<NavbarAfter />} />
         <Route path="/booking" element={<Booking />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/About" element={<About />} />
@@ -44,7 +40,13 @@ function AnimatedRoutes() {
 function App() {
   return (
     <Router>
-      <AnimatedRoutes />
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <Navbar />
+        <main style={{ flex: '1' }}>
+          <AnimatedRoutes />
+        </main>
+        <Footer />
+      </div>
     </Router>
   );
 }
