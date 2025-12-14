@@ -68,7 +68,7 @@ function Footer() {
                 </a>
 
                 <a
-                  href="#"
+                  href="https://www.linkedin.com/in/abdallah-elwasify-7b604a379/"
                   aria-label="LinkedIn"
                   title="LinkedIn"
                   className="social-link"
