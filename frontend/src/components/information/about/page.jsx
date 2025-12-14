@@ -217,8 +217,8 @@ export default function About() {
             has a place for you in our growing community.
           </p>
           <div className="cta-buttons fade-in">
-            <a href="/booking.html" className="btn btn-primary">Start Collecting</a>
-            <a href="/contact.html" className="btn btn-outline">Contact Us</a>
+            <a href="./booking" className="btn btn-primary">Start Collecting</a>
+            <a href="./contact" className="btn btn-outline">Contact Us</a>
           </div>
         </div>
       </section>
