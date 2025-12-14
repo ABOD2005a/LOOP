@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./home.css";
-import Navbar from "./Header_Footer/Navbar/page";
-import Footer from "./Header_Footer/Footer/page";
-import NavbarAfter from "./Header_Footer/NavbarAfter/page";
 
 const CO2_SAVINGS = {
   metal: 2.5,

@@ -147,7 +147,7 @@ export default function About() {
               </div>
               <div className="stat-card scale-in" data-target="100">
                 <div className="stat-value" data-suffix="+">0</div>
-                <div className="stat-label">Cities Covered</div>
+                <div className="stat-label2">Cities Covered</div>
               </div>
             </div>
           </div>
