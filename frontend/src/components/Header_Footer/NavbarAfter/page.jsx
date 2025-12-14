@@ -72,16 +72,16 @@ function NavbarAfter() {
 
         <ul className="navbar__links navbar__links--left">
           <li>
-            <a href="#how">How it Works</a>
+            <a href="#how-it-works">How it Works</a>
           </li>
           <li>
             <a href="#impact">Impact</a>
           </li>
           <li>
-            <a href="#contact">Contact</a>
+            <a href="./contact">Contact</a>
           </li>
           <li>
-            <a href="#about">About</a>
+            <a href="./About">About</a>
           </li>
         </ul>
 
