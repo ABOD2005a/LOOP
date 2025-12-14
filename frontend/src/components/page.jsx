@@ -204,10 +204,10 @@ export default function Home() {
       />
 
       <Notification {...notification} onHide={hideNotification} />
-      <NavbarAfter/>
-{/* <Navbar/> */}
+      {/* <NavbarAfter/> */}
+      <Navbar />
       <section className="hero">
-        <div className="hero__background"/>
+        <div className="hero__background" />
         <div className="hero__shapes">
           <div className="shape shape-1"></div>
           <div className="shape shape-2"></div>
@@ -609,7 +609,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <Footer/>
+      <Footer />
     </>
   );
 }

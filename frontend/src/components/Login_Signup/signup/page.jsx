@@ -73,7 +73,6 @@ export default function SignUp() {
       setErrors({});
 
       try {
-        // Call backend API
         const response = await fetch("http://localhost:8081/signup", {
           method: "POST",
           headers: {
@@ -91,18 +90,26 @@ export default function SignUp() {
         const data = await response.json();
 
         if (response.ok) {
-          console.log("Signup successful:", data);
+          console.log("✅ Signup successful:", data);
+          console.log("👤 User ID:", data.user.id);
 
+          // ✅ احفظ اليوزر في localStorage
+          localStorage.setItem("userId", data.user.id);
+          localStorage.setItem("user", JSON.stringify(data.user));
+
+          console.log("✅ User saved to localStorage");
+
+          // روح على صفحة Address
           setTimeout(() => {
-            navigate("/login");
-          }, 3000);
+            navigate("/address");
+          }, 1500);
         } else {
           setErrors({
             general: data.message,
           });
         }
       } catch (error) {
-        console.error("Signup error:", error);
+        console.error("❌ Signup error:", error);
         setErrors({
           general: "Unable to connect to server. Please try again later.",
         });
@@ -118,171 +125,168 @@ export default function SignUp() {
     <div className="signup-container">
       <Navbar />
       <div className="signup-wrapper">
-          <div className="signup-card">
-            <div className="signup-header">
-              <h1 className="signup-title">Create Account</h1>
-              <p className="signup-subtitle">
-                Join us today and get started in minutes
-              </p>
-            </div>
+        <div className="signup-card">
+          <div className="signup-header">
+            <h1 className="signup-title">Create Account</h1>
+            <p className="signup-subtitle">
+              Join us today and get started in minutes
+            </p>
+          </div>
 
-            <div className="signup-form">
-              {errors.general && (
-                <div className="form-error general-error">{errors.general}</div>
-              )}
+          <div className="signup-form">
+            {errors.general && (
+              <div className="form-error general-error">{errors.general}</div>
+            )}
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">First Name</label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    className={`form-input ${
-                      errors.firstName ? "form-input-error" : ""
-                    }`}
-                    placeholder="Amr"
-                    disabled={loading}
-                  />
-                  {errors.firstName && (
-                    <p className="form-error">{errors.firstName}</p>
-                  )}
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Last Name</label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    className={`form-input ${
-                      errors.lastName ? "form-input-error" : ""
-                    }`}
-                    placeholder="Mohamed"
-                    disabled={loading}
-                  />
-                  {errors.lastName && (
-                    <p className="form-error">{errors.lastName}</p>
-                  )}
-                </div>
-              </div>
-
+            <div className="form-row">
               <div className="form-group">
-                <label className="form-label">Email Address</label>
+                <label className="form-label">First Name</label>
                 <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
                   onChange={handleChange}
                   className={`form-input ${
-                    errors.email ? "form-input-error" : ""
+                    errors.firstName ? "form-input-error" : ""
                   }`}
-                  placeholder="john@example.com"
+                  placeholder="Amr"
                   disabled={loading}
                 />
-                {errors.email && <p className="form-error">{errors.email}</p>}
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Password</label>
-                <div className="password-wrapper">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={`form-input ${
-                      errors.password ? "form-input-error" : ""
-                    }`}
-                    placeholder="At least 8 characters"
-                    disabled={loading}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="password-toggle"
-                    disabled={loading}
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-                {errors.password && (
-                  <p className="form-error">{errors.password}</p>
+                {errors.firstName && (
+                  <p className="form-error">{errors.firstName}</p>
                 )}
               </div>
-
               <div className="form-group">
-                <label className="form-label">Confirm Password</label>
-                <div className="password-wrapper">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className={`form-input ${
-                      errors.confirmPassword ? "form-input-error" : ""
-                    }`}
-                    placeholder="Re-enter your password"
-                    disabled={loading}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="password-toggle"
-                    disabled={loading}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff size={18} />
-                    ) : (
-                      <Eye size={18} />
-                    )}
-                  </button>
-                </div>
-                {errors.confirmPassword && (
-                  <p className="form-error">{errors.confirmPassword}</p>
-                )}
-              </div>
-
-              <div className="terms-wrapper">
+                <label className="form-label">Last Name</label>
                 <input
-                  type="checkbox"
-                  name="agreeToTerms"
-                  checked={formData.agreeToTerms}
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
                   onChange={handleChange}
-                  className="terms-checkbox"
-                  id="terms"
+                  className={`form-input ${
+                    errors.lastName ? "form-input-error" : ""
+                  }`}
+                  placeholder="Mohamed"
                   disabled={loading}
                 />
-                <label htmlFor="terms" className="terms-label">
-                  I agree to the{" "}
-                  <span className="terms-link">Terms of Service</span> and{" "}
-                  <span className="terms-link">Privacy Policy</span>
-                </label>
+                {errors.lastName && (
+                  <p className="form-error">{errors.lastName}</p>
+                )}
               </div>
-              {errors.agreeToTerms && (
-                <p className="form-error">{errors.agreeToTerms}</p>
-              )}
-
-              <button
-                onClick={handleSubmit}
-                className="submit-btn"
-                disabled={loading}
-              >
-                {loading ? "Creating Account..." : "Create Account"}
-              </button>
-
-              <p className="signin-text">
-                Already have an account?{" "}
-                <span
-                  className="signin-link"
-                  onClick={() => navigate("/login")}
-                >
-                  Sign In
-                </span>
-              </p>
             </div>
+
+            <div className="form-group">
+              <label className="form-label">Email Address</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={`form-input ${
+                  errors.email ? "form-input-error" : ""
+                }`}
+                placeholder="john@example.com"
+                disabled={loading}
+              />
+              {errors.email && <p className="form-error">{errors.email}</p>}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Password</label>
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={`form-input ${
+                    errors.password ? "form-input-error" : ""
+                  }`}
+                  placeholder="At least 8 characters"
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="password-toggle"
+                  disabled={loading}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="form-error">{errors.password}</p>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Confirm Password</label>
+              <div className="password-wrapper">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className={`form-input ${
+                    errors.confirmPassword ? "form-input-error" : ""
+                  }`}
+                  placeholder="Re-enter your password"
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="password-toggle"
+                  disabled={loading}
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={18} />
+                  ) : (
+                    <Eye size={18} />
+                  )}
+                </button>
+              </div>
+              {errors.confirmPassword && (
+                <p className="form-error">{errors.confirmPassword}</p>
+              )}
+            </div>
+
+            <div className="terms-wrapper">
+              <input
+                type="checkbox"
+                name="agreeToTerms"
+                checked={formData.agreeToTerms}
+                onChange={handleChange}
+                className="terms-checkbox"
+                id="terms"
+                disabled={loading}
+              />
+              <label htmlFor="terms" className="terms-label">
+                I agree to the{" "}
+                <span className="terms-link">Terms of Service</span> and{" "}
+                <span className="terms-link">Privacy Policy</span>
+              </label>
+            </div>
+            {errors.agreeToTerms && (
+              <p className="form-error">{errors.agreeToTerms}</p>
+            )}
+
+            <button
+              onClick={handleSubmit}
+              className="submit-btn"
+              disabled={loading}
+            >
+              {loading ? "Creating Account..." : "Create Account"}
+            </button>
+
+            <p className="signin-text">
+              Already have an account?{" "}
+              <span className="signin-link" onClick={() => navigate("/login")}>
+                Sign In
+              </span>
+            </p>
           </div>
+        </div>
       </div>
       <Footer />
     </div>

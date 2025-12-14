@@ -14,6 +14,7 @@ const supabaseKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhraGhpbHFza214eGVtbWNybm1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjUyNjAsImV4cCI6MjA4MDYwMTI2MH0.xMEI9YPWvtjfIVYM9ImMW6HeZEBsOZ70ef5nQHsOhfg";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// SIGNUP ENDPOINT
 app.post("/signup", async (req, res) => {
   try {
     const { first_name, last_name, gmail, password, confirm_password } =
@@ -28,11 +29,35 @@ app.post("/signup", async (req, res) => {
       return res.status(400).json({ message: "Passwords do not match" });
     }
 
-    // Hash the password (using 'password' from req.body, not 'Password')
-    const hash = await bcrypt.hash(password, 10);
-    console.log("Password hashed successfully");
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(gmail)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
 
-    // Insert into Supabase with correct field names
+    // Check if email already exists
+    const { data: existingUser, error: checkError } = await supabase
+      .from("login")
+      .select("gmail")
+      .eq("gmail", gmail)
+      .maybeSingle();
+
+    if (checkError) {
+      return res
+        .status(500)
+        .json({ message: "Error checking email availability" });
+    }
+
+    if (existingUser) {
+      return res.status(409).json({
+        message: "This email is already registered. Please login instead.",
+      });
+    }
+
+    // Hash the password
+    const hash = await bcrypt.hash(password, 10);
+
+    // Insert into Supabase
     const { data, error } = await supabase
       .from("login")
       .insert([
@@ -46,23 +71,35 @@ app.post("/signup", async (req, res) => {
       .select();
 
     if (error) {
-      console.error("Signup Error:", error);
+      // Handle duplicate key error as backup
+      if (error.code === "23505") {
+        return res.status(409).json({
+          message: "This email is already registered. Please login instead.",
+        });
+      }
+
       return res
         .status(500)
         .json({ message: "Signup failed", error: error.message });
     }
 
-    return res
-      .status(200)
-      .json({ message: "User registered successfully", data });
+    return res.status(201).json({
+      message: "User registered successfully",
+      user: {
+        id: data[0].id,
+        first_name: data[0].first_name,
+        last_name: data[0].last_name,
+        gmail: data[0].gmail,
+      },
+    });
   } catch (err) {
-    console.error("Signup Error:", err);
     return res
       .status(500)
       .json({ message: "Signup failed", error: err.message });
   }
 });
 
+// LOGIN ENDPOINT
 app.post("/login", async (req, res) => {
   try {
     const { gmail: inputEmail, password: inputPassword } = req.body;
@@ -74,21 +111,20 @@ app.post("/login", async (req, res) => {
         .json({ message: "Email and password are required" });
     }
 
-    console.log("Login attempt:", inputEmail);
-
     // Query Supabase using 'gmail' field
     const { data, error } = await supabase
       .from("login")
       .select("*")
       .eq("gmail", inputEmail)
-      .single();
+      .maybeSingle();
 
-    if (error || !data) {
-      console.error("Login Error:", error);
-      return res.status(401).json({ message: "Invalid email or password" });
+    if (error) {
+      return res.status(500).json({ message: "Server error during login" });
     }
 
-    console.log("User found:", data.first_name, data.last_name);
+    if (!data) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
 
     // Compare password
     const result = await bcrypt.compare(inputPassword, data.password);
@@ -107,7 +143,6 @@ app.post("/login", async (req, res) => {
 
     return res.status(401).json({ message: "Invalid email or password" });
   } catch (err) {
-    console.error("Login Error:", err);
     return res.status(500).json({
       message: "Login failed due to server error",
       error: err.message,
@@ -115,6 +150,81 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// ADDRESS ENDPOINT
+app.post("/address", async (req, res) => {
+  try {
+    const { user_id, governorate, city, building_number, floor, apartment } =
+      req.body;
+
+    // Validate input
+    if (!user_id) {
+      return res
+        .status(400)
+        .json({ message: "User ID is required. Please login first." });
+    }
+    if (!governorate) {
+      return res.status(400).json({ message: "Governorate is required" });
+    }
+    if (!city) {
+      return res.status(400).json({ message: "City is required" });
+    }
+    if (!building_number) {
+      return res.status(400).json({ message: "Building number is required" });
+    }
+    if (floor === undefined || floor === null || floor === "") {
+      return res.status(400).json({ message: "Floor is required" });
+    }
+    if (apartment === undefined || apartment === null || apartment === "") {
+      return res.status(400).json({ message: "Apartment is required" });
+    }
+
+    // Convert floor and apartment to integers
+    const floorInt = parseInt(floor);
+    const apartmentInt = parseInt(apartment);
+
+    // Validate that floor and apartment are valid numbers
+    if (isNaN(floorInt)) {
+      return res.status(400).json({ message: "Floor must be a valid number" });
+    }
+    if (isNaN(apartmentInt)) {
+      return res
+        .status(400)
+        .json({ message: "Apartment must be a valid number" });
+    }
+
+    const userIdInt = parseInt(user_id);
+
+    // Insert into Supabase 'address' table
+    const { data, error } = await supabase
+      .from("address")
+      .insert([
+        {
+          user_id: userIdInt,
+          governorate: governorate,
+          city: city,
+          building_number: building_number,
+          floor: floorInt,
+          apartment: apartmentInt,
+        },
+      ])
+      .select();
+
+    if (error) {
+      return res
+        .status(500)
+        .json({ message: "Failed to save address", error: error.message });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Address saved successfully", data });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: "Address save failed", error: err.message });
+  }
+});
+
 app.listen(8081, () => {
-  console.log("Server listening on port 8081");
+  console.log("🚀 Server listening on port 8081");
 });

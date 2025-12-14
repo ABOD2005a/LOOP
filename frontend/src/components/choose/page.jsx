@@ -12,11 +12,13 @@ import {
 import "./Choose.css";
 import Navbar from "../Header_Footer/Navbar/page";
 import Footer from "../Header_Footer/Footer/page";
+import { useNavigate } from "react-router-dom";
 
 export default function choose() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
+  const navigate = useNavigate();
 
   const categories = [
     {
@@ -138,6 +140,11 @@ export default function choose() {
 
   const clearCart = () => {
     setCart([]);
+  };
+
+  // UPDATED: Pass cart items to booking page
+  const handleCheckout = () => {
+    navigate("/booking", { state: { cartItems: cart } });
   };
 
   return (
@@ -275,7 +282,7 @@ export default function choose() {
                 </div>
 
                 <div className="checkout-section">
-                  <button className="checkout-button">
+                  <button className="checkout-button" onClick={handleCheckout}>
                     <TrendingUp size={20} />
                     Proceed to Checkout
                   </button>

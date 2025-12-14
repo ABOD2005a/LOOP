@@ -13,6 +13,8 @@ import Login from "./components/Login_Signup/login/page";
 import Home from "./components/page";
 import NavbarAfter from "./components/Header_Footer/NavbarAfter/page";
 import Choose from "./components/choose/page";
+import Booking from "./components/booking/page";
+import Address from "./components/Login_Signup/signup/address/page";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -26,7 +28,9 @@ function AnimatedRoutes() {
         <Route path="/Footer" element={<Footer />} />
         <Route path="/login" element={<Login />} />
         <Route path="/choose" element={<Choose />} />
+        <Route path="/address" element={<Address />} />
         <Route path="/NavbarAfter" element={<NavbarAfter />} />
+        <Route path="/booking" element={<Booking />} />
       </Routes>
     </AnimatePresence>
   );

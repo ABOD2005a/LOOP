@@ -6,7 +6,15 @@ import { useNavigate } from "react-router-dom";
 function NavbarAfter() {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -35,7 +43,16 @@ function NavbarAfter() {
   };
 
   const handleLogout = () => {
-    console.log("Logging out...");
+    console.log("✅ Logging out...");
+
+    localStorage.removeItem("userId");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userFirstName");
+    localStorage.removeItem("userLastName");
+    localStorage.removeItem("userEmail");
+
+    console.log("✅ تم مسح البيانات من localStorage");
+
     navigate("/");
   };
 
@@ -90,8 +107,14 @@ function NavbarAfter() {
                     />
                   </div>
                   <div className="dropdown-user-info">
-                    <p className="dropdown-name">Amr El-Rotel</p>
-                    <p className="dropdown-email">amr332763@gmail.com</p>
+                    <p className="dropdown-name">
+                      {user
+                        ? `${user.first_name} ${user.last_name}`
+                        : "Loading..."}
+                    </p>
+                    <p className="dropdown-email">
+                      {user ? user.gmail : "Loading..."}
+                    </p>
                   </div>
                 </div>
 
