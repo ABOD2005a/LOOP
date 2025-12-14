@@ -320,7 +320,7 @@ export default function Home() {
       />
 
       <Notification {...notification} onHide={hideNotification} />
-      <Navbar />
+  
 
       <section className="hero">
         <div className="hero__background" />
@@ -718,7 +718,7 @@ export default function Home() {
         </div>
       </section>
 
-      <Footer />
+
     </div>
   );
 }
