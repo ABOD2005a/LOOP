@@ -41,7 +41,7 @@ function Footer() {
               </p>
               <div className="social-links">
                 <a
-                  href="#"
+                  href="https://www.facebook.com/aru.fci.eg"
                   aria-label="Facebook"
                   title="Facebook"
                   className="social-link"
@@ -50,7 +50,7 @@ function Footer() {
                 </a>
 
                 <a
-                  href="#"
+                  href="https://www.instagram.com/amrmohamed8340/"
                   aria-label="Instagram"
                   title="Instagram"
                   className="social-link"
@@ -59,7 +59,7 @@ function Footer() {
                 </a>
 
                 <a
-                  href="#"
+                  href="https://x.com/AmrMoha84821368"
                   aria-label="X (Twitter)"
                   title="X"
                   className="social-link"
@@ -84,14 +84,18 @@ function Footer() {
                 <li>
                   <a href="#home">Home</a>
                 </li>
+                
                 <li>
-                  <a href="#calculator">Calculator</a>
-                </li>
-                <li>
-                  <a href="#how">How it Works</a>
+                  <a href="#how-it-works">How it Works</a>
                 </li>
                 <li>
                   <a href="#impact">Our Impact</a>
+                </li>
+                <li>
+                  <a href="./about">About</a>
+                </li>
+                <li>
+                  <a href="./contact">Contact</a>
                 </li>
               </ul>
             </div>

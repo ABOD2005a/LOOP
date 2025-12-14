@@ -186,7 +186,7 @@ export default function contact() {
                         placeholder="Amr mohamed"
                         className={errors.name ? 'error' : ''}
                       />
-                      <div className="error-message" id="nameError">{errors.name}</div>
+                      {errors.name && <div className="error-message">{errors.name}</div>}
                     </div>
                     <div className="form-group">
                       <label htmlFor="email">Email Address</label>
@@ -199,7 +199,7 @@ export default function contact() {
                         placeholder="amr332763@gmail.com"
                         className={errors.email ? 'error' : ''}
                       />
-                      <div className="error-message" id="emailError">{errors.email}</div>
+                      {errors.email && <div className="error-message">{errors.email}</div>}
                     </div>
                   </div>
 
@@ -214,7 +214,7 @@ export default function contact() {
                       placeholder="How can we help?"
                       className={errors.subject ? 'error' : ''}
                     />
-                    <div className="error-message" id="subjectError">{errors.subject}</div>
+                    {errors.subject && <div className="error-message">{errors.subject}</div>}
                   </div>
 
                   <div className="form-group">
@@ -227,7 +227,7 @@ export default function contact() {
                       placeholder="Tell us more about your inquiry..."
                       className={errors.message ? 'error' : ''}
                     />
-                    <div className="error-message" id="messageError">{errors.message}</div>
+                    {errors.message && <div className="error-message">{errors.message}</div>}
                   </div>
 
                   <button
@@ -260,12 +260,13 @@ export default function contact() {
           </div>
         </section>
       </main>
-{showToast && (
-  <div className="toast show" id="toast">
-    <div className="toast-title">Message Sent!</div>
-    <div className="toast-description">Thank you for reaching out. We'll get back to you soon.</div>
-  </div>
-)}
+
+      {showToast && (
+        <div className="toast show" id="toast">
+          <div className="toast-title">Message Sent!</div>
+          <div className="toast-description">Thank you for reaching out. We'll get back to you soon.</div>
+        </div>
+      )}
     </div>
   );
 }
