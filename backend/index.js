@@ -150,7 +150,56 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// ADDRESS ENDPOINT
+// GET ADDRESS ENDPOINT - Fetch user's address
+app.get("/address/:user_id", async (req, res) => {
+  try {
+    const { user_id } = req.params;
+
+    if (!user_id) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    const userIdInt = parseInt(user_id);
+
+    if (isNaN(userIdInt)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+
+    // Fetch address from Supabase
+    const { data, error } = await supabase
+      .from("address")
+      .select("*")
+      .eq("user_id", userIdInt)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Supabase error:", error);
+      return res
+        .status(500)
+        .json({ message: "Failed to fetch address", error: error.message });
+    }
+
+    if (!data) {
+      return res.status(404).json({
+        message: "No address found for this user",
+        hasAddress: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Address fetched successfully",
+      hasAddress: true,
+      address: data,
+    });
+  } catch (err) {
+    console.error("Server error:", err);
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch address", error: err.message });
+  }
+});
+
+// POST ADDRESS ENDPOINT - Create new address
 app.post("/address", async (req, res) => {
   try {
     const { user_id, governorate, city, building_number, floor, apartment } =
@@ -194,37 +243,205 @@ app.post("/address", async (req, res) => {
 
     const userIdInt = parseInt(user_id);
 
-    // Insert into Supabase 'address' table
-    const { data, error } = await supabase
+    if (isNaN(userIdInt)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+
+    // Check if address already exists for this user
+    const { data: existingAddress } = await supabase
       .from("address")
-      .insert([
-        {
-          user_id: userIdInt,
+      .select("*")
+      .eq("user_id", userIdInt)
+      .maybeSingle();
+
+    if (existingAddress) {
+      // Update existing address
+      const { data, error } = await supabase
+        .from("address")
+        .update({
           governorate: governorate,
           city: city,
           building_number: building_number,
           floor: floorInt,
           apartment: apartmentInt,
-        },
-      ])
-      .select();
+        })
+        .eq("user_id", userIdInt)
+        .select();
 
-    if (error) {
+      if (error) {
+        return res
+          .status(500)
+          .json({ message: "Failed to update address", error: error.message });
+      }
+
       return res
-        .status(500)
-        .json({ message: "Failed to save address", error: error.message });
-    }
+        .status(200)
+        .json({ message: "Address updated successfully", data });
+    } else {
+      // Insert new address
+      const { data, error } = await supabase
+        .from("address")
+        .insert([
+          {
+            user_id: userIdInt,
+            governorate: governorate,
+            city: city,
+            building_number: building_number,
+            floor: floorInt,
+            apartment: apartmentInt,
+          },
+        ])
+        .select();
 
-    return res
-      .status(200)
-      .json({ message: "Address saved successfully", data });
+      if (error) {
+        return res
+          .status(500)
+          .json({ message: "Failed to save address", error: error.message });
+      }
+
+      return res
+        .status(201)
+        .json({ message: "Address saved successfully", data });
+    }
   } catch (err) {
+    console.error("Server error:", err);
     return res
       .status(500)
       .json({ message: "Address save failed", error: err.message });
   }
 });
 
-app.listen(8081, () => {
-  console.log("🚀 Server listening on port 8081");
+// PUT ADDRESS ENDPOINT - Update existing address
+app.put("/address/:user_id", async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const { governorate, city, building_number, floor, apartment } = req.body;
+
+    if (!user_id) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    const userIdInt = parseInt(user_id);
+
+    if (isNaN(userIdInt)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+
+    // Validate input
+    if (
+      !governorate ||
+      !city ||
+      !building_number ||
+      floor === undefined ||
+      apartment === undefined
+    ) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const floorInt = parseInt(floor);
+    const apartmentInt = parseInt(apartment);
+
+    if (isNaN(floorInt) || isNaN(apartmentInt)) {
+      return res
+        .status(400)
+        .json({ message: "Floor and apartment must be valid numbers" });
+    }
+
+    // Update address
+    const { data, error } = await supabase
+      .from("address")
+      .update({
+        governorate: governorate,
+        city: city,
+        building_number: building_number,
+        floor: floorInt,
+        apartment: apartmentInt,
+      })
+      .eq("user_id", userIdInt)
+      .select();
+
+    if (error) {
+      return res
+        .status(500)
+        .json({ message: "Failed to update address", error: error.message });
+    }
+
+    if (!data || data.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Address not found for this user" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Address updated successfully", data });
+  } catch (err) {
+    console.error("Server error:", err);
+    return res
+      .status(500)
+      .json({ message: "Address update failed", error: err.message });
+  }
+});
+
+// DELETE ADDRESS ENDPOINT - Delete user's address
+app.delete("/address/:user_id", async (req, res) => {
+  try {
+    const { user_id } = req.params;
+
+    if (!user_id) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    const userIdInt = parseInt(user_id);
+
+    if (isNaN(userIdInt)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+
+    const { data, error } = await supabase
+      .from("address")
+      .delete()
+      .eq("user_id", userIdInt)
+      .select();
+
+    if (error) {
+      return res
+        .status(500)
+        .json({ message: "Failed to delete address", error: error.message });
+    }
+
+    if (!data || data.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Address not found for this user" });
+    }
+
+    return res.status(200).json({ message: "Address deleted successfully" });
+  } catch (err) {
+    console.error("Server error:", err);
+    return res
+      .status(500)
+      .json({ message: "Address deletion failed", error: err.message });
+  }
+});
+
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Server is running",
+    endpoints: {
+      signup: "POST /signup",
+      login: "POST /login",
+      getAddress: "GET /address/:user_id",
+      createAddress: "POST /address",
+      updateAddress: "PUT /address/:user_id",
+      deleteAddress: "DELETE /address/:user_id",
+    },
+  });
+});
+
+const PORT = process.env.PORT || 8081;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server listening on port ${PORT}`);
 });

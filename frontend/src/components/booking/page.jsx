@@ -18,6 +18,7 @@ import "./Booking.css";
 import Navbar from "../Header_Footer/Navbar/page";
 import Footer from "../Header_Footer/Footer/page";
 import { useLocation, useNavigate } from "react-router-dom";
+import NavbarAfter from "../Header_Footer/NavbarAfter/page";
 
 export default function Booking() {
   const location = useLocation();
@@ -26,7 +27,7 @@ export default function Booking() {
 
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [locationError, setLocationError] = useState(false);
+  const [addressError, setAddressError] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const [bookingData, setBookingData] = useState({
@@ -48,13 +49,11 @@ export default function Booking() {
   ];
 
   useEffect(() => {
-    const detectLocation = async () => {
+    const fetchUserData = async () => {
       try {
-        // Get user data from localStorage
         const userData = localStorage.getItem("user");
 
         if (!userData) {
-          // User is not logged in, redirect to login
           alert("Please login first to book a pickup");
           navigate("/login");
           return;
@@ -68,67 +67,41 @@ export default function Booking() {
           fullName: fullName,
           email: user.gmail,
         }));
-
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            async (pos) => {
-              const { latitude, longitude } = pos.coords;
-              console.log("Location detected:", latitude, longitude);
-
-              try {
-                const geoRes = await fetch(
-                  `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-                );
-                const geo = await geoRes.json();
-
-                const address = geo.address
-                  ? `${geo.address.road || ""} ${geo.address.city || ""} ${
-                      geo.address.postcode || ""
-                    }`.trim()
-                  : `Located at: ${latitude.toFixed(4)}, ${longitude.toFixed(
-                      4
-                    )}`;
-
-                setBookingData((p) => ({
-                  ...p,
-                  address: address || "Location detected",
-                }));
-                setLocationError(false);
-              } catch (err) {
-                console.log("Geocoding error:", err);
-                setBookingData((p) => ({
-                  ...p,
-                  address: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
-                }));
-                setLocationError(false);
-              }
-
-              setLoading(false);
-            },
-            (error) => {
-              console.log("Geolocation error code:", error.code);
-              console.log("Geolocation error message:", error.message);
-
-              setLocationError(true);
-              setLoading(false);
-            }
+        try {
+          const response = await fetch(
+            `http://localhost:8081/address/${user.id}`
           );
-        } else {
-          setLocationError(true);
-          setLoading(false);
+          const data = await response.json();
+
+          if (response.ok && data.hasAddress) {
+            const addr = data.address;
+            const formattedAddress = `${addr.building_number}, Floor ${addr.floor}, Apt ${addr.apartment}, ${addr.city}, ${addr.governorate}`;
+
+            setBookingData((prev) => ({
+              ...prev,
+              address: formattedAddress,
+            }));
+            setAddressError(false);
+          } else {
+            setAddressError(true);
+          }
+        } catch (err) {
+          console.log("Error fetching address:", err);
+          setAddressError(true);
         }
+
+        setLoading(false);
       } catch (err) {
         console.log("Error:", err);
         setLoading(false);
       }
     };
 
-    detectLocation();
+    fetchUserData();
   }, [navigate]);
 
   const validateStep = () => {
-    if (step === 1) return bookingData.address;
-    if (step === 2) return bookingData.date && bookingData.time;
+    if (step === 1) return bookingData.date && bookingData.time;
     return true;
   };
 
@@ -149,9 +122,8 @@ export default function Booking() {
   const handleSubmit = () => {
     setSubmitted(true);
     setTimeout(() => {
-      setStep(1);
-      setSubmitted(false);
-    }, 3000);
+      navigate("/homeAfter")
+    }, 4000);
   };
 
   if (loading) {
@@ -173,7 +145,7 @@ export default function Booking() {
 
   return (
     <>
-      <Navbar />
+      <NavbarAfter />
 
       <div className="booking-container">
         <div className="booking-wrapper">
@@ -229,7 +201,7 @@ export default function Booking() {
                 </p>
 
                 <div className="step-indicator">
-                  {[1, 2, 3].map((s) => (
+                  {[1, 2].map((s) => (
                     <div
                       key={s}
                       className={`step ${step >= s ? "active" : ""} ${
@@ -244,48 +216,6 @@ export default function Booking() {
 
               <div className="form-container">
                 {step === 1 && (
-                  <div className="form-step">
-                    <div className="step-title-section">
-                      <h2 className="step-title">Pickup Location</h2>
-                      <p className="step-description">
-                        Your address is auto-detected from your location
-                      </p>
-                    </div>
-
-                    <div className="address-box">
-                      <MapPin className="address-icon" size={24} />
-                      <div className="address-content">
-                        <p className="address-label">Your Address</p>
-                        <p className="address-value">
-                          {bookingData.address || "Detecting location..."}
-                        </p>
-                      </div>
-                    </div>
-
-                    {locationError && (
-                      <div className="error-message">
-                        ⚠️ Location permission denied. Please enter your address
-                        manually below.
-                      </div>
-                    )}
-
-                    <div className="form-group">
-                      <label className="form-label">
-                        📍 Enter Address Manually
-                      </label>
-                      <textarea
-                        name="address"
-                        value={bookingData.address}
-                        onChange={handleChange}
-                        placeholder="Enter your complete address (street, building, apartment, city, postal code)"
-                        className="form-textarea"
-                        rows="3"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {step === 2 && (
                   <div className="form-step">
                     <div className="step-title-section">
                       <h2 className="step-title">Schedule Pickup</h2>
@@ -351,7 +281,7 @@ export default function Booking() {
                   </div>
                 )}
 
-                {step === 3 && (
+                {step === 2 && (
                   <div className="form-step">
                     <div className="step-title-section">
                       <h2 className="step-title">Review Your Booking</h2>
@@ -359,6 +289,13 @@ export default function Booking() {
                         Please verify all details before confirming
                       </p>
                     </div>
+
+                    {addressError && (
+                      <div className="error-message">
+                        ⚠️ No address found in your profile. Please add your
+                        address in your profile settings first.
+                      </div>
+                    )}
 
                     <div className="review-cards">
                       <div className="review-card">
@@ -383,7 +320,9 @@ export default function Booking() {
                           <span className="icon">
                             <MapPin size={18} />
                           </span>
-                          <span>{bookingData.address}</span>
+                          <span>
+                            {bookingData.address || "No address available"}
+                          </span>
                         </div>
                         <div className="review-row">
                           <span className="icon">
@@ -439,7 +378,7 @@ export default function Booking() {
                   </button>
                 )}
 
-                {step < 3 ? (
+                {step < 2 ? (
                   <button
                     className="btn btn-primary"
                     onClick={() => setStep(step + 1)}
@@ -448,7 +387,11 @@ export default function Booking() {
                     Next
                   </button>
                 ) : (
-                  <button className="btn btn-success" onClick={handleSubmit}>
+                  <button
+                    className="btn btn-success"
+                    onClick={handleSubmit}
+                    disabled={addressError || !bookingData.address}
+                  >
                     <CheckCircle size={18} /> Confirm Booking
                   </button>
                 )}
@@ -457,8 +400,6 @@ export default function Booking() {
           )}
         </div>
       </div>
-
-      {/* <Footer /> */}
     </>
   );
 }

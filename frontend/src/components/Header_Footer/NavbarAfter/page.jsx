@@ -51,8 +51,6 @@ function NavbarAfter() {
     localStorage.removeItem("userLastName");
     localStorage.removeItem("userEmail");
 
-    console.log("✅ تم مسح البيانات من localStorage");
-
     navigate("/");
   };
 
@@ -65,7 +63,7 @@ function NavbarAfter() {
               src={logoImage}
               alt="Loop logo"
               className="logo-image"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/homeAfter")}
             />
           </div>
         </div>
@@ -86,7 +84,7 @@ function NavbarAfter() {
         </ul>
 
         <div className="navbar__auth">
-          <button className="btn-book-now" onClick={() => navigate("/booking")}>
+          <button className="btn-book-now" onClick={() => navigate("../choose")}>
             <i className="fas fa-calendar-check"></i>
             <span>Book Now</span>
           </button>

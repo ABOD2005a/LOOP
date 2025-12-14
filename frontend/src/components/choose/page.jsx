@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 import "./Choose.css";
 import Navbar from "../Header_Footer/Navbar/page";
-import Footer from "../Header_Footer/Footer/page";
 import { useNavigate } from "react-router-dom";
+import NavbarAfter from "../Header_Footer/NavbarAfter/page";
 
 export default function choose() {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -142,16 +142,14 @@ export default function choose() {
     setCart([]);
   };
 
-  // UPDATED: Pass cart items to booking page
   const handleCheckout = () => {
     navigate("/booking", { state: { cartItems: cart } });
   };
 
   return (
     <div className="materials-container">
-      <Navbar />
-
       <div className="materials-wrapper">
+    <NavbarAfter/>
         <div className="materials-header">
           <div className="header-content">
             <div className="header-top">

@@ -59,7 +59,6 @@ export default function Login() {
       setErrors({});
 
       try {
-        // Call backend API
         const response = await fetch("http://localhost:8081/login", {
           method: "POST",
           headers: {
@@ -84,7 +83,7 @@ export default function Login() {
           console.log("Login successful:", data);
 
           setTimeout(() => {
-            navigate("/"); 
+            navigate("/homeAfter"); 
           }, 2000);
         } else {
           // Login failed

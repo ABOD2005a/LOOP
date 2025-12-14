@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Clock, Send, Contact } from 'lucide-react';
 import "./Contact.css"
+import NavbarAfter from '../../Header_Footer/NavbarAfter/page';
 
 
 export default function contact() {
@@ -104,6 +105,7 @@ export default function contact() {
   return (
     <div>
       <main>
+      <NavbarAfter/>
         <section className="hero">
           <div className="container">
             <h1>Get in <span className="text-primary">Touch</span></h1>

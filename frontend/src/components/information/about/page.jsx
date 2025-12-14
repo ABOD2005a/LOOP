@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import "./About.css"
+import NavbarAfter from '../../Header_Footer/NavbarAfter/page';
 
 
 export default function About() {
@@ -83,7 +84,7 @@ export default function About() {
 
   return (
     <main>
-      {/* Hero Section */}
+    <NavbarAfter/>
       <section className="hero">
         <div className="container">
           <div className="badge fade-in">
@@ -207,7 +208,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="cta">
         <div className="container">
           <h2 className="fade-in">Join Our Movement</h2>
@@ -217,7 +217,7 @@ export default function About() {
             has a place for you in our growing community.
           </p>
           <div className="cta-buttons fade-in">
-            <a href="./booking" className="btn btn-primary">Start Collecting</a>
+            <a href="./choose" className="btn btn-primary">Start Collecting</a>
             <a href="./contact" className="btn btn-outline">Contact Us</a>
           </div>
         </div>

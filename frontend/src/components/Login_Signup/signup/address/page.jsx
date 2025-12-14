@@ -55,7 +55,7 @@ export default function Address() {
 
     if (!userStr) {
       alert("Please Sign up first");
-      navigate("/login");
+      navigate("/signup");
       return;
     }
 
@@ -135,7 +135,6 @@ export default function Address() {
       console.log("✅ Response:", data);
 
       if (response.ok) {
-        alert("✅ Address saved successfully!");
         
         setFormData({
           governorate: "",
@@ -145,7 +144,7 @@ export default function Address() {
           apartment: "",
         });
 
-        navigate("/NavbarAfter");
+        navigate("/homeAfter");
       } else {
         setErrors({ general: data.message || "Failed to save address" });
       }
