@@ -245,7 +245,7 @@ export default function HomeAfter() {
           </p>
 
           <div className="hero__actions">
-            <a href="#calculator" className="btn btn-primary">
+            <a href="./choose" className="btn btn-primary">
               <i className="fas fa-calculator"></i>
               <span>Start Earning Now</span>
             </a>
