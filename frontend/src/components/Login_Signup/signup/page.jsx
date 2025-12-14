@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff, Check } from "lucide-react";
-import "./SignUp.css";
+import "./signup.css";
 import Navbar from "../../Header_Footer/Navbar/page";
 import Footer from "../../Header_Footer/Footer/page";
 import { useNavigate } from "react-router-dom";
