@@ -80,6 +80,9 @@ function NavbarAfter() {
           <li>
             <a href="#contact">Contact</a>
           </li>
+          <li>
+            <a href="#about">About</a>
+          </li>
         </ul>
 
         <div className="navbar__auth">
