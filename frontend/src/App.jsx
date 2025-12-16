@@ -18,6 +18,7 @@ import Address from "./components/Login_Signup/signup/address/page";
 import Contact from "./components/information/contact/page";
 import About from "./components/information/about/page";
 import HomeAfter from "./components/homeAfter/page";
+// import Profile from "./components/profile/page";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -35,6 +36,7 @@ function AnimatedRoutes() {
         <Route path="/About" element={<About />} />
         <Route path="/NavbarAfter" element={<NavbarAfter/>} />
         <Route path="/homeAfter" element={<HomeAfter/>} />
+        {/* <Route path="/profile" element={< Profile/>}/> */}
       </Routes>
     </AnimatePresence>
   );

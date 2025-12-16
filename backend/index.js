@@ -12,7 +12,13 @@ const supabaseUrl =
 const supabaseKey =
   process.env.SUPABASE_ANON_KEY ||
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhraGhpbHFza214eGVtbWNybm1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjUyNjAsImV4cCI6MjA4MDYwMTI2MH0.xMEI9YPWvtjfIVYM9ImMW6HeZEBsOZ70ef5nQHsOhfg";
+
+const supabaseServiceKey =
+  process.env.SUPABASE_SERVICE_KEY ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhraGhpbHFza214eGVtbWNybm1nIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NTAyNTI2MCwiZXhwIjoyMDgwNjAxMjYwfQ.tq8yo41bLnHy2662n03kumzIbb2TofGFwgXHBeU1jZU";
+
 const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
 // SIGNUP ENDPOINT
 app.post("/signup", async (req, res) => {
@@ -20,7 +26,6 @@ app.post("/signup", async (req, res) => {
     const { first_name, last_name, gmail, password, confirm_password } =
       req.body;
 
-    // Validate input
     if (!first_name || !last_name || !gmail || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -29,13 +34,11 @@ app.post("/signup", async (req, res) => {
       return res.status(400).json({ message: "Passwords do not match" });
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(gmail)) {
       return res.status(400).json({ message: "Invalid email format" });
     }
 
-    // Check if email already exists
     const { data: existingUser, error: checkError } = await supabase
       .from("login")
       .select("gmail")
@@ -54,10 +57,8 @@ app.post("/signup", async (req, res) => {
       });
     }
 
-    // Hash the password
     const hash = await bcrypt.hash(password, 10);
 
-    // Insert into Supabase
     const { data, error } = await supabase
       .from("login")
       .insert([
@@ -71,7 +72,6 @@ app.post("/signup", async (req, res) => {
       .select();
 
     if (error) {
-      // Handle duplicate key error as backup
       if (error.code === "23505") {
         return res.status(409).json({
           message: "This email is already registered. Please login instead.",
@@ -104,14 +104,12 @@ app.post("/login", async (req, res) => {
   try {
     const { gmail: inputEmail, password: inputPassword } = req.body;
 
-    // Validate input
     if (!inputEmail || !inputPassword) {
       return res
         .status(400)
         .json({ message: "Email and password are required" });
     }
 
-    // Query Supabase using 'gmail' field
     const { data, error } = await supabase
       .from("login")
       .select("*")
@@ -126,7 +124,6 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Compare password
     const result = await bcrypt.compare(inputPassword, data.password);
 
     if (result) {
@@ -150,7 +147,98 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// GET ADDRESS ENDPOINT - Fetch user's address
+// UPDATE USER NAME ENDPOINT
+app.put("/user/:user_id", async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const { first_name, last_name } = req.body;
+
+    console.log("Received update request for user:", user_id);
+    console.log("Request body:", { first_name, last_name });
+
+    if (!user_id) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    const userIdInt = parseInt(user_id);
+
+    if (isNaN(userIdInt)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+
+    if (!first_name || !last_name) {
+      return res
+        .status(400)
+        .json({ message: "First name and last name are required" });
+    }
+
+    if (first_name.trim().length === 0 || last_name.trim().length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Names cannot be empty or only whitespace" });
+    }
+
+    const { data: existingUser, error: checkError } = await supabase
+      .from("login")
+      .select("id")
+      .eq("id", userIdInt)
+      .single();
+
+    if (checkError || !existingUser) {
+      console.error("User not found:", userIdInt);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    console.log("User exists, proceeding with update");
+
+    const { data: updateData, error: updateError } = await supabaseAdmin
+      .from("login")
+      .update({
+        first_name: first_name.trim(),
+        last_name: last_name.trim(),
+      })
+      .eq("id", userIdInt)
+      .select();
+
+    console.log("Update result:", { data: updateData, error: updateError });
+
+    if (updateError) {
+      console.error("Supabase update error:", updateError);
+      return res.status(500).json({
+        message: "Failed to update user name",
+        error: updateError.message,
+      });
+    }
+
+    const { data: updatedUser, error: fetchError } = await supabase
+      .from("login")
+      .select("id, first_name, last_name, gmail")
+      .eq("id", userIdInt)
+      .single();
+
+    if (fetchError) {
+      console.error("Error fetching updated user:", fetchError);
+      return res.status(500).json({
+        message: "Update may have succeeded but failed to fetch updated data",
+        error: fetchError.message,
+      });
+    }
+
+    console.log("Successfully updated user:", updatedUser);
+
+    return res.status(200).json({
+      message: "User name updated successfully",
+      user: updatedUser,
+    });
+  } catch (err) {
+    console.error("Server error:", err);
+    return res
+      .status(500)
+      .json({ message: "User update failed", error: err.message });
+  }
+});
+
+// GET ADDRESS ENDPOINT
 app.get("/address/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
@@ -165,7 +253,6 @@ app.get("/address/:user_id", async (req, res) => {
       return res.status(400).json({ message: "Invalid user ID format" });
     }
 
-    // Fetch address from Supabase
     const { data, error } = await supabase
       .from("address")
       .select("*")
@@ -199,13 +286,21 @@ app.get("/address/:user_id", async (req, res) => {
   }
 });
 
-// POST ADDRESS ENDPOINT - Create new address
+// POST ADDRESS ENDPOINT
 app.post("/address", async (req, res) => {
   try {
     const { user_id, governorate, city, building_number, floor, apartment } =
       req.body;
 
-    // Validate input
+    console.log("Address save request:", {
+      user_id,
+      governorate,
+      city,
+      building_number,
+      floor,
+      apartment,
+    });
+
     if (!user_id) {
       return res
         .status(400)
@@ -227,11 +322,9 @@ app.post("/address", async (req, res) => {
       return res.status(400).json({ message: "Apartment is required" });
     }
 
-    // Convert floor and apartment to integers
     const floorInt = parseInt(floor);
     const apartmentInt = parseInt(apartment);
 
-    // Validate that floor and apartment are valid numbers
     if (isNaN(floorInt)) {
       return res.status(400).json({ message: "Floor must be a valid number" });
     }
@@ -247,16 +340,18 @@ app.post("/address", async (req, res) => {
       return res.status(400).json({ message: "Invalid user ID format" });
     }
 
-    // Check if address already exists for this user
-    const { data: existingAddress } = await supabase
+    // Use admin client to bypass RLS
+    const { data: existingAddress } = await supabaseAdmin
       .from("address")
       .select("*")
       .eq("user_id", userIdInt)
       .maybeSingle();
 
+    console.log("Existing address:", existingAddress);
+
     if (existingAddress) {
-      // Update existing address
-      const { data, error } = await supabase
+      // Update existing address using admin client
+      const { data, error } = await supabaseAdmin
         .from("address")
         .update({
           governorate: governorate,
@@ -268,7 +363,10 @@ app.post("/address", async (req, res) => {
         .eq("user_id", userIdInt)
         .select();
 
+      console.log("Update result:", { data, error });
+
       if (error) {
+        console.error("Update error:", error);
         return res
           .status(500)
           .json({ message: "Failed to update address", error: error.message });
@@ -278,8 +376,8 @@ app.post("/address", async (req, res) => {
         .status(200)
         .json({ message: "Address updated successfully", data });
     } else {
-      // Insert new address
-      const { data, error } = await supabase
+      // Insert new address using admin client
+      const { data, error } = await supabaseAdmin
         .from("address")
         .insert([
           {
@@ -293,7 +391,10 @@ app.post("/address", async (req, res) => {
         ])
         .select();
 
+      console.log("Insert result:", { data, error });
+
       if (error) {
+        console.error("Insert error:", error);
         return res
           .status(500)
           .json({ message: "Failed to save address", error: error.message });
@@ -311,11 +412,20 @@ app.post("/address", async (req, res) => {
   }
 });
 
-// PUT ADDRESS ENDPOINT - Update existing address
+// PUT ADDRESS ENDPOINT
 app.put("/address/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
     const { governorate, city, building_number, floor, apartment } = req.body;
+
+    console.log("Address update request:", {
+      user_id,
+      governorate,
+      city,
+      building_number,
+      floor,
+      apartment,
+    });
 
     if (!user_id) {
       return res.status(400).json({ message: "User ID is required" });
@@ -327,7 +437,6 @@ app.put("/address/:user_id", async (req, res) => {
       return res.status(400).json({ message: "Invalid user ID format" });
     }
 
-    // Validate input
     if (
       !governorate ||
       !city ||
@@ -347,8 +456,8 @@ app.put("/address/:user_id", async (req, res) => {
         .json({ message: "Floor and apartment must be valid numbers" });
     }
 
-    // Update address
-    const { data, error } = await supabase
+    // Use admin client to bypass RLS
+    const { data, error } = await supabaseAdmin
       .from("address")
       .update({
         governorate: governorate,
@@ -360,7 +469,10 @@ app.put("/address/:user_id", async (req, res) => {
       .eq("user_id", userIdInt)
       .select();
 
+    console.log("Update result:", { data, error });
+
     if (error) {
+      console.error("Update error:", error);
       return res
         .status(500)
         .json({ message: "Failed to update address", error: error.message });
@@ -383,7 +495,7 @@ app.put("/address/:user_id", async (req, res) => {
   }
 });
 
-// DELETE ADDRESS ENDPOINT - Delete user's address
+// DELETE ADDRESS ENDPOINT
 app.delete("/address/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
@@ -398,7 +510,8 @@ app.delete("/address/:user_id", async (req, res) => {
       return res.status(400).json({ message: "Invalid user ID format" });
     }
 
-    const { data, error } = await supabase
+    // Use admin client to bypass RLS
+    const { data, error } = await supabaseAdmin
       .from("address")
       .delete()
       .eq("user_id", userIdInt)
@@ -432,6 +545,7 @@ app.get("/", (req, res) => {
     endpoints: {
       signup: "POST /signup",
       login: "POST /login",
+      updateUser: "PUT /user/:user_id",
       getAddress: "GET /address/:user_id",
       createAddress: "POST /address",
       updateAddress: "PUT /address/:user_id",

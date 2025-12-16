@@ -45,18 +45,18 @@ function Footer() {
                   aria-label="Facebook"
                   title="Facebook"
                   className="social-link"
-                  target="_blank" 
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
                   <FontAwesomeIcon icon={faFacebook} />
                 </a>
 
                 <a
-                  href="https://www.instagram.com/amrmohamed8340/"
+                  href="https://www.instagram.com/abdalluh_mohamed_6767?igsh=ZDNiY3drb2pnYXdy"
                   aria-label="Instagram"
                   title="Instagram"
                   className="social-link"
-                  target="_blank" 
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
                   <FontAwesomeIcon icon={faInstagram} />
@@ -67,7 +67,7 @@ function Footer() {
                   aria-label="X (Twitter)"
                   title="X"
                   className="social-link"
-                  target="_blank" 
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
                   <FontAwesomeIcon icon={faXTwitter} />
@@ -78,7 +78,7 @@ function Footer() {
                   aria-label="LinkedIn"
                   title="LinkedIn"
                   className="social-link"
-                  target="_blank" 
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
                   <FontAwesomeIcon icon={faLinkedin} />
@@ -92,7 +92,7 @@ function Footer() {
                 <li>
                   <a href="#home">Home</a>
                 </li>
-                
+
                 <li>
                   <a href="#how-it-works">How it Works</a>
                 </li>
