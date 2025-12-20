@@ -1,6 +1,6 @@
 import React from "react";
 import "./NavbarTest.css";
-import logoImage from "../../../assets/loopFooter.png";
+import logoImage from "../../../assets/loopNav.png";
 import { useNavigate } from "react-router-dom";
 
 function NavbarTest() {

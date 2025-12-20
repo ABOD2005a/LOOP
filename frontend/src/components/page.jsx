@@ -217,7 +217,7 @@ export default function Home() {
       />
 
       <Notification {...notification} onHide={hideNotification} />
-
+   <NavbarTest/>
 
       <section className="hero">
         <div className="hero__background" />

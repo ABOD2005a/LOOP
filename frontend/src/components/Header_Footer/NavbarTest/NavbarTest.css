@@ -95,7 +95,14 @@
   padding: 0;
 }
 
-.navbar__links--left { margin-left: 1rem; }
+.navbar__links--left { 
+    display: flex;
+    margin-left: 1rem;
+     align-items: center;
+    
+    }
+    
+
 
 .navbar__auth {
   margin-left: auto;
