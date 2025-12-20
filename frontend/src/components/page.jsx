@@ -303,10 +303,10 @@ export default function Home() {
             <div className="impact-content">
               <span className="section-badge light">Our Impact</span>
               <h2>Making Egypt Greener, Together</h2>
-              {/* <p>
+              <p>
                 Every kilogram you recycle makes a difference. Join our
                 community in creating a sustainable future for Egypt.
-              </p> */}
+              </p>
 
               <div className="impact-metrics">
                 {[
