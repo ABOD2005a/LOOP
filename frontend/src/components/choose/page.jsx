@@ -102,22 +102,6 @@ const metalIcons = {
 
 // ============= COMPONENTS =============
 
-const BookingHeader = ({ onBack }) => (
-  <header className="booking-header">
-    <div className="container">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 0' }}>
-        <button onClick={onBack} className="booking-header__back-button" aria-label="Go back">
-          <ArrowLeft style={{ width: '1.25rem', height: '1.25rem' }} />
-        </button>
-        <div>
-          <h1 className="text-gradient" style={{ fontSize: '1.25rem', fontWeight: '700' }}>Schedule a Pickup</h1>
-          <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Book an appointment with our collector</p>
-        </div>
-      </div>
-    </div>
-  </header>
-);
-
 const HeroSection = () => (
   <section className="hero-section">
     <div className="hero-section__image-wrapper">
@@ -312,15 +296,54 @@ const DateTimeSection = ({ date, setDate, selectedTime, setSelectedTime }) => {
           <label style={{ fontWeight: '600' }}>Pickup Date</label>
           <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" style={{ width: '100%', height: '3rem', justifyContent: 'flex-start', textAlign: 'left' }}>
+              <Button 
+                variant="outline" 
+                className="date-picker-button"
+                style={{ 
+                  width: '100%', 
+                  height: '3rem', 
+                  justifyContent: 'flex-start', 
+                  textAlign: 'left',
+                  background: 'white',
+                  color: 'var(--foreground)',
+                  border: '2px solid var(--border)'
+                }}
+              >
                 <CalendarIcon style={{ marginRight: '0.75rem', height: '1.25rem', width: '1.25rem', color: 'var(--primary)' }} />
-                {date ? <span style={{ fontWeight: '600' }}>{format(date, "EEEE, MMMM d, yyyy")}</span> : <span>Select a pickup date</span>}
+                {date ? <span style={{ fontWeight: '600', color: 'var(--foreground)' }}>{format(date, "EEEE, MMMM d, yyyy")}</span> : <span style={{ color: 'var(--muted-foreground)' }}>Select a pickup date</span>}
               </Button>
             </PopoverTrigger>
-            <PopoverContent style={{ width: 'auto', padding: '0' }} align="start">
-              <Calendar mode="single" selected={date} onSelect={(d) => { setDate(d); setCalendarOpen(false); }} 
-                disabled={(d) => d < tomorrow || d > maxDate} initialFocus />
-              <div style={{ padding: '0 1rem 1rem' }}>
+            <PopoverContent 
+              style={{ 
+                width: 'auto', 
+                padding: '0', 
+                zIndex: 9999,
+                background: 'white !important',
+                border: '1px solid var(--border)',
+                borderRadius: '1rem',
+                boxShadow: '0 10px 40px rgba(0, 0, 0, 0.15)'
+              }} 
+              align="start" 
+              className="calendar-popover"
+            >
+              <div style={{ background: 'white', padding: '1rem', borderRadius: '1rem' }}>
+                <Calendar 
+                  mode="single" 
+                  selected={date} 
+                  onSelect={(d) => { setDate(d); setCalendarOpen(false); }} 
+                  disabled={(d) => d < tomorrow || d > maxDate} 
+                  initialFocus
+                  styles={{
+                    root: { background: 'white' },
+                    months: { background: 'white' },
+                    month: { background: 'white' },
+                    table: { background: 'white' },
+                    head: { background: 'white' },
+                    tbody: { background: 'white' }
+                  }}
+                />
+              </div>
+              <div style={{ padding: '0 1rem 1rem', background: 'white', borderRadius: '0 0 1rem 1rem' }}>
                 <p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)', textAlign: 'center' }}>
                   Available: Tomorrow to {format(maxDate, "MMM d")}
                 </p>
@@ -877,8 +900,7 @@ const Choose = () => {
       <div className="choose-page__blur-effect choose-page__blur-effect--top-left" />
       <div className="choose-page__blur-effect choose-page__blur-effect--middle-right" />
       <div className="choose-page__blur-effect choose-page__blur-effect--bottom-left" />
-      <BookingHeader onBack={handleBack} />
-      <main className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem', maxWidth: '80rem', position: 'relative', zIndex: '10' }}>
+      <main className="container" style={{ paddingTop: '4rem', paddingBottom: '2rem', maxWidth: '80rem', position: 'relative', zIndex: '10' }}>
         <HeroSection />
         <StepsIndicator currentStep={currentStep} />
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -938,11 +960,6 @@ const Choose = () => {
           </div>
         </form>
       </main>
-      <footer className="page-footer">
-        <div className="container page-footer__text">
-          <p>© 2024 Loop. Helping Egypt recycle, one pickup at a time. 🌱</p>
-        </div>
-      </footer>
     </div>
   );
 };
