@@ -45,9 +45,9 @@ import {
   PopoverTrigger,
 } from "../ui/popover";
 import recyclingHero from "../../assets/recycling-hero.jpg";
-import ecoHero from "../../assets/eco-hero.jpg";
+import ecoHero from "../../assets/Mnemonic-Device.png";
 import pickupTruck from "../../assets/pickup-truck.png";
-import ecoPattern from "../../assets/eco-pattern.png";
+// import ecoPattern from "../../assets/eco-pattern.png";
 import "./Choose.css";
 
 // ============= DATA =============
@@ -107,15 +107,15 @@ const metalIcons = {
 const HeroSection = () => (
   <section className="hero-section">
     <div className="hero-section__image-wrapper">
-      <img src={recyclingHero} alt="Eco-friendly recycling" className="hero-section__image" />
+      <img src={ecoHero} alt="Eco-friendly recycling" className="hero-section__image" />
       <div className="hero-section__overlay" />
     </div>
     <div className="hero-section__content">
-      <div style={{ maxWidth: '36rem' }}>
-        <div className="hero-section__badge animate-fade-in">
+      <div style={{ maxWidth: '36rem',marginBottom:'85px'}}>
+        {/* <div className="hero-section__badge animate-fade-in">
           <Sparkles style={{ width: '1rem', height: '1rem' }} />
           <span>Earn money by recycling</span>
-        </div>
+        </div> */}
         <h2 className="hero-section__title animate-slide-up">
           Turn Your Recyclables<br /><span>Into Cash</span>
         </h2>
@@ -898,7 +898,7 @@ const Choose = () => {
   return (
     <div className="choose-page">
       <div className="choose-page__background-gradient" />
-      <div className="choose-page__pattern" style={{ backgroundImage: `url(${ecoPattern})` }} />
+      {/* <div className="choose-page__pattern" style={{ backgroundImage: `url(${ecoPattern})` }} /> */}
       <div className="choose-page__blur-effect choose-page__blur-effect--top-left" />
       <div className="choose-page__blur-effect choose-page__blur-effect--middle-right" />
       <div className="choose-page__blur-effect choose-page__blur-effect--bottom-left" />
