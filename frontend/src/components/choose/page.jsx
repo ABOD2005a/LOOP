@@ -44,11 +44,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "../ui/popover";
-import recyclingHero from "../../assets/recycling-hero.jpg";
+// import recyclingHero from "../../assets/recycling-hero.jpg";
 import ecoHero from "../../assets/Mnemonic-Device.png";
 import pickupTruck from "../../assets/pickup-truck.png";
-// import ecoPattern from "../../assets/eco-pattern.png";
+import NavbarAfter from "../Header_Footer/NavbarAfter/page"
 import "./Choose.css";
+// import ecoPattern from "../../assets/eco-pattern.png";
 
 // ============= DATA =============
 
@@ -897,6 +898,7 @@ const Choose = () => {
 
   return (
     <div className="choose-page">
+      <NavbarAfter/>
       <div className="choose-page__background-gradient" />
       {/* <div className="choose-page__pattern" style={{ backgroundImage: `url(${ecoPattern})` }} /> */}
       <div className="choose-page__blur-effect choose-page__blur-effect--top-left" />
