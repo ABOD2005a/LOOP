@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./home.css";
+import NavbarTest from "../components/Header_Footer/NavbarTest/page";
 
 const CO2_SAVINGS = {
   metal: 2.5,
@@ -208,6 +209,7 @@ export default function Home() {
   };
 
   return (
+   
     <div>
       <link
         rel="stylesheet"
@@ -215,7 +217,7 @@ export default function Home() {
       />
 
       <Notification {...notification} onHide={hideNotification} />
-  
+   <NavbarTest/>
 
       <section className="hero">
         <div className="hero__background" />
