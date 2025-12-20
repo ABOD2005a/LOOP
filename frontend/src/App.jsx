@@ -17,10 +17,10 @@ import Address from "./components/Login_Signup/signup/address/page";
 import Contact from "./components/information/contact/page";
 import About from "./components/information/about/page";
 import HomeAfter from "./components/homeAfter/page";
+import Profile from "./components/profile/page";
 // import Booking from "./components/booking/page";
 // import Settings from "./components/profile/settings/page";
 // import Bookings from "./components/profile/bookings/page";
-// import Profile from "./components/profile/page";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -35,10 +35,10 @@ function AnimatedRoutes() {
         <Route path="/address" element={<Address />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/About" element={<About />} />
-        <Route path="/NavbarAfter" element={<NavbarAfter/>} />
-        <Route path="/homeAfter" element={<HomeAfter/>} />
+        <Route path="/NavbarAfter" element={<NavbarAfter />} />
+        <Route path="/homeAfter" element={<HomeAfter />} />
+        <Route path="/profile" element={<Profile />} />
         {/* <Route path="/booking" element={<Booking />} /> */}
-        {/* <Route path="/profile" element={< Profile/>}/> */}
         {/* <Route path="/settings" element={<Settings />} /> */}
         {/* <Route path="/bookings" element={<Bookings />} /> */}
       </Routes>
@@ -47,17 +47,31 @@ function AnimatedRoutes() {
 }
 
 function App() {
+  const location = useLocation();
+
+  const isProfilePage = location.pathname === "/profile";
+
+  return (
+    <div
+      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+    >
+      {!isProfilePage && <Navbar />}
+
+      <main style={{ flex: "1" }}>
+        <AnimatedRoutes />
+      </main>
+
+      {!isProfilePage && <Footer />}
+    </div>
+  );
+}
+
+function AppWrapper() {
   return (
     <Router>
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <Navbar />
-        <main style={{ flex: '1' }}>
-          <AnimatedRoutes />
-        </main>
-        <Footer />
-      </div>
+      <App />
     </Router>
   );
 }
 
-export default App;
+export default AppWrapper;
