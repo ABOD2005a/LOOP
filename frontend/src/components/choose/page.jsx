@@ -100,90 +100,61 @@ const metalIcons = {
   brass: "🔔",
 };
 
-// ============= SUB-COMPONENTS =============
+// ============= COMPONENTS =============
 
-const BookingHeader = ({ onBack }) => {
-  return (
-    <header className="booking-header">
-      <div className="container">
-        <div className="flex items-center gap-4 py-4">
-          <button
-            onClick={onBack}
-            className="booking-header__back-button"
-            aria-label="Go back"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <div>
-            <h1 className="text-xl font-bold text-gradient">Schedule a Pickup</h1>
-            <p className="text-sm text-muted-foreground">Book an appointment with our collector</p>
-          </div>
+const BookingHeader = ({ onBack }) => (
+  <header className="booking-header">
+    <div className="container">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 0' }}>
+        <button onClick={onBack} className="booking-header__back-button" aria-label="Go back">
+          <ArrowLeft style={{ width: '1.25rem', height: '1.25rem' }} />
+        </button>
+        <div>
+          <h1 className="text-gradient" style={{ fontSize: '1.25rem', fontWeight: '700' }}>Schedule a Pickup</h1>
+          <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Book an appointment with our collector</p>
         </div>
       </div>
-    </header>
-  );
-};
+    </div>
+  </header>
+);
 
-const HeroSection = () => {
-  return (
-    <section className="hero-section">
-      <div className="hero-section__image-wrapper">
-        <img
-          src={recyclingHero}
-          alt="Eco-friendly recycling"
-          className="hero-section__image"
-        />
-        <div className="hero-section__overlay" />
-      </div>
-
-      <div className="hero-section__content">
-        <div className="max-w-xl">
-          <div className="hero-section__badge animate-fade-in">
-            <Sparkles className="w-4 h-4" />
-            <span>Earn money by recycling</span>
-          </div>
-
-          <h2 className="hero-section__title animate-slide-up">
-            Turn Your Recyclables
-            <br />
-            <span>Into Cash</span>
-          </h2>
-
-          <p className="hero-section__description animate-slide-up" style={{ animationDelay: "100ms" }}>
-            Schedule a free pickup and get paid instantly. Help save the planet while earning money.
-          </p>
-
-          <div className="hero-section__stats animate-slide-up" style={{ animationDelay: "200ms" }}>
-            <div className="hero-section__stat-card">
-              <div className="flex items-center justify-center mb-2">
-                <Recycle className="w-6 h-6 text-white" />
+const HeroSection = () => (
+  <section className="hero-section">
+    <div className="hero-section__image-wrapper">
+      <img src={recyclingHero} alt="Eco-friendly recycling" className="hero-section__image" />
+      <div className="hero-section__overlay" />
+    </div>
+    <div className="hero-section__content">
+      <div style={{ maxWidth: '36rem' }}>
+        <div className="hero-section__badge animate-fade-in">
+          <Sparkles style={{ width: '1rem', height: '1rem' }} />
+          <span>Earn money by recycling</span>
+        </div>
+        <h2 className="hero-section__title animate-slide-up">
+          Turn Your Recyclables<br /><span>Into Cash</span>
+        </h2>
+        <p className="hero-section__description animate-slide-up" style={{ animationDelay: "100ms" }}>
+          Schedule a free pickup and get paid instantly. Help save the planet while earning money.
+        </p>
+        <div className="hero-section__stats animate-slide-up" style={{ animationDelay: "200ms" }}>
+          {[
+            { icon: Recycle, value: "500+", label: "Tons Recycled" },
+            { icon: Leaf, value: "2K+", label: "Trees Saved" },
+            { icon: TrendingUp, value: "50K+", label: "EGP Paid" }
+          ].map(({ icon: Icon, value, label }) => (
+            <div key={label} className="hero-section__stat-card">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.5rem' }}>
+                <Icon style={{ width: '1.5rem', height: '1.5rem', color: 'white' }} />
               </div>
-              <div className="hero-section__stat-value">500+</div>
-              <div className="hero-section__stat-label">Tons Recycled</div>
+              <div className="hero-section__stat-value">{value}</div>
+              <div className="hero-section__stat-label">{label}</div>
             </div>
-            <div className="hero-section__stat-card">
-              <div className="flex items-center justify-center mb-2">
-                <Leaf className="w-6 h-6 text-white" />
-              </div>
-              <div className="hero-section__stat-value">2K+</div>
-              <div className="hero-section__stat-label">Trees Saved</div>
-            </div>
-            <div className="hero-section__stat-card">
-              <div className="flex items-center justify-center mb-2">
-                <TrendingUp className="w-6 h-6 text-white" />
-              </div>
-              <div className="hero-section__stat-value">50K+</div>
-              <div className="hero-section__stat-label">EGP Paid</div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
-
-      <div className="absolute top-10 right-10 w-24 h-24 bg-white/10 rounded-full blur-2xl animate-pulse-soft" />
-      <div className="absolute bottom-10 right-20 w-32 h-32 bg-white/10 rounded-full blur-2xl animate-pulse-soft" style={{ animationDelay: "500ms" }} />
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 const StepsIndicator = ({ currentStep }) => {
   const steps = [
@@ -194,43 +165,32 @@ const StepsIndicator = ({ currentStep }) => {
   ];
 
   return (
-    <div className="flex items-center justify-between mb-8 px-4">
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem', padding: '0 1rem' }}>
       {steps.map((step, index) => {
         const StepIcon = step.icon;
         const isActive = index <= currentStep;
         const isCurrent = index === currentStep;
-
         return (
-          <div key={step.label} className="flex items-center flex-1 last:flex-none">
-            <div className="flex flex-col items-center gap-2">
+          <div key={step.label} style={{ display: 'flex', alignItems: 'center', flex: index < steps.length - 1 ? '1' : 'none' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
               <div
-                className={cn(
-                  "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300",
-                  isCurrent && "gradient-primary text-white shadow-primary scale-110",
-                  isActive && !isCurrent && "bg-primary/20 text-primary",
-                  !isActive && "bg-muted text-muted-foreground"
-                )}
+                className={isCurrent ? "gradient-primary shadow-primary" : ""}
+                style={{
+                  width: '3rem', height: '3rem', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'all 300ms', transform: isCurrent ? 'scale(1.1)' : 'scale(1)',
+                  background: isActive && !isCurrent ? 'rgba(34, 197, 94, 0.2)' : !isActive ? 'var(--muted)' : undefined,
+                  color: isCurrent ? 'white' : isActive ? 'var(--primary)' : 'var(--muted-foreground)'
+                }}
               >
-                <StepIcon className="w-5 h-5" />
+                <StepIcon style={{ width: '1.25rem', height: '1.25rem' }} />
               </div>
-              <span
-                className={cn(
-                  "text-xs font-semibold transition-colors duration-300",
-                  isActive ? "text-primary" : "text-muted-foreground"
-                )}
-              >
+              <span style={{ fontSize: '0.75rem', fontWeight: '600', color: isActive ? 'var(--primary)' : 'var(--muted-foreground)' }}>
                 {step.label}
               </span>
             </div>
-            
             {index < steps.length - 1 && (
-              <div className="flex-1 mx-3 h-1 rounded-full overflow-hidden bg-muted">
-                <div
-                  className={cn(
-                    "h-full gradient-primary transition-all duration-500",
-                    index < currentStep ? "w-full" : "w-0"
-                  )}
-                />
+              <div style={{ flex: '1', margin: '0 0.75rem', height: '0.25rem', borderRadius: '9999px', background: 'var(--muted)' }}>
+                <div className="gradient-primary" style={{ height: '100%', transition: 'width 500ms', width: index < currentStep ? '100%' : '0' }} />
               </div>
             )}
           </div>
@@ -242,176 +202,92 @@ const StepsIndicator = ({ currentStep }) => {
 
 const PickupInfo = () => {
   const features = [
-    {
-      icon: Truck,
-      title: "Free Pickup",
-      description: "We collect from your doorstep",
-    },
-    {
-      icon: Shield,
-      title: "Trusted Service",
-      description: "Professional & reliable team",
-    },
-    {
-      icon: Clock,
-      title: "Fast Processing",
-      description: "Same day weighing & payment",
-    },
-    {
-      icon: Banknote,
-      title: "Best Prices",
-      description: "Competitive market rates",
-    },
+    { icon: Truck, title: "Free Pickup", description: "We collect from your doorstep" },
+    { icon: Shield, title: "Trusted Service", description: "Professional & reliable team" },
+    { icon: Clock, title: "Fast Processing", description: "Same day weighing & payment" },
+    { icon: Banknote, title: "Best Prices", description: "Competitive market rates" },
   ];
 
   return (
-    <div className="bg-gradient-to-br from-muted to-muted/50 rounded-2xl p-6 mb-6 overflow-hidden relative">
-      <div className="absolute -right-10 -bottom-10 w-40 h-40 opacity-20">
-        <img src={pickupTruck} alt="" className="w-full h-full object-contain" />
+    <div style={{ background: 'linear-gradient(to bottom right, var(--muted), rgba(var(--muted-rgb, 240, 240, 240), 0.5))', borderRadius: '1rem', padding: '1.5rem', marginBottom: '1.5rem', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', right: '-2.5rem', bottom: '-2.5rem', width: '10rem', height: '10rem', opacity: '0.2' }}>
+        <img src={pickupTruck} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
       </div>
-
-      <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
-        <Truck className="w-5 h-5 text-primary" />
+      <h3 style={{ fontSize: '1.125rem', fontWeight: '700', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <Truck style={{ width: '1.25rem', height: '1.25rem', color: 'var(--primary)' }} />
         Why Choose Loop?
       </h3>
-
-      <div className="grid grid-cols-2 gap-4 relative z-10">
-        {features.map((feature, index) => {
-          const FeatureIcon = feature.icon;
-          return (
-            <div
-              key={feature.title}
-              className="flex items-start gap-3 animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0 shadow-primary">
-                <FeatureIcon className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-foreground text-sm">{feature.title}</h4>
-                <p className="text-xs text-muted-foreground">{feature.description}</p>
-              </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', position: 'relative', zIndex: '10' }}>
+        {features.map(({ icon: Icon, title, description }, index) => (
+          <div key={title} className="animate-fade-in" style={{ display: 'flex', gap: '0.75rem', animationDelay: `${index * 100}ms` }}>
+            <div className="gradient-primary shadow-primary" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: '0' }}>
+              <Icon style={{ width: '1.25rem', height: '1.25rem', color: 'white' }} />
             </div>
-          );
-        })}
+            <div>
+              <h4 style={{ fontWeight: '600', fontSize: '0.875rem' }}>{title}</h4>
+              <p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>{description}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
 const AddressSection = ({ address, setAddress }) => {
-  const updateField = (field, value) => {
-    setAddress({ ...address, [field]: value });
-  };
+  const updateField = (field, value) => setAddress({ ...address, [field]: value });
 
   return (
-    <section className="section-card group">
-      <div className="section-card__accent-bar" />
-      
+    <section className="section-card">
       <h2 className="section-card__title">
-        <MapPin className="w-5 h-5 text-primary drop-shadow-sm" />
+        <MapPin style={{ width: '1.25rem', height: '1.25rem' }} />
         Pickup Address
       </h2>
-      
-      <div className="grid gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="street" className="font-semibold text-foreground flex items-center gap-2">
-            <Navigation className="w-4 h-4 text-muted-foreground" />
-            Street Name <span className="text-primary">*</span>
+      <div style={{ display: 'grid', gap: '1rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <Label htmlFor="street" style={{ fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Navigation style={{ width: '1rem', height: '1rem', color: 'var(--muted-foreground)' }} />
+            Street Name <span style={{ color: 'var(--primary)' }}>*</span>
           </Label>
-          <Input
-            id="street"
-            type="text"
-            value={address.street}
-            onChange={(e) => updateField("street", e.target.value)}
-            placeholder="Enter your street name"
-            className="h-12 px-4 text-base border-2"
-            required
-            maxLength={200}
-          />
+          <Input id="street" value={address.street} onChange={(e) => updateField("street", e.target.value)} 
+            placeholder="Enter your street name" required maxLength={200} />
         </div>
-
-        <div className="grid sm:grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="buildingNumber" className="font-semibold text-foreground flex items-center gap-2">
-              <Building className="w-4 h-4 text-muted-foreground" />
-              Building No. <span className="text-primary">*</span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <Label htmlFor="buildingNumber" style={{ fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Building style={{ width: '1rem', height: '1rem', color: 'var(--muted-foreground)' }} />
+              Building No. <span style={{ color: 'var(--primary)' }}>*</span>
             </Label>
-            <Input
-              id="buildingNumber"
-              type="text"
-              value={address.buildingNumber}
-              onChange={(e) => updateField("buildingNumber", e.target.value)}
-              placeholder="e.g., 15"
-              className="h-12 px-4 text-base border-2"
-              required
-              maxLength={20}
-            />
+            <Input id="buildingNumber" value={address.buildingNumber} onChange={(e) => updateField("buildingNumber", e.target.value)} 
+              placeholder="e.g., 15" required maxLength={20} />
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="floor" className="font-semibold text-foreground">
-              Floor
-            </Label>
-            <Input
-              id="floor"
-              type="text"
-              value={address.floor}
-              onChange={(e) => updateField("floor", e.target.value)}
-              placeholder="e.g., 3rd"
-              className="h-12 px-4 text-base border-2"
-              maxLength={20}
-            />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <Label htmlFor="floor">Floor</Label>
+            <Input id="floor" value={address.floor} onChange={(e) => updateField("floor", e.target.value)} 
+              placeholder="e.g., 3rd" maxLength={20} />
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="apartment" className="font-semibold text-foreground flex items-center gap-2">
-              <Home className="w-4 h-4 text-muted-foreground" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <Label htmlFor="apartment" style={{ fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Home style={{ width: '1rem', height: '1rem', color: 'var(--muted-foreground)' }} />
               Apartment
             </Label>
-            <Input
-              id="apartment"
-              type="text"
-              value={address.apartment}
-              onChange={(e) => updateField("apartment", e.target.value)}
-              placeholder="e.g., 5A"
-              className="h-12 px-4 text-base border-2"
-              maxLength={20}
-            />
+            <Input id="apartment" value={address.apartment} onChange={(e) => updateField("apartment", e.target.value)} 
+              placeholder="e.g., 5A" maxLength={20} />
           </div>
         </div>
-
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="area" className="font-semibold text-foreground flex items-center gap-2">
-              <MapPinned className="w-4 h-4 text-muted-foreground" />
-              Area / District <span className="text-primary">*</span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <Label htmlFor="area" style={{ fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <MapPinned style={{ width: '1rem', height: '1rem', color: 'var(--muted-foreground)' }} />
+              Area / District <span style={{ color: 'var(--primary)' }}>*</span>
             </Label>
-            <Input
-              id="area"
-              type="text"
-              value={address.area}
-              onChange={(e) => updateField("area", e.target.value)}
-              placeholder="e.g., Maadi, Cairo"
-              className="h-12 px-4 text-base border-2"
-              required
-              maxLength={100}
-            />
+            <Input id="area" value={address.area} onChange={(e) => updateField("area", e.target.value)} 
+              placeholder="e.g., Maadi, Cairo" required maxLength={100} />
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="landmark" className="font-semibold text-foreground">
-              Landmark (Optional)
-            </Label>
-            <Input
-              id="landmark"
-              type="text"
-              value={address.landmark}
-              onChange={(e) => updateField("landmark", e.target.value)}
-              placeholder="Near the main mosque..."
-              className="h-12 px-4 text-base border-2"
-              maxLength={200}
-            />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <Label htmlFor="landmark">Landmark (Optional)</Label>
+            <Input id="landmark" value={address.landmark} onChange={(e) => updateField("landmark", e.target.value)} 
+              placeholder="Near the main mosque..." maxLength={200} />
           </div>
         </div>
       </div>
@@ -423,111 +299,68 @@ const DateTimeSection = ({ date, setDate, selectedTime, setSelectedTime }) => {
   const [calendarOpen, setCalendarOpen] = useState(false);
   const tomorrow = addDays(new Date(), 1);
   const maxDate = addDays(new Date(), 30);
-
-  const timeSlots = [
-    "8:00 AM - 10:00 AM",
-    "10:00 AM - 12:00 PM",
-    "12:00 PM - 2:00 PM",
-    "2:00 PM - 4:00 PM",
-    "4:00 PM - 6:00 PM",
-  ];
+  const timeSlots = ["8:00 AM - 10:00 AM", "10:00 AM - 12:00 PM", "12:00 PM - 2:00 PM", "2:00 PM - 4:00 PM", "4:00 PM - 6:00 PM"];
 
   return (
-    <section className="section-card group">
-      <div className="section-card__accent-bar" />
-
+    <section className="section-card">
       <h2 className="section-card__title">
-        <Clock className="w-5 h-5 text-primary drop-shadow-sm" />
-        Select Date & Time <span className="text-primary">*</span>
+        <Clock style={{ width: '1.25rem', height: '1.25rem' }} />
+        Select Date & Time <span style={{ color: 'var(--primary)' }}>*</span>
       </h2>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label className="block font-semibold text-foreground">
-            Pickup Date
-          </label>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <label style={{ fontWeight: '600' }}>Pickup Date</label>
           <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
             <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full h-12 justify-start text-left font-normal border-2",
-                  !date && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-3 h-5 w-5 text-primary" />
-                {date ? (
-                  <span className="font-semibold text-foreground">
-                    {format(date, "EEEE, MMMM d, yyyy")}
-                  </span>
-                ) : (
-                  <span>Select a pickup date</span>
-                )}
+              <Button variant="outline" style={{ width: '100%', height: '3rem', justifyContent: 'flex-start', textAlign: 'left' }}>
+                <CalendarIcon style={{ marginRight: '0.75rem', height: '1.25rem', width: '1.25rem', color: 'var(--primary)' }} />
+                {date ? <span style={{ fontWeight: '600' }}>{format(date, "EEEE, MMMM d, yyyy")}</span> : <span>Select a pickup date</span>}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={(newDate) => {
-                  setDate(newDate);
-                  setCalendarOpen(false);
-                }}
-                disabled={(date) => date < tomorrow || date > maxDate}
-                initialFocus
-              />
-              <div className="px-4 pb-4">
-                <p className="text-xs text-muted-foreground text-center">
+            <PopoverContent style={{ width: 'auto', padding: '0' }} align="start">
+              <Calendar mode="single" selected={date} onSelect={(d) => { setDate(d); setCalendarOpen(false); }} 
+                disabled={(d) => d < tomorrow || d > maxDate} initialFocus />
+              <div style={{ padding: '0 1rem 1rem' }}>
+                <p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)', textAlign: 'center' }}>
                   Available: Tomorrow to {format(maxDate, "MMM d")}
                 </p>
               </div>
             </PopoverContent>
           </Popover>
-          
-          <div className="flex flex-wrap gap-2 mt-3">
-            <button
-              type="button"
-              onClick={() => setDate(tomorrow)}
-              className={cn(
-                "px-3 py-1.5 text-sm font-semibold rounded-lg border transition-all",
-                date && format(date, "yyyy-MM-dd") === format(tomorrow, "yyyy-MM-dd")
-                  ? "gradient-primary text-white border-primary"
-                  : "bg-muted border-border text-foreground hover:border-primary"
-              )}
-            >
-              Tomorrow
-            </button>
-            <button
-              type="button"
-              onClick={() => setDate(addDays(new Date(), 2))}
-              className={cn(
-                "px-3 py-1.5 text-sm font-semibold rounded-lg border transition-all",
-                date && format(date, "yyyy-MM-dd") === format(addDays(new Date(), 2), "yyyy-MM-dd")
-                  ? "gradient-primary text-white border-primary"
-                  : "bg-muted border-border text-foreground hover:border-primary"
-              )}
-            >
-              {format(addDays(new Date(), 2), "EEE, MMM d")}
-            </button>
+          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+            {[tomorrow, addDays(new Date(), 2)].map((d, i) => (
+              <button key={i} type="button" onClick={() => setDate(d)}
+                className={date && format(date, "yyyy-MM-dd") === format(d, "yyyy-MM-dd") ? "gradient-primary" : ""}
+                style={{
+                  padding: '0.375rem 0.75rem', fontSize: '0.875rem', fontWeight: '600', borderRadius: '0.5rem',
+                  border: '1px solid', transition: 'all 0.2s', cursor: 'pointer',
+                  borderColor: date && format(date, "yyyy-MM-dd") === format(d, "yyyy-MM-dd") ? 'var(--primary)' : 'var(--border)',
+                  background: date && format(date, "yyyy-MM-dd") === format(d, "yyyy-MM-dd") ? undefined : 'var(--muted)',
+                  color: date && format(date, "yyyy-MM-dd") === format(d, "yyyy-MM-dd") ? 'white' : 'var(--foreground)'
+                }}
+              >
+                {i === 0 ? "Tomorrow" : format(d, "EEE, MMM d")}
+              </button>
+            ))}
           </div>
         </div>
-
-        <div className="space-y-2">
-          <label className="block font-semibold text-foreground">Preferred Time</label>
-          <div className="space-y-2">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <label style={{ fontWeight: '600' }}>Preferred Time</label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {timeSlots.map((slot) => (
-              <button
-                key={slot}
-                type="button"
-                onClick={() => setSelectedTime(selectedTime === slot ? null : slot)}
-                className={cn(
-                  "w-full flex items-center gap-3 px-4 py-3 border-2 rounded-xl font-medium text-sm transition-all",
-                  selectedTime === slot
-                    ? "gradient-primary text-white border-primary shadow-primary scale-[1.02]"
-                    : "border-border bg-background text-foreground hover:bg-muted hover:border-primary"
-                )}
+              <button key={slot} type="button" onClick={() => setSelectedTime(selectedTime === slot ? null : slot)}
+                className={selectedTime === slot ? "gradient-primary shadow-primary" : ""}
+                style={{
+                  width: '100%', display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem',
+                  border: '2px solid', borderRadius: '0.75rem', fontWeight: '500', fontSize: '0.875rem',
+                  transition: 'all 0.2s', cursor: 'pointer',
+                  borderColor: selectedTime === slot ? 'var(--primary)' : 'var(--border)',
+                  background: selectedTime === slot ? undefined : 'var(--background)',
+                  color: selectedTime === slot ? 'white' : 'var(--foreground)',
+                  transform: selectedTime === slot ? 'scale(1.02)' : 'scale(1)'
+                }}
               >
-                <Clock className="w-4 h-4" />
+                <Clock style={{ width: '1rem', height: '1rem' }} />
                 {slot}
               </button>
             ))}
@@ -538,206 +371,168 @@ const DateTimeSection = ({ date, setDate, selectedTime, setSelectedTime }) => {
   );
 };
 
-const NotesSection = ({ notes, setNotes }) => {
-  return (
-    <section className="section-card group">
-      <div className="section-card__accent-bar" />
+const NotesSection = ({ notes, setNotes }) => (
+  <section className="section-card">
+    <h2 className="section-card__title">
+      <FileText style={{ width: '1.25rem', height: '1.25rem' }} />
+      Additional Notes
+      <span style={{ fontSize: '0.875rem', fontWeight: '400', color: 'var(--muted-foreground)', marginLeft: '0.5rem' }}>(Optional)</span>
+    </h2>
+    <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} 
+      placeholder="Any special instructions for the collector..." 
+      style={{ minHeight: '120px', padding: '0.75rem 1rem' }} />
+  </section>
+);
 
-      <h2 className="section-card__title">
-        <FileText className="w-5 h-5 text-primary drop-shadow-sm" />
-        Additional Notes
-        <span className="text-sm font-normal text-muted-foreground">(Optional)</span>
-      </h2>
-
-      <Textarea
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-        placeholder="Any special instructions for the collector..."
-        className="min-h-[120px] px-4 py-3 text-base border-2"
-      />
-    </section>
-  );
-};
-
-const SuccessScreen = ({ details, onViewBookings, onBackHome }) => {
-  return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative">
-      <div 
-        className="absolute inset-0 opacity-5"
-        style={{ 
-          backgroundImage: `url(${ecoHero})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      />
-      
-      <div className="relative z-10 w-full max-w-md animate-scale-in">
-        <div className="flex justify-center mb-6">
-          <div className="w-20 h-20 gradient-primary rounded-full flex items-center justify-center shadow-primary animate-pulse-soft">
-            <Check className="w-10 h-10 text-white" strokeWidth={3} />
-          </div>
-        </div>
-
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold text-gradient mb-2">Booking Confirmed!</h1>
-          <p className="text-muted-foreground">Your pickup has been scheduled successfully.</p>
-        </div>
-
-        <div className="bg-card rounded-3xl p-6 shadow-lg border border-border mb-6">
-          <div className="space-y-4">
-            <div className="flex items-start gap-4 p-3 bg-muted rounded-xl">
-              <MapPin className="w-5 h-5 text-primary mt-0.5" />
-              <div>
-                <span className="block text-sm text-muted-foreground">Pickup Address</span>
-                <span className="font-semibold text-foreground">{details.address}</span>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-3 bg-muted rounded-xl">
-              <Package className="w-5 h-5 text-primary mt-0.5" />
-              <div className="flex-1">
-                <span className="block text-sm text-muted-foreground">Materials</span>
-                <div className="space-y-1">
-                  {details.items.map((item) => (
-                    <div key={item.id} className="flex justify-between">
-                      <span className="font-semibold text-foreground">
-                        {item.subTypeName || item.materialName}
-                      </span>
-                      <span className="text-muted-foreground">{item.weight} kg</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-3 bg-muted rounded-xl">
-              <CalendarIcon className="w-5 h-5 text-primary mt-0.5" />
-              <div>
-                <span className="block text-sm text-muted-foreground">Date & Time</span>
-                <span className="font-semibold text-foreground">{details.date}</span>
-                <span className="block text-sm text-muted-foreground">{details.time}</span>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-3 bg-green-50 rounded-xl">
-              <Leaf className="w-5 h-5 text-primary mt-0.5" />
-              <div>
-                <span className="block text-sm text-primary">Environmental Impact</span>
-                <span className="font-semibold text-primary">
-                  {details.totalCo2.toFixed(1)} kg CO₂ saved
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between p-4 gradient-primary rounded-xl text-white">
-              <div>
-                <span className="block font-semibold">Estimated Earnings</span>
-                <span className="text-sm opacity-80">{details.totalWeight} kg total</span>
-              </div>
-              <span className="text-2xl font-extrabold">{details.totalEarnings} EGP</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Button 
-            onClick={onViewBookings} 
-            className="flex-1 h-12 gradient-primary text-white font-semibold rounded-xl shadow-primary hover:opacity-90"
-          >
-            View My Bookings
-          </Button>
-          <Button 
-            onClick={onBackHome}
-            variant="outline"
-            className="flex-1 h-12 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary hover:text-white"
-          >
-            New Booking
-          </Button>
+const SuccessScreen = ({ details, onViewBookings, onBackHome }) => (
+  <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', position: 'relative' }}>
+    <div style={{ position: 'absolute', inset: '0', opacity: '0.05', backgroundImage: `url(${ecoHero})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+    <div style={{ position: 'relative', zIndex: '10', width: '100%', maxWidth: '28rem' }} className="animate-scale-in">
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
+        <div className="gradient-primary shadow-primary animate-pulse-soft" style={{ width: '5rem', height: '5rem', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Check style={{ width: '2.5rem', height: '2.5rem', color: 'white', strokeWidth: '3' }} />
         </div>
       </div>
-    </div>
-  );
-};
-
-const MetalSubTypes = ({ subTypes, selectedSubType, onSelectSubType }) => {
-  return (
-    <div className="mt-4 ml-4 pl-4 border-l-2 border-primary/30 space-y-2 animate-fade-in">
-      <p className="text-sm font-semibold text-muted-foreground mb-3">Select metal type:</p>
-      {subTypes.map((subType) => (
-        <div
-          key={subType.id}
-          onClick={() => onSelectSubType(subType.id)}
-          className={cn(
-            "flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all",
-            selectedSubType === subType.id
-              ? "bg-primary/10 border-2 border-primary shadow-sm"
-              : "bg-card border-2 border-transparent hover:bg-muted hover:border-primary/50"
-          )}
-        >
-          <span className="text-2xl">{metalIcons[subType.id] || "🔧"}</span>
-          
-          <div className="flex-1">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-foreground">{subType.name}</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-xl font-extrabold text-primary">{subType.price}</span>
-                <span className="text-xs font-semibold text-muted-foreground">EGP/kg</span>
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <h1 className="text-gradient" style={{ fontSize: '1.875rem', fontWeight: '800', marginBottom: '0.5rem' }}>Booking Confirmed!</h1>
+        <p style={{ color: 'var(--muted-foreground)' }}>Your pickup has been scheduled successfully.</p>
+      </div>
+      <div style={{ background: 'var(--card)', borderRadius: '1.5rem', padding: '1.5rem', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border)', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {[
+            { icon: MapPin, label: "Pickup Address", value: details.address },
+            { icon: CalendarIcon, label: "Date & Time", value: details.date, extra: details.time }
+          ].map(({ icon: Icon, label, value, extra }) => (
+            <div key={label} style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', padding: '0.75rem', background: 'var(--muted)', borderRadius: '0.75rem' }}>
+              <Icon style={{ width: '1.25rem', height: '1.25rem', color: 'var(--primary)', marginTop: '0.125rem' }} />
+              <div>
+                <span style={{ display: 'block', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>{label}</span>
+                <span style={{ fontWeight: '600' }}>{value}</span>
+                {extra && <span style={{ display: 'block', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>{extra}</span>}
               </div>
             </div>
-            <div className="flex gap-3 mt-1 text-xs text-muted-foreground">
-              <span>CO₂: {subType.co2PerKg}kg/kg</span>
-              <span>Water: {subType.waterPerKg}L/kg</span>
+          ))}
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', padding: '0.75rem', background: 'var(--muted)', borderRadius: '0.75rem' }}>
+            <Package style={{ width: '1.25rem', height: '1.25rem', color: 'var(--primary)', marginTop: '0.125rem' }} />
+            <div style={{ flex: '1' }}>
+              <span style={{ display: 'block', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Materials</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                {details.items.map((item) => (
+                  <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ fontWeight: '600' }}>{item.subTypeName || item.materialName}</span>
+                    <span style={{ color: 'var(--muted-foreground)' }}>{item.weight} kg</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-
-          <div className={cn(
-            "w-6 h-6 rounded-full flex items-center justify-center transition-all",
-            selectedSubType === subType.id
-              ? "gradient-primary text-white scale-100"
-              : "bg-muted scale-75 opacity-50"
-          )}>
-            <Check className="w-4 h-4" strokeWidth={3} />
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', padding: '0.75rem', background: 'rgba(34, 197, 94, 0.1)', borderRadius: '0.75rem' }}>
+            <Leaf style={{ width: '1.25rem', height: '1.25rem', color: 'var(--primary)', marginTop: '0.125rem' }} />
+            <div>
+              <span style={{ display: 'block', fontSize: '0.875rem', color: 'var(--primary)' }}>Environmental Impact</span>
+              <span style={{ fontWeight: '600', color: 'var(--primary)' }}>{details.totalCo2.toFixed(1)} kg CO₂ saved</span>
+            </div>
+          </div>
+          <div className="gradient-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderRadius: '0.75rem', color: 'white' }}>
+            <div>
+              <span style={{ display: 'block', fontWeight: '600' }}>Estimated Earnings</span>
+              <span style={{ fontSize: '0.875rem', opacity: '0.8' }}>{details.totalWeight} kg total</span>
+            </div>
+            <span style={{ fontSize: '1.5rem', fontWeight: '800' }}>{details.totalEarnings} EGP</span>
           </div>
         </div>
-      ))}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        <Button onClick={onViewBookings} className="gradient-primary shadow-primary" 
+          style={{ flex: '1', height: '3rem', fontWeight: '600', borderRadius: '0.75rem' }}>
+          View My Bookings
+        </Button>
+        <Button onClick={onBackHome} variant="outline"
+          style={{ flex: '1', height: '3rem', border: '2px solid var(--primary)', color: 'var(--primary)', fontWeight: '600', borderRadius: '0.75rem' }}>
+          New Booking
+        </Button>
+      </div>
     </div>
-  );
-};
+  </div>
+);
+
+const MetalSubTypes = ({ subTypes, selectedSubType, onSelectSubType }) => (
+  <div className="animate-fade-in" style={{ marginTop: '1rem', marginLeft: '1rem', paddingLeft: '1rem', borderLeft: '2px solid rgba(34, 197, 94, 0.3)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+    <p style={{ fontSize: '0.875rem', fontWeight: '600', color: 'var(--muted-foreground)', marginBottom: '0.75rem' }}>Select metal type:</p>
+    {subTypes.map((subType) => (
+      <div key={subType.id} onClick={() => onSelectSubType(subType.id)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', borderRadius: '0.75rem',
+          cursor: 'pointer', transition: 'all 0.2s',
+          background: selectedSubType === subType.id ? 'rgba(34, 197, 94, 0.1)' : 'var(--card)',
+          border: '2px solid',
+          borderColor: selectedSubType === subType.id ? 'var(--primary)' : 'transparent',
+          boxShadow: selectedSubType === subType.id ? 'var(--shadow-sm)' : 'none'
+        }}
+      >
+        <span style={{ fontSize: '1.5rem' }}>{metalIcons[subType.id] || "🔧"}</span>
+        <div style={{ flex: '1' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontWeight: '700' }}>{subType.name}</span>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.25rem' }}>
+              <span style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--primary)' }}>{subType.price}</span>
+              <span style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--muted-foreground)' }}>EGP/kg</span>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.25rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+            <span>CO₂: {subType.co2PerKg}kg/kg</span>
+            <span>Water: {subType.waterPerKg}L/kg</span>
+          </div>
+        </div>
+        <div style={{
+          width: '1.5rem', height: '1.5rem', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'all 0.2s',
+          background: selectedSubType === subType.id ? 'linear-gradient(135deg, hsl(142, 76%, 36%) 0%, hsl(142, 70%, 45%) 100%)' : 'var(--muted)',
+          color: selectedSubType === subType.id ? 'white' : 'transparent',
+          transform: selectedSubType === subType.id ? 'scale(1)' : 'scale(0.75)',
+          opacity: selectedSubType === subType.id ? '1' : '0.5'
+        }}>
+          <Check style={{ width: '1rem', height: '1rem', strokeWidth: '3' }} />
+        </div>
+      </div>
+    ))}
+  </div>
+);
 
 const MaterialCard = ({ material, isSelected, onSelect, hasSubTypes }) => {
   const IconComponent = material.icon;
   
   return (
-    <div onClick={onSelect} className={cn("material-card", isSelected && "material-card--selected")}>
-      <div className={cn("absolute inset-0 opacity-0 transition-opacity", material.gradient, isSelected && "opacity-5")} />
-      
-      <div className={cn("material-card__icon", material.gradient)}>
-        <IconComponent className="w-7 h-7" />
+    <div onClick={onSelect} className={`material-card ${isSelected ? 'material-card--selected' : ''}`}>
+      <div className={material.gradient} style={{ position: 'absolute', inset: '0', opacity: isSelected ? '0.05' : '0', transition: 'opacity 0.3s' }} />
+      <div className={`material-card__icon ${material.gradient}`}>
+        <IconComponent style={{ width: '1.75rem', height: '1.75rem' }} />
       </div>
-      
       <div className="material-card__content">
         <h4 className="material-card__name">{material.name}</h4>
         {!hasSubTypes && (
-          <div className="flex items-baseline gap-1 mb-2">
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.25rem', marginBottom: '0.5rem' }}>
             <span className="material-card__price">{material.price}</span>
-            <span className="text-sm font-semibold text-muted-foreground">EGP/kg</span>
+            <span style={{ fontSize: '0.875rem', fontWeight: '600', color: 'var(--muted-foreground)' }}>EGP/kg</span>
           </div>
         )}
-        {hasSubTypes && (
-          <p className="text-sm text-muted-foreground mb-2">Multiple types available</p>
-        )}
+        {hasSubTypes && <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '0.5rem' }}>Multiple types available</p>}
         <div className="material-card__tags">
-          {material.tags.map((tag) => (
-            <span key={tag} className="material-card__tag">{tag}</span>
-          ))}
+          {material.tags.map((tag) => <span key={tag} className="material-card__tag">{tag}</span>)}
         </div>
       </div>
-      
       {hasSubTypes ? (
-        <ChevronRight className={cn("w-6 h-6 text-muted-foreground transition-all relative z-10", isSelected && "text-primary rotate-90")} />
+        <ChevronRight style={{ width: '1.5rem', height: '1.5rem', color: isSelected ? 'var(--primary)' : 'var(--muted-foreground)', transition: 'all 0.3s', transform: isSelected ? 'rotate(90deg)' : 'rotate(0)', position: 'relative', zIndex: '10' }} />
       ) : (
-        <div className={cn("w-8 h-8 rounded-full flex items-center justify-center transition-all relative z-10", isSelected ? "gradient-primary text-white scale-100 opacity-100" : "scale-0 opacity-0")}>
-          <Check className="w-5 h-5" strokeWidth={3} />
+        <div style={{
+          width: '2rem', height: '2rem', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'all 0.3s', position: 'relative', zIndex: '10',
+          background: isSelected ? 'linear-gradient(135deg, hsl(142, 76%, 36%) 0%, hsl(142, 70%, 45%) 100%)' : 'transparent',
+          color: isSelected ? 'white' : 'transparent',
+          transform: isSelected ? 'scale(1)' : 'scale(0)',
+          opacity: isSelected ? '1' : '0'
+        }}>
+          <Check style={{ width: '1.25rem', height: '1.25rem', strokeWidth: '3' }} />
         </div>
       )}
     </div>
@@ -748,12 +543,9 @@ const WeightInput = ({ weight, setWeight }) => {
   const quickWeights = [5, 10, 25, 50, 100];
 
   return (
-    <div className="space-y-4">
-      <label className="block text-base font-bold text-foreground">
-        Enter Weight (kg)
-      </label>
-      
-      <div className="relative">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <label style={{ display: 'block', fontSize: '1rem', fontWeight: '700' }}>Enter Weight (kg)</label>
+      <div style={{ position: 'relative' }}>
         <input
           type="number"
           value={weight || ""}
@@ -761,25 +553,28 @@ const WeightInput = ({ weight, setWeight }) => {
           placeholder="0.0"
           min="0"
           step="0.1"
-          className="w-full px-4 pr-12 py-3.5 text-lg font-semibold border-2 border-border rounded-xl bg-background focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+          style={{
+            width: '100%', padding: '0.875rem 3rem 0.875rem 1rem', fontSize: '1.125rem', fontWeight: '600',
+            border: '2px solid var(--border)', borderRadius: '0.75rem', background: 'var(--background)',
+            outline: 'none', transition: 'all 0.2s'
+          }}
         />
-        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">
-          kg
-        </span>
+        <span style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted-foreground)', fontWeight: '700' }}>kg</span>
       </div>
-      
-      <div className="grid grid-cols-5 gap-2">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.5rem' }}>
         {quickWeights.map((qw) => (
           <button
             key={qw}
             type="button"
             onClick={() => setWeight(qw)}
-            className={cn(
-              "py-2.5 px-2 rounded-lg font-semibold text-sm border transition-all",
-              weight === qw
-                ? "gradient-primary text-white border-primary shadow-primary"
-                : "bg-muted border-border text-foreground hover:bg-primary hover:text-white hover:border-primary hover:-translate-y-0.5"
-            )}
+            className={weight === qw ? "gradient-primary shadow-primary" : ""}
+            style={{
+              padding: '0.625rem 0.5rem', borderRadius: '0.5rem', fontWeight: '600', fontSize: '0.875rem',
+              border: '1px solid', transition: 'all 0.2s', cursor: 'pointer',
+              borderColor: weight === qw ? 'var(--primary)' : 'var(--border)',
+              background: weight === qw ? undefined : 'var(--muted)',
+              color: weight === qw ? 'white' : 'var(--foreground)'
+            }}
           >
             {qw} kg
           </button>
@@ -789,38 +584,29 @@ const WeightInput = ({ weight, setWeight }) => {
   );
 };
 
-const CartItem = ({ item, onRemove }) => {
-  return (
-    <div className="cart-item animate-scale-in">
-      <div className={cn("cart-item__icon", item.gradient)}>
-        <span>{item.weight}</span>
-      </div>
-      
-      <div className="cart-item__content">
-        <div className="flex items-center gap-2">
-          <span className="cart-item__name">
-            {item.subTypeName || item.materialName}
-          </span>
-          {item.subTypeName && (
-            <span className="text-xs text-muted-foreground">({item.materialName})</span>
-          )}
-        </div>
-        <div className="cart-item__details">
-          <span>{item.weight} kg × {item.pricePerKg} EGP</span>
-        </div>
-      </div>
-      
-      <div className="cart-item__price">
-        <span className="cart-item__total">{item.total}</span>
-        <span className="text-sm text-muted-foreground ml-1">EGP</span>
-      </div>
-      
-      <button onClick={onRemove} className="cart-item__remove" aria-label="Remove item">
-        <Trash2 className="w-5 h-5" />
-      </button>
+const CartItem = ({ item, onRemove }) => (
+  <div className="cart-item animate-scale-in">
+    <div className={`cart-item__icon ${item.gradient}`}>
+      <span>{item.weight}</span>
     </div>
-  );
-};
+    <div className="cart-item__content">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <span className="cart-item__name">{item.subTypeName || item.materialName}</span>
+        {item.subTypeName && <span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>({item.materialName})</span>}
+      </div>
+      <div className="cart-item__details">
+        <span>{item.weight} kg × {item.pricePerKg} EGP</span>
+      </div>
+    </div>
+    <div className="cart-item__price">
+      <span className="cart-item__total">{item.total}</span>
+      <span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginLeft: '0.25rem' }}>EGP</span>
+    </div>
+    <button onClick={onRemove} className="cart-item__remove" aria-label="Remove item">
+      <Trash2 style={{ width: '1.25rem', height: '1.25rem' }} />
+    </button>
+  </div>
+);
 
 const Cart = ({ items, onRemoveItem, onClearAll }) => {
   const totalEarnings = items.reduce((sum, item) => sum + item.total, 0);
@@ -833,66 +619,53 @@ const Cart = ({ items, onRemoveItem, onClearAll }) => {
 
   return (
     <div className="cart animate-fade-in">
-      <div className="flex items-center justify-between pb-4 mb-4 border-b-2 border-border">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 gradient-primary rounded-xl flex items-center justify-center">
-            <Package className="w-5 h-5 text-white" />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1rem', marginBottom: '1rem', borderBottom: '2px solid var(--border)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div className="gradient-primary" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Package style={{ width: '1.25rem', height: '1.25rem', color: 'white' }} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-foreground">Your Cart</h3>
-            <span className="text-sm text-muted-foreground">{items.length} item(s)</span>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '700' }}>Your Cart</h3>
+            <span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>{items.length} item(s)</span>
           </div>
         </div>
-        <button onClick={onClearAll} className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-destructive hover:bg-destructive/10 rounded-lg transition-colors">
-          <Trash2 className="w-4 h-4" />
+        <button onClick={onClearAll} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0.75rem', fontSize: '0.875rem', fontWeight: '600', color: 'var(--destructive)', background: 'transparent', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', transition: 'background 0.2s' }}>
+          <Trash2 style={{ width: '1rem', height: '1rem' }} />
           Clear All
         </button>
       </div>
-
-      <div className="space-y-3 mb-6">
-        {items.map((item) => (
-          <CartItem key={item.id} item={item} onRemove={() => onRemoveItem(item.id)} />
-        ))}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+        {items.map((item) => <CartItem key={item.id} item={item} onRemove={() => onRemoveItem(item.id)} />)}
       </div>
-
-      <div className="space-y-4">
-        <div className="flex items-center justify-between p-4 gradient-primary rounded-xl text-white">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="gradient-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderRadius: '0.75rem', color: 'white' }}>
           <div>
-            <span className="block text-sm opacity-90">Total Earnings</span>
-            <span className="block text-sm opacity-75">{totalWeight} kg total</span>
+            <span style={{ display: 'block', fontSize: '0.875rem', opacity: '0.9' }}>Total Earnings</span>
+            <span style={{ display: 'block', fontSize: '0.875rem', opacity: '0.75' }}>{totalWeight} kg total</span>
           </div>
-          <span className="text-3xl font-extrabold">{totalEarnings} EGP</span>
+          <span style={{ fontSize: '1.875rem', fontWeight: '800' }}>{totalEarnings} EGP</span>
         </div>
-
-        <div className="relative overflow-hidden rounded-xl p-4 bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
-          <div className="absolute inset-0 opacity-5" style={{ backgroundImage: `url(${ecoHero})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-          <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-3">
-              <Leaf className="w-5 h-5 text-primary" />
-              <span className="font-bold text-foreground">Your Environmental Impact</span>
+        <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '0.75rem', padding: '1rem', background: 'linear-gradient(to bottom right, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05))', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+          <div style={{ position: 'absolute', inset: '0', opacity: '0.05', backgroundImage: `url(${ecoHero})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+          <div style={{ position: 'relative', zIndex: '10' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+              <Leaf style={{ width: '1.25rem', height: '1.25rem', color: 'var(--primary)' }} />
+              <span style={{ fontWeight: '700' }}>Your Environmental Impact</span>
             </div>
-            <div className="grid grid-cols-3 gap-3">
-              <div className="text-center p-2 bg-card/50 rounded-lg">
-                <div className="flex items-center justify-center gap-1 text-primary">
-                  <Leaf className="w-4 h-4" />
-                  <span className="font-extrabold">{totalCo2.toFixed(1)}</span>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
+              {[
+                { icon: Leaf, value: totalCo2.toFixed(1), label: 'kg CO₂ saved' },
+                { icon: TreePine, value: treesSaved, label: 'trees saved' },
+                { icon: Droplets, value: totalWater, label: 'liters saved' }
+              ].map(({ icon: Icon, value, label }) => (
+                <div key={label} style={{ textAlign: 'center', padding: '0.5rem', background: 'rgba(var(--card-rgb, 255, 255, 255), 0.5)', borderRadius: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem', color: 'var(--primary)' }}>
+                    <Icon style={{ width: '1rem', height: '1rem' }} />
+                    <span style={{ fontWeight: '800' }}>{value}</span>
+                  </div>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>{label}</span>
                 </div>
-                <span className="text-xs text-muted-foreground">kg CO₂ saved</span>
-              </div>
-              <div className="text-center p-2 bg-card/50 rounded-lg">
-                <div className="flex items-center justify-center gap-1 text-primary">
-                  <TreePine className="w-4 h-4" />
-                  <span className="font-extrabold">{treesSaved}</span>
-                </div>
-                <span className="text-xs text-muted-foreground">trees saved</span>
-              </div>
-              <div className="text-center p-2 bg-card/50 rounded-lg">
-                <div className="flex items-center justify-center gap-1 text-primary">
-                  <Droplets className="w-4 h-4" />
-                  <span className="font-extrabold">{totalWater}</span>
-                </div>
-                <span className="text-xs text-muted-foreground">liters saved</span>
-              </div>
+              ))}
             </div>
           </div>
         </div>
@@ -924,12 +697,10 @@ const MaterialCalculator = ({ cartItems, setCartItems }) => {
       toast.error("Please select a material");
       return;
     }
-
     if (currentMaterial.subTypes && !currentSubType) {
       toast.error("Please select a metal type");
       return;
     }
-
     if (weight <= 0) {
       toast.error("Please enter a valid weight");
       return;
@@ -958,30 +729,19 @@ const MaterialCalculator = ({ cartItems, setCartItems }) => {
     setWeight(0);
   };
 
-  const handleRemoveItem = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-    toast.info("Item removed from cart");
-  };
-
-  const handleClearCart = () => {
-    setCartItems([]);
-    toast.info("Cart cleared");
-  };
-
   const canAddToCart = currentMaterial && weight > 0 && (!currentMaterial.subTypes || currentSubType);
 
   return (
-    <section className="bg-muted rounded-3xl p-6 md:p-8">
-      <div className="grid lg:grid-cols-2 gap-8 items-start">
-        <div className="bg-card rounded-3xl p-6 shadow-lg border border-border/50">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-foreground">Add Materials</h3>
-            <span className="px-3 py-1.5 bg-muted rounded-full text-sm font-semibold text-muted-foreground">
+    <section style={{ background: 'var(--muted)', borderRadius: '1.5rem', padding: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', alignItems: 'flex-start' }}>
+        <div style={{ background: 'var(--card)', borderRadius: '1.5rem', padding: '1.5rem', boxShadow: 'var(--shadow-lg)', border: '1px solid rgba(var(--border-rgb, 0, 0, 0), 0.5)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '700' }}>Add Materials</h3>
+            <span style={{ padding: '0.375rem 0.75rem', background: 'var(--muted)', borderRadius: '9999px', fontSize: '0.875rem', fontWeight: '600', color: 'var(--muted-foreground)' }}>
               {selectedMaterial ? "1 selected" : "Choose one"}
             </span>
           </div>
-
-          <div className="space-y-3 mb-6">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
             {materials.map((material) => (
               <div key={material.id}>
                 <MaterialCard
@@ -990,7 +750,6 @@ const MaterialCalculator = ({ cartItems, setCartItems }) => {
                   onSelect={() => handleMaterialSelect(material.id)}
                   hasSubTypes={!!material.subTypes}
                 />
-                
                 {selectedMaterial === material.id && material.subTypes && (
                   <MetalSubTypes
                     subTypes={material.subTypes}
@@ -1001,32 +760,28 @@ const MaterialCalculator = ({ cartItems, setCartItems }) => {
               </div>
             ))}
           </div>
-
           <WeightInput weight={weight} setWeight={setWeight} />
-
           <Button
             type="button"
             onClick={handleAddToCart}
             disabled={!canAddToCart}
-            className="w-full mt-6 h-14 gradient-primary text-white text-lg font-semibold rounded-xl shadow-primary hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="gradient-primary shadow-primary"
+            style={{ width: '100%', marginTop: '1.5rem', height: '3.5rem', fontSize: '1.125rem', fontWeight: '600', borderRadius: '0.75rem', transition: 'all 0.3s', opacity: !canAddToCart ? '0.5' : '1', cursor: !canAddToCart ? 'not-allowed' : 'pointer' }}
           >
-            <Plus className="w-5 h-5 mr-2" />
+            <Plus style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.5rem' }} />
             Add to Cart
           </Button>
         </div>
-
         <div>
           {cartItems.length > 0 ? (
-            <Cart items={cartItems} onRemoveItem={handleRemoveItem} onClearAll={handleClearCart} />
+            <Cart items={cartItems} onRemoveItem={(id) => { setCartItems(cartItems.filter((item) => item.id !== id)); toast.info("Item removed from cart"); }} onClearAll={() => { setCartItems([]); toast.info("Cart cleared"); }} />
           ) : (
-            <div className="bg-card rounded-3xl p-8 shadow-lg border border-border/50 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center">
-                <Wrench className="w-8 h-8 text-muted-foreground" />
+            <div style={{ background: 'var(--card)', borderRadius: '1.5rem', padding: '2rem', boxShadow: 'var(--shadow-lg)', border: '1px solid rgba(var(--border-rgb, 0, 0, 0), 0.5)', textAlign: 'center' }}>
+              <div style={{ width: '4rem', height: '4rem', margin: '0 auto 1rem', background: 'var(--muted)', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Wrench style={{ width: '2rem', height: '2rem', color: 'var(--muted-foreground)' }} />
               </div>
-              <h3 className="text-lg font-bold text-foreground mb-2">Your Cart is Empty</h3>
-              <p className="text-muted-foreground">
-                Select materials and add them to your cart to schedule a pickup.
-              </p>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '700', marginBottom: '0.5rem' }}>Your Cart is Empty</h3>
+              <p style={{ color: 'var(--muted-foreground)' }}>Select materials and add them to your cart to schedule a pickup.</p>
             </div>
           )}
         </div>
@@ -1035,19 +790,9 @@ const MaterialCalculator = ({ cartItems, setCartItems }) => {
   );
 };
 
-// Main Component
 const Choose = () => {
   const navigate = useNavigate();
-  
-  const [address, setAddress] = useState({
-    street: "",
-    buildingNumber: "",
-    floor: "",
-    apartment: "",
-    area: "",
-    landmark: "",
-  });
-
+  const [address, setAddress] = useState({ street: "", buildingNumber: "", floor: "", apartment: "", area: "", landmark: "" });
   const [cartItems, setCartItems] = useState([]);
   const [date, setDate] = useState(undefined);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -1069,56 +814,30 @@ const Choose = () => {
   };
 
   const validateAddress = () => {
-    if (!address.street.trim()) {
-      toast.error("Please enter your street name");
-      return false;
-    }
-    if (!address.buildingNumber.trim()) {
-      toast.error("Please enter your building number");
-      return false;
-    }
-    if (!address.area.trim()) {
-      toast.error("Please enter your area/district");
-      return false;
-    }
+    if (!address.street.trim()) { toast.error("Please enter your street name"); return false; }
+    if (!address.buildingNumber.trim()) { toast.error("Please enter your building number"); return false; }
+    if (!address.area.trim()) { toast.error("Please enter your area/district"); return false; }
     return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateAddress()) return;
-
-    if (cartItems.length === 0) {
-      toast.error("Please add at least one material to your cart");
-      return;
-    }
-
-    if (!date) {
-      toast.error("Please select a pickup date");
-      return;
-    }
-
-    if (!selectedTime) {
-      toast.error("Please select a preferred time slot");
-      return;
-    }
+    if (cartItems.length === 0) { toast.error("Please add at least one material to your cart"); return; }
+    if (!date) { toast.error("Please select a pickup date"); return; }
+    if (!selectedTime) { toast.error("Please select a preferred time slot"); return; }
 
     setIsSubmitting(true);
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    const totalEarnings = cartItems.reduce((sum, item) => sum + item.total, 0);
-    const totalWeight = cartItems.reduce((sum, item) => sum + item.weight, 0);
-    const totalCo2 = cartItems.reduce((sum, item) => sum + item.co2Saved, 0);
-    
     setBookingDetails({
       address: formatAddress(),
       items: cartItems,
       date: format(date, "EEEE, MMMM d, yyyy"),
       time: selectedTime,
-      totalEarnings,
-      totalWeight,
-      totalCo2,
+      totalEarnings: cartItems.reduce((sum, item) => sum + item.total, 0),
+      totalWeight: cartItems.reduce((sum, item) => sum + item.weight, 0),
+      totalCo2: cartItems.reduce((sum, item) => sum + item.co2Saved, 0),
     });
 
     setIsSubmitting(false);
@@ -1140,17 +859,10 @@ const Choose = () => {
   };
 
   if (showSuccess && bookingDetails) {
-    return (
-      <SuccessScreen
-        details={bookingDetails}
-        onViewBookings={() => toast.info("My Bookings page coming soon!")}
-        onBackHome={handleBack}
-      />
-    );
+    return <SuccessScreen details={bookingDetails} onViewBookings={() => toast.info("My Bookings page coming soon!")} onBackHome={handleBack} />;
   }
 
   const totalEarnings = cartItems.reduce((sum, item) => sum + item.total, 0);
-
   const currentStep = useMemo(() => {
     if (!address.street || !address.buildingNumber || !address.area) return 0;
     if (cartItems.length === 0) return 1;
@@ -1161,101 +873,71 @@ const Choose = () => {
   return (
     <div className="choose-page">
       <div className="choose-page__background-gradient" />
-      
-      <div 
-        className="choose-page__pattern"
-        style={{ backgroundImage: `url(${ecoPattern})` }}
-      />
-
+      <div className="choose-page__pattern" style={{ backgroundImage: `url(${ecoPattern})` }} />
       <div className="choose-page__blur-effect choose-page__blur-effect--top-left" />
       <div className="choose-page__blur-effect choose-page__blur-effect--middle-right" />
       <div className="choose-page__blur-effect choose-page__blur-effect--bottom-left" />
-
       <BookingHeader onBack={handleBack} />
-
-      <main className="container py-8 max-w-7xl relative z-10">
+      <main className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem', maxWidth: '80rem', position: 'relative', zIndex: '10' }}>
         <HeroSection />
         <StepsIndicator currentStep={currentStep} />
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-8 space-y-6">
-              <AddressSection address={address} setAddress={setAddress} />
-              <MaterialCalculator cartItems={cartItems} setCartItems={setCartItems} />
-              <DateTimeSection
-                date={date}
-                setDate={setDate}
-                selectedTime={selectedTime}
-                setSelectedTime={setSelectedTime}
-              />
-              <NotesSection notes={notes} setNotes={setNotes} />
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '2rem' }}>
+            <div style={{ gridColumn: 'span 12 / span 12' }} className="lg:col-span-8">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <AddressSection address={address} setAddress={setAddress} />
+                <MaterialCalculator cartItems={cartItems} setCartItems={setCartItems} />
+                <DateTimeSection date={date} setDate={setDate} selectedTime={selectedTime} setSelectedTime={setSelectedTime} />
+                <NotesSection notes={notes} setNotes={setNotes} />
+              </div>
             </div>
-
-            <div className="lg:col-span-4 space-y-6">
-              <PickupInfo />
-
-              <div className="bg-card rounded-2xl p-6 border border-border shadow-sm sticky top-24">
-                <h3 className="font-bold text-lg text-foreground mb-4">Booking Summary</h3>
-                
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Items in cart</span>
-                    <span className="font-semibold text-foreground">{cartItems.length}</span>
+            <div style={{ gridColumn: 'span 12 / span 12' }} className="lg:col-span-4">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <PickupInfo />
+                <div style={{ background: 'var(--card)', borderRadius: '1rem', padding: '1.5rem', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)', position: 'sticky', top: '6rem' }}>
+                  <h3 style={{ fontWeight: '700', fontSize: '1.125rem', marginBottom: '1rem' }}>Booking Summary</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                    {[
+                      { label: 'Items in cart', value: cartItems.length },
+                      { label: 'Total weight', value: `${cartItems.reduce((sum, item) => sum + item.weight, 0)} kg` },
+                      date && { label: 'Pickup date', value: format(date, "MMM d") },
+                      selectedTime && { label: 'Time slot', value: selectedTime.split(" - ")[0] }
+                    ].filter(Boolean).map(({ label, value }) => (
+                      <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
+                        <span style={{ color: 'var(--muted-foreground)' }}>{label}</span>
+                        <span style={{ fontWeight: '600' }}>{value}</span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Total weight</span>
-                    <span className="font-semibold text-foreground">
-                      {cartItems.reduce((sum, item) => sum + item.weight, 0)} kg
-                    </span>
-                  </div>
-                  {date && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Pickup date</span>
-                      <span className="font-semibold text-foreground">{format(date, "MMM d")}</span>
+                  <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem', marginBottom: '1.5rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: 'var(--muted-foreground)' }}>Estimated Earnings</span>
+                      <span style={{ fontSize: '1.875rem', fontWeight: '800', color: 'var(--primary)' }}>{totalEarnings} <span style={{ fontSize: '1.125rem' }}>EGP</span></span>
                     </div>
-                  )}
-                  {selectedTime && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Time slot</span>
-                      <span className="font-semibold text-foreground">{selectedTime.split(" - ")[0]}</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="border-t border-border pt-4 mb-6">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Estimated Earnings</span>
-                    <span className="text-3xl font-extrabold text-primary">{totalEarnings} <span className="text-lg">EGP</span></span>
                   </div>
+                  <Button type="submit" disabled={isSubmitting || cartItems.length === 0} className="gradient-primary shadow-primary"
+                    style={{ width: '100%', height: '3.5rem', fontSize: '1.125rem', fontWeight: '600', borderRadius: '0.75rem', transition: 'all 0.3s', opacity: isSubmitting || cartItems.length === 0 ? '0.5' : '1', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 style={{ width: '1.25rem', height: '1.25rem' }} className="animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        Confirm Booking
+                        <ArrowRight style={{ width: '1.25rem', height: '1.25rem' }} />
+                      </>
+                    )}
+                  </Button>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)', textAlign: 'center', marginTop: '0.75rem' }}>
+                    Free pickup • No hidden fees
+                  </p>
                 </div>
-
-                <Button
-                  type="submit"
-                  disabled={isSubmitting || cartItems.length === 0}
-                  className="w-full h-14 gradient-primary text-white text-lg font-semibold rounded-xl shadow-primary hover:opacity-90 transition-all disabled:opacity-50 group"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      Confirm Booking
-                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </Button>
-
-                <p className="text-xs text-muted-foreground text-center mt-3">
-                  Free pickup • No hidden fees
-                </p>
               </div>
             </div>
           </div>
         </form>
       </main>
-
       <footer className="page-footer">
         <div className="container page-footer__text">
           <p>© 2024 Loop. Helping Egypt recycle, one pickup at a time. 🌱</p>
@@ -1265,4 +947,4 @@ const Choose = () => {
   );
 };
 
-export default Choose
+export default Choose;
