@@ -204,19 +204,19 @@ export default function About() {
                 <div className="stat-value" data-suffix="K+">
                   0
                 </div>
-                <div className="stat-label">Active Collectors</div>
+                <div className="stat-label2">Active Collectors</div>
               </div>
               <div className="stat-card scale-in" data-target="2000000">
                 <div className="stat-value" data-suffix="M+">
                   0
                 </div>
-                <div className="stat-label">Items Recycled</div>
+                <div className="stat-label2">Items Recycled</div>
               </div>
               <div className="stat-card scale-in" data-target="500">
                 <div className="stat-value" data-suffix="+">
                   0
                 </div>
-                <div className="stat-label">Partner Facilities</div>
+                <div className="stat-label2">Partner Facilities</div>
               </div>
               <div className="stat-card scale-in" data-target="100">
                 <div className="stat-value" data-suffix="+">
