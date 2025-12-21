@@ -18,7 +18,6 @@ const Profile = () => {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
-  // Get userId from localStorage (تم تغيير user_id إلى userId)
   const userId = localStorage.getItem("userId");
 
   const [personalData, setPersonalData] = useState({
