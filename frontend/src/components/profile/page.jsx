@@ -3,7 +3,6 @@ import "./Profile.css";
 import { useNavigate } from "react-router-dom";
 import logoImage from "../../assets/loopNav.png";
 
-
 const Profile = () => {
   const [activePage, setActivePage] = useState("profile");
   const [editMode, setEditMode] = useState({ personal: false, address: false });
@@ -114,7 +113,6 @@ const Profile = () => {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching user data:", error);
-      displayAlert("Error loading user data");
       setLoading(false);
     }
   };
@@ -146,16 +144,9 @@ const Profile = () => {
       const reader = new FileReader();
       reader.onload = (event) => {
         setAvatar(event.target.result);
-        displayAlert("Profile picture updated!");
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const displayAlert = (message = "Changes saved successfully!") => {
-    setAlertMessage(message);
-    setShowAlert(true);
-    setTimeout(() => setShowAlert(false), 3000);
   };
 
   const toggleEdit = (section) => {
@@ -186,7 +177,6 @@ const Profile = () => {
       const data = await response.json();
 
       if (response.ok) {
-        
         const user = JSON.parse(localStorage.getItem("user"));
         user.first_name = personalData.firstName;
         user.last_name = personalData.lastName;
@@ -198,13 +188,9 @@ const Profile = () => {
 
         setOriginalData((prev) => ({ ...prev, personal: { ...personalData } }));
         toggleEdit("personal");
-        displayAlert("Personal information updated successfully!");
-      } else {
-        displayAlert(data.message || "Error updating personal information");
       }
     } catch (error) {
       console.error("Error saving personal data:", error);
-      displayAlert("Error updating personal information");
     }
   };
 
@@ -242,13 +228,9 @@ const Profile = () => {
       if (response.ok) {
         setOriginalData((prev) => ({ ...prev, address: { ...addressData } }));
         toggleEdit("address");
-        displayAlert("Address information updated successfully!");
-      } else {
-        displayAlert(data.message || "Error updating address information");
       }
     } catch (error) {
       console.error("Error saving address data:", error);
-      displayAlert("Error updating address information");
     }
   };
 
@@ -261,549 +243,534 @@ const Profile = () => {
     toggleEdit(section);
   };
 
-
-  const Sidebar = () => (
-    <aside className="sidebar">
-      <div className="sidebar-header">
-        <div className="logo-icon" onClick={() => navigate("/homeAfter")}>
-          <span className="logo-text">
-            {" "}
-            <img
-              src={logoImage}
-              alt="Loop logo"
-              className="logo-image"
-              onClick={() => navigate("/homeAfter")}
-            />
-          </span>
-        </div>
-      </div>
-
-      <a
-        href="#"
-        className={`nav-link ${activePage === "profile" ? "active" : ""}`}
-        onClick={(e) => {
-          e.preventDefault();
-          setActivePage("profile");
-        }}
-      >
-        <i className="bi bi-person-circle"></i>
-        <span>Profile</span>
-      </a>
-      <a
-        href="#"
-        className={`nav-link ${activePage === "dashboard" ? "active" : ""}`}
-        onClick={(e) => {
-          e.preventDefault();
-          setActivePage("dashboard");
-        }}
-      >
-        <i className="bi bi-speedometer2"></i>
-        <span>Dashboard</span>
-      </a>
-      <a
-        href="#"
-        className={`nav-link ${activePage === "settings" ? "active" : ""}`}
-        onClick={(e) => {
-          e.preventDefault();
-          setActivePage("settings");
-        }}
-      >
-        <i className="bi bi-gear"></i>
-        <span>Settings</span>
-      </a>
-      <a
-        href="#"
-        className="nav-link logout"
-        onClick={(e) => {
-          e.preventDefault();
-          localStorage.clear();
-          navigate("/");
-        }}
-      >
-        <i className="bi bi-box-arrow-right"></i>
-        <span>Log-out</span>
-      </a>
-    </aside>
-  );
-
-
-  const DashboardPage = () => (
-    <div className="page-content">
-      <div className="page-header">
-        <div className="breadcrumb">
-          <a href="#">
-            <i className="bi bi-house-door"></i>
-          </a>
-          <span>›</span>
-          <span className="active">Dashboard</span>
-        </div>
-        <h1 className="page-title">Dashboard</h1>
-        <p className="page-subtitle">
-          Welcome back! Here's your account overview
-        </p>
-      </div>
-
-      <div className="stats-grid">
-        <div className="stat-card primary">
-          <h3>45</h3>
-          <p>Total Orders</p>
-        </div>
-        <div className="stat-card secondary">
-          <h3>3</h3>
-          <p>Pending Orders</p>
-        </div>
-        <div className="stat-card warning">
-          <h3>1</h3>
-          <p>On the Way</p>
-        </div>
-        <div className="stat-card danger">
-          <h3>890</h3>
-          <p>Reward Points</p>
-        </div>
-      </div>
-
-      <div className="content-card">
-        <h3 className="section-title">
-          <i className="bi bi-arrow-repeat"></i>
-          Order History
-        </h3>
-
-        <div className="table-container">
-          <table className="order-table">
-            <thead>
-              <tr>
-                <th>ORDER ID</th>
-                <th>DATE</th>
-                <th>TOTAL</th>
-                <th>STATUS</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order.id}>
-                  <td className="order-id">{order.id}</td>
-                  <td>{order.date}</td>
-                  <td>
-                    {order.total} ({order.items} Products)
-                  </td>
-                  <td>
-                    <span className={`status ${order.status}`}>
-                      {order.status === "on-the-way"
-                        ? "On the way"
-                        : order.status.charAt(0).toUpperCase() +
-                          order.status.slice(1)}
-                    </span>
-                  </td>
-                  <td>
-                    <a href="#" className="view-btn">
-                      View Details
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="pagination">
-          <button disabled>
-            <i className="bi bi-chevron-left"></i>
-          </button>
-          <button className="active">1</button>
-          <button>2</button>
-          <button>3</button>
-          <button>
-            <i className="bi bi-chevron-right"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  const ProfilePage = () => {
-    if (loading) {
-      return (
-        <div className="page-content">
-          <div style={{ textAlign: "center", padding: "3rem" }}>
-            <p>Loading...</p>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className="page-content">
-        <div className="page-header">
-          <div className="breadcrumb">
-            <a href="#">
-              <i className="bi bi-house-door"></i>
-            </a>
-            <span>›</span>
-            <span className="active">Profile</span>
-          </div>
-          <h1 className="page-title">My Profile</h1>
-          <p className="page-subtitle">
-            Manage your personal information and preferences
-          </p>
-        </div>
-
-        <div className="content-card">
-          <div className="profile-header">
-            <div
-              className="avatar-container"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <img
-                src={avatar}
-                alt="Profile Picture"
-                className="profile-avatar"
-              />
-              <div className="avatar-overlay">
-                <i className="bi bi-camera-fill"></i>
-              </div>
-              <input
-                type="file"
-                ref={fileInputRef}
-                className="avatar-input"
-                accept="image/*"
-                onChange={handleAvatarChange}
-              />
-            </div>
-            <div className="profile-info">
-              <h2>
-                {personalData.firstName} {personalData.lastName}
-              </h2>
-              <p>
-                <i className="bi bi-envelope-fill"></i>
-                {personalData.email}
-              </p>
-              {addressData.city && (
-                <p>
-                  <i className="bi bi-geo-alt-fill"></i>
-                  {addressData.city}, {addressData.governorate}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="content-card">
-          <button className="edit-btn" onClick={() => toggleEdit("personal")}>
-            <i className="bi bi-pencil-fill"></i>
-            <span>Edit</span>
-          </button>
-
-          <h3 className="section-title">
-            <i className="bi bi-person-fill"></i>
-            Personal Information
-          </h3>
-
-          <div className="form-grid">
-            <div className="form-group">
-              <label className="form-label">First Name</label>
-              <input
-                type="text"
-                className="form-input"
-                value={personalData.firstName}
-                onChange={(e) =>
-                  setPersonalData({
-                    ...personalData,
-                    firstName: e.target.value,
-                  })
-                }
-                disabled={!editMode.personal}
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Last Name</label>
-              <input
-                type="text"
-                className="form-input"
-                value={personalData.lastName}
-                onChange={(e) =>
-                  setPersonalData({ ...personalData, lastName: e.target.value })
-                }
-                disabled={!editMode.personal}
-              />
-            </div>
-            <div className="form-group full-width">
-              <label className="form-label">Email Address</label>
-              <input
-                type="email"
-                className="form-input"
-                value={personalData.email}
-                disabled={true}
-              />
-            </div>
-          </div>
-
-          {editMode.personal && (
-            <div className="btn-group">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => saveEdit("personal")}
-              >
-                <i className="bi bi-check-circle-fill"></i>
-                Save Changes
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => cancelEdit("personal")}
-              >
-                <i className="bi bi-x-circle-fill"></i>
-                Cancel
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div className="content-card">
-          <button className="edit-btn" onClick={() => toggleEdit("address")}>
-            <i className="bi bi-pencil-fill"></i>
-            <span>Edit</span>
-          </button>
-
-          <h3 className="section-title">
-            <i className="bi bi-house-fill"></i>
-            Address Information
-          </h3>
-
-          <div className="form-grid">
-            <div className="form-group">
-              <label className="form-label">Governorate</label>
-              <input
-                type="text"
-                className="form-input"
-                value={addressData.governorate}
-                onChange={(e) =>
-                  setAddressData({
-                    ...addressData,
-                    governorate: e.target.value,
-                  })
-                }
-                disabled={!editMode.address}
-                placeholder="e.g., Cairo"
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">City</label>
-              <input
-                type="text"
-                className="form-input"
-                value={addressData.city}
-                onChange={(e) =>
-                  setAddressData({ ...addressData, city: e.target.value })
-                }
-                disabled={!editMode.address}
-                placeholder="e.g., Nasr City"
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Building Number</label>
-              <input
-                type="text"
-                className="form-input"
-                value={addressData.building_number}
-                onChange={(e) =>
-                  setAddressData({
-                    ...addressData,
-                    building_number: e.target.value,
-                  })
-                }
-                disabled={!editMode.address}
-                placeholder="e.g., 123"
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Floor</label>
-              <input
-                type="number"
-                className="form-input"
-                value={addressData.floor}
-                onChange={(e) =>
-                  setAddressData({ ...addressData, floor: e.target.value })
-                }
-                disabled={!editMode.address}
-                placeholder="e.g., 3"
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Apartment</label>
-              <input
-                type="number"
-                className="form-input"
-                value={addressData.apartment}
-                onChange={(e) =>
-                  setAddressData({ ...addressData, apartment: e.target.value })
-                }
-                disabled={!editMode.address}
-                placeholder="e.g., 5"
-              />
-            </div>
-          </div>
-
-          {editMode.address && (
-            <div className="btn-group">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => saveEdit("address")}
-              >
-                <i className="bi bi-check-circle-fill"></i>
-                Save Changes
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => cancelEdit("address")}
-              >
-                <i className="bi bi-x-circle-fill"></i>
-                Cancel
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const SettingsPage = () => (
-    <div className="page-content">
-      <div className="page-header">
-        <div className="breadcrumb">
-          <a href="#">
-            <i className="bi bi-house-door"></i>
-          </a>
-          <span>›</span>
-          <span className="active">Settings</span>
-        </div>
-        <h1 className="page-title">Settings</h1>
-        <p className="page-subtitle">Manage your account preferences</p>
-      </div>
-
-      <div className="content-card">
-        <h3 className="section-title">
-          <i className="bi bi-bell-fill"></i>
-          Notifications
-        </h3>
-        <div className="settings-section">
-          <div className="settings-item">
-            <div className="settings-info">
-              <h4>Email Notifications</h4>
-              <p>Receive order updates via email</p>
-            </div>
-            <label className="switch">
-              <input type="checkbox" defaultChecked />
-              <span className="slider"></span>
-            </label>
-          </div>
-          <div className="settings-item">
-            <div className="settings-info">
-              <h4>SMS Notifications</h4>
-              <p>Receive order updates via SMS</p>
-            </div>
-            <label className="switch">
-              <input type="checkbox" />
-              <span className="slider"></span>
-            </label>
-          </div>
-          <div className="settings-item">
-            <div className="settings-info">
-              <h4>Marketing Emails</h4>
-              <p>Receive promotional offers and news</p>
-            </div>
-            <label className="switch">
-              <input type="checkbox" defaultChecked />
-              <span className="slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div className="content-card">
-        <h3 className="section-title">
-          <i className="bi bi-shield-check"></i>
-          Privacy & Security
-        </h3>
-        <div className="settings-section">
-          <div className="settings-item">
-            <div className="settings-info">
-              <h4>Two-Factor Authentication</h4>
-              <p>Add an extra layer of security</p>
-            </div>
-            <label className="switch">
-              <input type="checkbox" />
-              <span className="slider"></span>
-            </label>
-          </div>
-          <div className="settings-item">
-            <div className="settings-info">
-              <h4>Show Online Status</h4>
-              <p>Let others see when you're active</p>
-            </div>
-            <label className="switch">
-              <input type="checkbox" defaultChecked />
-              <span className="slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div className="content-card">
-        <h3 className="section-title">
-          <i className="bi bi-key-fill"></i>
-          Change Password
-        </h3>
-        <div className="form-grid">
-          <div className="form-group full-width">
-            <label className="form-label">Current Password</label>
-            <input
-              type="password"
-              className="form-input"
-              placeholder="Enter current password"
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">New Password</label>
-            <input
-              type="password"
-              className="form-input"
-              placeholder="Enter new password"
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Confirm New Password</label>
-            <input
-              type="password"
-              className="form-input"
-              placeholder="Confirm new password"
-            />
-          </div>
-        </div>
-        <div className="btn-group">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => displayAlert("Password updated successfully!")}
-          >
-            <i className="bi bi-check-circle-fill"></i>
-            Update Password
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <div className="profile-page">
-      <Sidebar />
+      <aside className="sidebar">
+        <div className="sidebar-header">
+          <div className="logo-icon" onClick={() => navigate("/homeAfter")}>
+            <span className="logo-text">
+              <img
+                src={logoImage}
+                alt="Loop logo"
+                className="logo-image"
+                onClick={() => navigate("/homeAfter")}
+              />
+            </span>
+          </div>
+        </div>
+
+        <a
+          href="#"
+          className={`nav-link ${activePage === "profile" ? "active" : ""}`}
+          onClick={(e) => {
+            e.preventDefault();
+            setActivePage("profile");
+          }}
+        >
+          <i className="bi bi-person-circle"></i>
+          <span>Profile</span>
+        </a>
+        <a
+          href="#"
+          className={`nav-link ${activePage === "dashboard" ? "active" : ""}`}
+          onClick={(e) => {
+            e.preventDefault();
+            setActivePage("dashboard");
+          }}
+        >
+          <i className="bi bi-speedometer2"></i>
+          <span>Dashboard</span>
+        </a>
+        <a
+          href="#"
+          className={`nav-link ${activePage === "settings" ? "active" : ""}`}
+          onClick={(e) => {
+            e.preventDefault();
+            setActivePage("settings");
+          }}
+        >
+          <i className="bi bi-gear"></i>
+          <span>Settings</span>
+        </a>
+        <a
+          href="#"
+          className="nav-link logout"
+          onClick={(e) => {
+            e.preventDefault();
+            localStorage.clear();
+            navigate("/");
+          }}
+        >
+          <i className="bi bi-box-arrow-right"></i>
+          <span>Log-out</span>
+        </a>
+      </aside>
+
       <main className="main-content">
-        {activePage === "dashboard" && <DashboardPage />}
-        {activePage === "profile" && <ProfilePage />}
-        {activePage === "settings" && <SettingsPage />}
+        {activePage === "dashboard" && (
+          <div className="page-content">
+            <div className="page-header">
+              <div className="breadcrumb">
+                <a href="#">
+                  <i className="bi bi-house-door"></i>
+                </a>
+                <span>›</span>
+                <span className="active">Dashboard</span>
+              </div>
+              <h1 className="page-title">Dashboard</h1>
+              <p className="page-subtitle">
+                Welcome back! Here's your account overview
+              </p>
+            </div>
+
+            <div className="stats-grid">
+              <div className="stat-card primary">
+                <h3>45</h3>
+                <p>Total Orders</p>
+              </div>
+              <div className="stat-card secondary">
+                <h3>3</h3>
+                <p>Pending Orders</p>
+              </div>
+              <div className="stat-card warning">
+                <h3>1</h3>
+                <p>On the Way</p>
+              </div>
+              <div className="stat-card danger">
+                <h3>890</h3>
+                <p>Reward Points</p>
+              </div>
+            </div>
+
+            <div className="content-card">
+              <h3 className="section-title">
+                <i className="bi bi-arrow-repeat"></i>
+                Order History
+              </h3>
+
+              <div className="table-container">
+                <table className="order-table">
+                  <thead>
+                    <tr>
+                      <th>ORDER ID</th>
+                      <th>DATE</th>
+                      <th>TOTAL</th>
+                      <th>STATUS</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map((order) => (
+                      <tr key={order.id}>
+                        <td className="order-id">{order.id}</td>
+                        <td>{order.date}</td>
+                        <td>
+                          {order.total} ({order.items} Products)
+                        </td>
+                        <td>
+                          <span className={`status ${order.status}`}>
+                            {order.status === "on-the-way"
+                              ? "On the way"
+                              : order.status.charAt(0).toUpperCase() +
+                                order.status.slice(1)}
+                          </span>
+                        </td>
+                        <td>
+                          <a href="#" className="view-btn">
+                            View Details
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="pagination">
+                <button disabled>
+                  <i className="bi bi-chevron-left"></i>
+                </button>
+                <button className="active">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>
+                  <i className="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activePage === "profile" && (
+          loading ? (
+            <div className="page-content">
+              <div style={{ textAlign: "center", padding: "3rem" }}>
+                <p>Loading...</p>
+              </div>
+            </div>
+          ) : (
+            <div className="page-content">
+              <div className="page-header">
+                <div className="breadcrumb">
+                  <a href="#">
+                    <i className="bi bi-house-door"></i>
+                  </a>
+                  <span>›</span>
+                  <span className="active">Profile</span>
+                </div>
+                <h1 className="page-title">My Profile</h1>
+                <p className="page-subtitle">
+                  Manage your personal information and preferences
+                </p>
+              </div>
+
+              <div className="content-card">
+                <div className="profile-header">
+                  <div
+                    className="avatar-container"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <img
+                      src={avatar}
+                      alt="Profile Picture"
+                      className="profile-avatar"
+                    />
+                    <div className="avatar-overlay">
+                      <i className="bi bi-camera-fill"></i>
+                    </div>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      className="avatar-input"
+                      accept="image/*"
+                      onChange={handleAvatarChange}
+                    />
+                  </div>
+                  <div className="profile-info">
+                    <h2>
+                      {personalData.firstName} {personalData.lastName}
+                    </h2>
+                    <p>
+                      <i className="bi bi-envelope-fill"></i>
+                      {personalData.email}
+                    </p>
+                    {addressData.city && (
+                      <p>
+                        <i className="bi bi-geo-alt-fill"></i>
+                        {addressData.city}, {addressData.governorate}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="content-card">
+                <button className="edit-btn" onClick={() => toggleEdit("personal")}>
+                  <i className="bi bi-pencil-fill"></i>
+                  <span>Edit</span>
+                </button>
+
+                <h3 className="section-title">
+                  <i className="bi bi-person-fill"></i>
+                  Personal Information
+                </h3>
+
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label className="form-label">First Name</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={personalData.firstName}
+                      onChange={(e) =>
+                        setPersonalData({
+                          ...personalData,
+                          firstName: e.target.value,
+                        })
+                      }
+                      disabled={!editMode.personal}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Last Name</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={personalData.lastName}
+                      onChange={(e) =>
+                        setPersonalData({ ...personalData, lastName: e.target.value })
+                      }
+                      disabled={!editMode.personal}
+                    />
+                  </div>
+                  <div className="form-group full-width">
+                    <label className="form-label">Email Address</label>
+                    <input
+                      type="email"
+                      className="form-input"
+                      value={personalData.email}
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+
+                {editMode.personal && (
+                  <div className="btn-group">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => saveEdit("personal")}
+                    >
+                      <i className="bi bi-check-circle-fill"></i>
+                      Save Changes
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => cancelEdit("personal")}
+                    >
+                      <i className="bi bi-x-circle-fill"></i>
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="content-card">
+                <button className="edit-btn" onClick={() => toggleEdit("address")}>
+                  <i className="bi bi-pencil-fill"></i>
+                  <span>Edit</span>
+                </button>
+
+                <h3 className="section-title">
+                  <i className="bi bi-house-fill"></i>
+                  Address Information
+                </h3>
+
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label className="form-label">Governorate</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={addressData.governorate}
+                      onChange={(e) =>
+                        setAddressData({
+                          ...addressData,
+                          governorate: e.target.value,
+                        })
+                      }
+                      disabled={!editMode.address}
+                      placeholder="e.g., Cairo"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">City</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={addressData.city}
+                      onChange={(e) =>
+                        setAddressData({ ...addressData, city: e.target.value })
+                      }
+                      disabled={!editMode.address}
+                      placeholder="e.g., Nasr City"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Building Number</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={addressData.building_number}
+                      onChange={(e) =>
+                        setAddressData({
+                          ...addressData,
+                          building_number: e.target.value,
+                        })
+                      }
+                      disabled={!editMode.address}
+                      placeholder="e.g., 123"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Floor</label>
+                    <input
+                      type="number"
+                      className="form-input"
+                      value={addressData.floor}
+                      onChange={(e) =>
+                        setAddressData({ ...addressData, floor: e.target.value })
+                      }
+                      disabled={!editMode.address}
+                      placeholder="e.g., 3"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Apartment</label>
+                    <input
+                      type="number"
+                      className="form-input"
+                      value={addressData.apartment}
+                      onChange={(e) =>
+                        setAddressData({ ...addressData, apartment: e.target.value })
+                      }
+                      disabled={!editMode.address}
+                      placeholder="e.g., 5"
+                    />
+                  </div>
+                </div>
+
+                {editMode.address && (
+                  <div className="btn-group">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => saveEdit("address")}
+                    >
+                      <i className="bi bi-check-circle-fill"></i>
+                      Save Changes
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => cancelEdit("address")}
+                    >
+                      <i className="bi bi-x-circle-fill"></i>
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        )}
+
+        {activePage === "settings" && (
+          <div className="page-content">
+            <div className="page-header">
+              <div className="breadcrumb">
+                <a href="#">
+                  <i className="bi bi-house-door"></i>
+                </a>
+                <span>›</span>
+                <span className="active">Settings</span>
+              </div>
+              <h1 className="page-title">Settings</h1>
+              <p className="page-subtitle">Manage your account preferences</p>
+            </div>
+
+            <div className="content-card">
+              <h3 className="section-title">
+                <i className="bi bi-bell-fill"></i>
+                Notifications
+              </h3>
+              <div className="settings-section">
+                <div className="settings-item">
+                  <div className="settings-info">
+                    <h4>Email Notifications</h4>
+                    <p>Receive order updates via email</p>
+                  </div>
+                  <label className="switch">
+                    <input type="checkbox" defaultChecked />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+                <div className="settings-item">
+                  <div className="settings-info">
+                    <h4>SMS Notifications</h4>
+                    <p>Receive order updates via SMS</p>
+                  </div>
+                  <label className="switch">
+                    <input type="checkbox" />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+                <div className="settings-item">
+                  <div className="settings-info">
+                    <h4>Marketing Emails</h4>
+                    <p>Receive promotional offers and news</p>
+                  </div>
+                  <label className="switch">
+                    <input type="checkbox" defaultChecked />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="content-card">
+              <h3 className="section-title">
+                <i className="bi bi-shield-check"></i>
+                Privacy & Security
+              </h3>
+              <div className="settings-section">
+                <div className="settings-item">
+                  <div className="settings-info">
+                    <h4>Two-Factor Authentication</h4>
+                    <p>Add an extra layer of security</p>
+                  </div>
+                  <label className="switch">
+                    <input type="checkbox" />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+                <div className="settings-item">
+                  <div className="settings-info">
+                    <h4>Show Online Status</h4>
+                    <p>Let others see when you're active</p>
+                  </div>
+                  <label className="switch">
+                    <input type="checkbox" defaultChecked />
+                    <span className="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="content-card">
+              <h3 className="section-title">
+                <i className="bi bi-key-fill"></i>
+                Change Password
+              </h3>
+              <div className="form-grid">
+                <div className="form-group full-width">
+                  <label className="form-label">Current Password</label>
+                  <input
+                    type="password"
+                    className="form-input"
+                    placeholder="Enter current password"
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">New Password</label>
+                  <input
+                    type="password"
+                    className="form-input"
+                    placeholder="Enter new password"
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Confirm New Password</label>
+                  <input
+                    type="password"
+                    className="form-input"
+                    placeholder="Confirm new password"
+                  />
+                </div>
+              </div>
+              <div className="btn-group">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                >
+                  <i className="bi bi-check-circle-fill"></i>
+                  Update Password
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
