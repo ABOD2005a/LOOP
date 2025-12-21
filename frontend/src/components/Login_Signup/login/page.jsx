@@ -110,7 +110,7 @@ export default function Login() {
       <div className="login-wrapper">
           <div className="login-card">
             <div className="login-header">
-              <h1 className="login-title">Sign In</h1>
+              <h1 className="login-title">Login</h1>
               <p className="login-subtitle">
                 Welcome back! Please login to your account
               </p>
