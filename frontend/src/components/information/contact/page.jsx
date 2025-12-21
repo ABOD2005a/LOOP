@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Mail, Phone, MapPin, Clock, Send, Contact } from "lucide-react";
 import "./Contact.css";
 import NavbarAfter from "../../Header_Footer/NavbarAfter/page";
-import Navbar from "../../Header_Footer/Navbar/page"; // Import regular Navbar
+import Navbar from "../../Header_Footer/Navbar/page";
 
 export default function contact() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,15 +27,48 @@ export default function contact() {
 
   useEffect(() => {
     const checkAuthStatus = () => {
+      // طباعة كل القيم الموجودة في localStorage
+      console.log("=== Contact Page - Checking Auth Status ===");
+      console.log("localStorage authToken:", localStorage.getItem("authToken"));
+      console.log("localStorage userData:", localStorage.getItem("userData"));
+      console.log(
+        "localStorage isLoggedIn:",
+        localStorage.getItem("isLoggedIn")
+      );
+      console.log("localStorage token:", localStorage.getItem("token"));
+      console.log("localStorage user:", localStorage.getItem("user"));
+      console.log(
+        "sessionStorage authToken:",
+        sessionStorage.getItem("authToken")
+      );
+      console.log("All localStorage keys:", Object.keys(localStorage));
+
       const token =
         localStorage.getItem("authToken") ||
         sessionStorage.getItem("authToken");
       const userData = localStorage.getItem("userData");
       const isAuth = localStorage.getItem("isLoggedIn") === "true";
-      setIsLoggedIn(!!token || !!userData || isAuth);
+      const tokenAlt = localStorage.getItem("token");
+      const user = localStorage.getItem("user");
+
+      const loggedIn = !!(token || userData || isAuth || tokenAlt || user);
+
+      console.log("Final isLoggedIn:", loggedIn);
+      setIsLoggedIn(loggedIn);
     };
 
     checkAuthStatus();
+
+    const handleStorageChange = () => {
+      console.log("Storage changed in Contact page, rechecking auth...");
+      checkAuthStatus();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   const handleInputChange = (e) => {
@@ -117,7 +150,6 @@ export default function contact() {
   return (
     <div>
       <main>
-        {/* Conditionally render navbar based on login status */}
         {isLoggedIn ? <NavbarAfter /> : <Navbar />}
 
         <section className="hero">

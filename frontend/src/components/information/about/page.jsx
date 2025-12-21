@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./About.css";
 import NavbarAfter from "../../Header_Footer/NavbarAfter/page";
-import Navbar from "../../Header_Footer/Navbar/page"; // Import regular Navbar
+import Navbar from "../../Header_Footer/Navbar/page";
 
 export default function About() {
   const observerRef = useRef(null);
@@ -10,15 +10,49 @@ export default function About() {
 
   useEffect(() => {
     const checkAuthStatus = () => {
-      const token =
-        localStorage.getItem("authToken") ||
-        sessionStorage.getItem("authToken");
+      console.log("=== Checking Auth Status ===");
+      console.log("localStorage authToken:", localStorage.getItem("authToken"));
+      console.log("localStorage userData:", localStorage.getItem("userData"));
+      console.log(
+        "localStorage isLoggedIn:",
+        localStorage.getItem("isLoggedIn")
+      );
+      console.log("localStorage token:", localStorage.getItem("token"));
+      console.log("localStorage user:", localStorage.getItem("user"));
+      console.log(
+        "sessionStorage authToken:",
+        sessionStorage.getItem("authToken")
+      );
+      console.log("All localStorage keys:", Object.keys(localStorage));
+
+      // جرب كل الطرق الممكنة
+      const authToken = localStorage.getItem("authToken");
       const userData = localStorage.getItem("userData");
       const isAuth = localStorage.getItem("isLoggedIn") === "true";
-      setIsLoggedIn(!!token || !!userData || isAuth);
+      const token = localStorage.getItem("token");
+      const user = localStorage.getItem("user");
+      const sessionToken = sessionStorage.getItem("authToken");
+
+      const loggedIn = !!(
+        authToken ||
+        userData ||
+        isAuth ||
+        token ||
+        user ||
+        sessionToken
+      );
+
+      console.log("Final isLoggedIn:", loggedIn);
+      setIsLoggedIn(loggedIn);
     };
 
     checkAuthStatus();
+
+    const handleStorageChange = () => {
+      console.log("Storage changed, rechecking auth...");
+    };
+
+    window.addEventListener("storage", handleStorageChange);
 
     // Intersection Observer for scroll animations
     const observerOptions = {
@@ -37,7 +71,6 @@ export default function About() {
       });
     }, observerOptions);
 
-    // Observe all animated elements
     document.querySelectorAll(".fade-in, .scale-in").forEach((el) => {
       observerRef.current?.observe(el);
     });
@@ -69,7 +102,6 @@ export default function About() {
       }, 16);
     };
 
-    // Observe stat cards for counter animation
     statsObserverRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -94,12 +126,12 @@ export default function About() {
     return () => {
       observerRef.current?.disconnect();
       statsObserverRef.current?.disconnect();
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
   return (
     <main>
-      {/* Conditionally render navbar based on login status */}
       {isLoggedIn ? <NavbarAfter /> : <Navbar />}
 
       <section className="hero">
@@ -134,7 +166,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Mission Section */}
       <section className="mission">
         <div className="container">
           <div className="mission-grid">
@@ -186,16 +217,6 @@ export default function About() {
                   0
                 </div>
                 <div className="stat-label">Partner Facilities</div>
-                <div className="stat-value" data-suffix="K+">0</div>
-                <div className="stat-label2">Active Collectors</div>
-              </div>
-              <div className="stat-card scale-in" data-target="2000000">
-                <div className="stat-value" data-suffix="M+">0</div>
-                <div className="stat-label2">Items Recycled</div>
-              </div>
-              <div className="stat-card scale-in" data-target="500">
-                <div className="stat-value" data-suffix="+">0</div>
-                <div className="stat-label2">Partner Facilities</div>
               </div>
               <div className="stat-card scale-in" data-target="100">
                 <div className="stat-value" data-suffix="+">
@@ -208,7 +229,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Values Section */}
       <section className="values">
         <div className="container">
           <div className="section-header fade-in">

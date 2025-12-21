@@ -196,7 +196,7 @@ const PickupInfo = () => {
   ];
 
   return (
-    <div style={{ background: 'linear-gradient(to bottom right, var(--muted), rgba(var(--muted-rgb, 240, 240, 240), 0.5))', borderRadius: '1rem', padding: '1.5rem', marginBottom: '1.5rem', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ borderRadius: '1rem', padding: '1.5rem', marginBottom: '1.5rem', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', right: '-2.5rem', bottom: '-2.5rem', width: '10rem', height: '10rem', opacity: '0.2' }}>
         <img src={pickupTruck} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
       </div>
