@@ -1,29 +1,38 @@
-import { useState, useRef } from "react";
-import logoImage from "../../assets/loopNav.png";
+import { useState, useRef, useEffect } from "react";
 import "./Profile.css";
 import { useNavigate } from "react-router-dom";
+import logoImage from "../../assets/loopNav.png";
+
 
 const Profile = () => {
   const [activePage, setActivePage] = useState("profile");
   const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState(
+    "Changes saved successfully!"
+  );
   const [editMode, setEditMode] = useState({ personal: false, address: false });
-  const [avatar, setAvatar] = useState("3mk.jpg");
+  const [avatar, setAvatar] = useState(
+    "https://avatar.iran.liara.run/username?username=User"
+  );
+  const [loading, setLoading] = useState(true);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
+  // Get userId from localStorage (تم تغيير user_id إلى userId)
+  const userId = localStorage.getItem("userId");
+
   const [personalData, setPersonalData] = useState({
-    firstName: "Abdallah",
-    lastName: "Elwasify",
-    email: "abdallahelwasify0@gmail.com",
-    phone: "+20 109 640 2629",
-    bio: "Founder",
+    firstName: "",
+    lastName: "",
+    email: "",
   });
 
   const [addressData, setAddressData] = useState({
-    country: "Arab Republic of Egypt",
-    city: "Elsharqia, Egypt",
-    postal: "44681",
-    tax: "AS56417896",
+    governorate: "",
+    city: "",
+    building_number: "",
+    floor: "",
+    apartment: "",
   });
 
   const [originalData, setOriginalData] = useState({
@@ -74,21 +83,71 @@ const Profile = () => {
       items: 7,
       status: "completed",
     },
-    {
-      id: "#3535",
-      date: "5 Mar, 2021",
-      total: "$560.00",
-      items: 2,
-      status: "completed",
-    },
-    {
-      id: "#1374",
-      date: "27 Feb, 2021",
-      total: "$560.00",
-      items: 2,
-      status: "completed",
-    },
   ];
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    // تم إزالة التحويل للـ login - دلوقتي هيفتح الصفحة عادي
+    fetchUserData();
+    if (userId) {
+      fetchAddressData();
+    }
+  }, [userId]);
+
+  const fetchUserData = async () => {
+    try {
+      // Get user data from localStorage
+      const user = localStorage.getItem("user");
+
+      if (user) {
+        const userData = JSON.parse(user);
+        const firstName = userData.first_name || "";
+        const lastName = userData.last_name || "";
+        const email = userData.gmail || "";
+
+        const data = {
+          firstName,
+          lastName,
+          email,
+        };
+
+        setPersonalData(data);
+        setOriginalData((prev) => ({ ...prev, personal: data }));
+
+        // Update avatar with user's name
+        setAvatar(
+          `https://avatar.iran.liara.run/username?username=${firstName}+${lastName}`
+        );
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      displayAlert("Error loading user data");
+      setLoading(false);
+    }
+  };
+
+  const fetchAddressData = async () => {
+    try {
+      const response = await fetch(`http://localhost:8081/address/${userId}`);
+      const data = await response.json();
+
+      if (response.ok && data.hasAddress) {
+        const address = {
+          governorate: data.address.governorate || "",
+          city: data.address.city || "",
+          building_number: data.address.building_number || "",
+          floor: data.address.floor?.toString() || "",
+          apartment: data.address.apartment?.toString() || "",
+        };
+        setAddressData(address);
+        setOriginalData((prev) => ({ ...prev, address }));
+      }
+    } catch (error) {
+      console.error("Error fetching address:", error);
+    }
+  };
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -96,13 +155,14 @@ const Profile = () => {
       const reader = new FileReader();
       reader.onload = (event) => {
         setAvatar(event.target.result);
-        displayAlert();
+        displayAlert("Profile picture updated!");
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const displayAlert = () => {
+  const displayAlert = (message = "Changes saved successfully!") => {
+    setAlertMessage(message);
     setShowAlert(true);
     setTimeout(() => setShowAlert(false), 3000);
   };
@@ -111,14 +171,96 @@ const Profile = () => {
     setEditMode((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
-  const saveEdit = (section) => {
+  const saveEdit = async (section) => {
     if (section === "personal") {
-      setOriginalData((prev) => ({ ...prev, personal: { ...personalData } }));
+      await savePersonalData();
     } else {
-      setOriginalData((prev) => ({ ...prev, address: { ...addressData } }));
+      await saveAddressData();
     }
-    toggleEdit(section);
-    displayAlert();
+  };
+
+  const savePersonalData = async () => {
+    try {
+      const response = await fetch(`http://localhost:8081/user/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          first_name: personalData.firstName,
+          last_name: personalData.lastName,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Update localStorage
+        const user = JSON.parse(localStorage.getItem("user"));
+        user.first_name = personalData.firstName;
+        user.last_name = personalData.lastName;
+        localStorage.setItem("user", JSON.stringify(user));
+
+        // Update avatar
+        setAvatar(
+          `https://avatar.iran.liara.run/username?username=${personalData.firstName}+${personalData.lastName}`
+        );
+
+        setOriginalData((prev) => ({ ...prev, personal: { ...personalData } }));
+        toggleEdit("personal");
+        displayAlert("Personal information updated successfully!");
+      } else {
+        displayAlert(data.message || "Error updating personal information");
+      }
+    } catch (error) {
+      console.error("Error saving personal data:", error);
+      displayAlert("Error updating personal information");
+    }
+  };
+
+  const saveAddressData = async () => {
+    try {
+      // Check if address exists
+      const checkResponse = await fetch(
+        `http://localhost:8081/address/${userId}`
+      );
+      const checkData = await checkResponse.json();
+
+      const method = checkData.hasAddress ? "PUT" : "POST";
+      const url = checkData.hasAddress
+        ? `http://localhost:8081/address/${userId}`
+        : `http://localhost:8081/address`;
+
+      const body = {
+        user_id: parseInt(userId),
+        governorate: addressData.governorate,
+        city: addressData.city,
+        building_number: addressData.building_number,
+        floor: parseInt(addressData.floor),
+        apartment: parseInt(addressData.apartment),
+      };
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setOriginalData((prev) => ({ ...prev, address: { ...addressData } }));
+        toggleEdit("address");
+        displayAlert("Address information updated successfully!");
+      } else {
+        displayAlert(data.message || "Error updating address information");
+      }
+    } catch (error) {
+      console.error("Error saving address data:", error);
+      displayAlert("Error updating address information");
+    }
   };
 
   const cancelEdit = (section) => {
@@ -132,20 +274,24 @@ const Profile = () => {
 
   const handleLogout = () => {
     if (window.confirm("Are you sure you want to logout?")) {
-      alert("Logged out successfully!");
+      localStorage.clear();
+      navigate("/");
     }
   };
 
   const Sidebar = () => (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <div className="logo-icon">
-          <img
-            src={logoImage}
-            alt="Loop logo"
-            className="logo-image"
-            onClick={() => navigate("/homeAfter")}
-          />
+        <div className="logo-icon" onClick={() => navigate("/homeAfter")}>
+          <span className="logo-text">
+            {" "}
+            <img
+              src={logoImage}
+              alt="Loop logo"
+              className="logo-image"
+              onClick={() => navigate("/homeAfter")}
+            />
+          </span>
         </div>
       </div>
 
@@ -199,7 +345,7 @@ const Profile = () => {
   const Alert = () => (
     <div className={`alert ${showAlert ? "show" : ""}`}>
       <div className="alert-icon">✓</div>
-      <span className="alert-text">Changes saved successfully!</span>
+      <span className="alert-text">{alertMessage}</span>
       <button className="alert-close" onClick={() => setShowAlert(false)}>
         ×
       </button>
@@ -224,30 +370,18 @@ const Profile = () => {
 
       <div className="stats-grid">
         <div className="stat-card primary">
-          <div className="icon">
-            <i className="bi bi-bag-check"></i>
-          </div>
           <h3>45</h3>
           <p>Total Orders</p>
         </div>
         <div className="stat-card secondary">
-          <div className="icon">
-            <i className="bi bi-clock-history"></i>
-          </div>
           <h3>3</h3>
           <p>Pending Orders</p>
         </div>
         <div className="stat-card warning">
-          <div className="icon">
-            <i className="bi bi-truck"></i>
-          </div>
           <h3>1</h3>
           <p>On the Way</p>
         </div>
         <div className="stat-card danger">
-          <div className="icon">
-            <i className="bi bi-star"></i>
-          </div>
           <h3>890</h3>
           <p>Reward Points</p>
         </div>
@@ -312,242 +446,254 @@ const Profile = () => {
     </div>
   );
 
-  const ProfilePage = () => (
-    <div className="page-content">
-      <div className="page-header">
-        <div className="breadcrumb">
-          <a href="#">
-            <i className="bi bi-house-door"></i>
-          </a>
-          <span>›</span>
-          <a href="#">Account</a>
-          <span>›</span>
-          <span className="active">Profile</span>
+  const ProfilePage = () => {
+    if (loading) {
+      return (
+        <div className="page-content">
+          <div style={{ textAlign: "center", padding: "3rem" }}>
+            <p>Loading...</p>
+          </div>
         </div>
-        <h1 className="page-title">My Profile</h1>
-        <p className="page-subtitle">
-          Manage your personal information and preferences
-        </p>
-      </div>
+      );
+    }
 
-      <div className="content-card">
-        <div className="profile-header">
-          <div
-            className="avatar-container"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <img
-              src={avatar}
-              alt="Profile Picture"
-              className="profile-avatar"
-            />
-            <div className="avatar-overlay">
-              <i className="bi bi-camera-fill"></i>
+    return (
+      <div className="page-content">
+        <div className="page-header">
+          <div className="breadcrumb">
+            <a href="#">
+              <i className="bi bi-house-door"></i>
+            </a>
+            <span>›</span>
+            <span className="active">Profile</span>
+          </div>
+          <h1 className="page-title">My Profile</h1>
+          <p className="page-subtitle">
+            Manage your personal information and preferences
+          </p>
+        </div>
+
+        <div className="content-card">
+          <div className="profile-header">
+            <div
+              className="avatar-container"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <img
+                src={avatar}
+                alt="Profile Picture"
+                className="profile-avatar"
+              />
+              <div className="avatar-overlay">
+                <i className="bi bi-camera-fill"></i>
+              </div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="avatar-input"
+                accept="image/*"
+                onChange={handleAvatarChange}
+              />
             </div>
-            <input
-              type="file"
-              ref={fileInputRef}
-              className="avatar-input"
-              accept="image/*"
-              onChange={handleAvatarChange}
-            />
-          </div>
-          <div className="profile-info">
-            <h2>
-              {personalData.firstName} {personalData.lastName}
-            </h2>
-            <p>
-              <i className="bi bi-briefcase-fill"></i>
-              {personalData.bio}
-            </p>
-            <p>
-              <i className="bi bi-geo-alt-fill"></i>Zagazig, Elsharqia, Egypt
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="content-card">
-        <button className="edit-btn" onClick={() => toggleEdit("personal")}>
-          <i className="bi bi-pencil-fill"></i>
-          <span>Edit</span>
-        </button>
-
-        <h3 className="section-title">
-          <i className="bi bi-person-fill"></i>
-          Personal Information
-        </h3>
-
-        <div className="form-grid">
-          <div className="form-group">
-            <label className="form-label">First Name</label>
-            <input
-              type="text"
-              className="form-input"
-              value={personalData.firstName}
-              onChange={(e) =>
-                setPersonalData({ ...personalData, firstName: e.target.value })
-              }
-              disabled={!editMode.personal}
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Last Name</label>
-            <input
-              type="text"
-              className="form-input"
-              value={personalData.lastName}
-              onChange={(e) =>
-                setPersonalData({ ...personalData, lastName: e.target.value })
-              }
-              disabled={!editMode.personal}
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Email Address</label>
-            <input
-              type="email"
-              className="form-input"
-              value={personalData.email}
-              onChange={(e) =>
-                setPersonalData({ ...personalData, email: e.target.value })
-              }
-              disabled={!editMode.personal}
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Phone Number</label>
-            <input
-              type="tel"
-              className="form-input"
-              value={personalData.phone}
-              onChange={(e) =>
-                setPersonalData({ ...personalData, phone: e.target.value })
-              }
-              disabled={!editMode.personal}
-            />
-          </div>
-          <div className="form-group full-width">
-            <label className="form-label">Bio</label>
-            <input
-              type="text"
-              className="form-input"
-              value={personalData.bio}
-              onChange={(e) =>
-                setPersonalData({ ...personalData, bio: e.target.value })
-              }
-              disabled={!editMode.personal}
-            />
+            <div className="profile-info">
+              <h2>
+                {personalData.firstName} {personalData.lastName}
+              </h2>
+              <p>
+                <i className="bi bi-envelope-fill"></i>
+                {personalData.email}
+              </p>
+              {addressData.city && (
+                <p>
+                  <i className="bi bi-geo-alt-fill"></i>
+                  {addressData.city}, {addressData.governorate}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
-        {editMode.personal && (
-          <div className="btn-group">
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => saveEdit("personal")}
-            >
-              <i className="bi bi-check-circle-fill"></i>
-              Save Changes
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => cancelEdit("personal")}
-            >
-              <i className="bi bi-x-circle-fill"></i>
-              Cancel
-            </button>
-          </div>
-        )}
-      </div>
+        <div className="content-card">
+          <button className="edit-btn" onClick={() => toggleEdit("personal")}>
+            <i className="bi bi-pencil-fill"></i>
+            <span>Edit</span>
+          </button>
 
-      <div className="content-card">
-        <button className="edit-btn" onClick={() => toggleEdit("address")}>
-          <i className="bi bi-pencil-fill"></i>
-          <span>Edit</span>
-        </button>
+          <h3 className="section-title">
+            <i className="bi bi-person-fill"></i>
+            Personal Information
+          </h3>
 
-        <h3 className="section-title">
-          <i className="bi bi-house-fill"></i>
-          Address Information
-        </h3>
+          <div className="form-grid">
+            <div className="form-group">
+              <label className="form-label">First Name</label>
+              <input
+                type="text"
+                className="form-input"
+                value={personalData.firstName}
+                onChange={(e) =>
+                  setPersonalData({
+                    ...personalData,
+                    firstName: e.target.value,
+                  })
+                }
+                disabled={!editMode.personal}
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Last Name</label>
+              <input
+                type="text"
+                className="form-input"
+                value={personalData.lastName}
+                onChange={(e) =>
+                  setPersonalData({ ...personalData, lastName: e.target.value })
+                }
+                disabled={!editMode.personal}
+              />
+            </div>
+            <div className="form-group full-width">
+              <label className="form-label">Email Address</label>
+              <input
+                type="email"
+                className="form-input"
+                value={personalData.email}
+                disabled={true}
+              />
+            </div>
+          </div>
 
-        <div className="form-grid">
-          <div className="form-group">
-            <label className="form-label">Country</label>
-            <input
-              type="text"
-              className="form-input"
-              value={addressData.country}
-              onChange={(e) =>
-                setAddressData({ ...addressData, country: e.target.value })
-              }
-              disabled={!editMode.address}
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">City / State</label>
-            <input
-              type="text"
-              className="form-input"
-              value={addressData.city}
-              onChange={(e) =>
-                setAddressData({ ...addressData, city: e.target.value })
-              }
-              disabled={!editMode.address}
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Postal Code</label>
-            <input
-              type="text"
-              className="form-input"
-              value={addressData.postal}
-              onChange={(e) =>
-                setAddressData({ ...addressData, postal: e.target.value })
-              }
-              disabled={!editMode.address}
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">TAX ID</label>
-            <input
-              type="text"
-              className="form-input"
-              value={addressData.tax}
-              onChange={(e) =>
-                setAddressData({ ...addressData, tax: e.target.value })
-              }
-              disabled={!editMode.address}
-            />
-          </div>
+          {editMode.personal && (
+            <div className="btn-group">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => saveEdit("personal")}
+              >
+                <i className="bi bi-check-circle-fill"></i>
+                Save Changes
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => cancelEdit("personal")}
+              >
+                <i className="bi bi-x-circle-fill"></i>
+                Cancel
+              </button>
+            </div>
+          )}
         </div>
 
-        {editMode.address && (
-          <div className="btn-group">
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => saveEdit("address")}
-            >
-              <i className="bi bi-check-circle-fill"></i>
-              Save Changes
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => cancelEdit("address")}
-            >
-              <i className="bi bi-x-circle-fill"></i>
-              Cancel
-            </button>
+        <div className="content-card">
+          <button className="edit-btn" onClick={() => toggleEdit("address")}>
+            <i className="bi bi-pencil-fill"></i>
+            <span>Edit</span>
+          </button>
+
+          <h3 className="section-title">
+            <i className="bi bi-house-fill"></i>
+            Address Information
+          </h3>
+
+          <div className="form-grid">
+            <div className="form-group">
+              <label className="form-label">Governorate</label>
+              <input
+                type="text"
+                className="form-input"
+                value={addressData.governorate}
+                onChange={(e) =>
+                  setAddressData({
+                    ...addressData,
+                    governorate: e.target.value,
+                  })
+                }
+                disabled={!editMode.address}
+                placeholder="e.g., Cairo"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">City</label>
+              <input
+                type="text"
+                className="form-input"
+                value={addressData.city}
+                onChange={(e) =>
+                  setAddressData({ ...addressData, city: e.target.value })
+                }
+                disabled={!editMode.address}
+                placeholder="e.g., Nasr City"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Building Number</label>
+              <input
+                type="text"
+                className="form-input"
+                value={addressData.building_number}
+                onChange={(e) =>
+                  setAddressData({
+                    ...addressData,
+                    building_number: e.target.value,
+                  })
+                }
+                disabled={!editMode.address}
+                placeholder="e.g., 123"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Floor</label>
+              <input
+                type="number"
+                className="form-input"
+                value={addressData.floor}
+                onChange={(e) =>
+                  setAddressData({ ...addressData, floor: e.target.value })
+                }
+                disabled={!editMode.address}
+                placeholder="e.g., 3"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Apartment</label>
+              <input
+                type="number"
+                className="form-input"
+                value={addressData.apartment}
+                onChange={(e) =>
+                  setAddressData({ ...addressData, apartment: e.target.value })
+                }
+                disabled={!editMode.address}
+                placeholder="e.g., 5"
+              />
+            </div>
           </div>
-        )}
+
+          {editMode.address && (
+            <div className="btn-group">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => saveEdit("address")}
+              >
+                <i className="bi bi-check-circle-fill"></i>
+                Save Changes
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => cancelEdit("address")}
+              >
+                <i className="bi bi-x-circle-fill"></i>
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const SettingsPage = () => (
     <div className="page-content">
@@ -556,8 +702,6 @@ const Profile = () => {
           <a href="#">
             <i className="bi bi-house-door"></i>
           </a>
-          <span>›</span>
-          <a href="#">Account</a>
           <span>›</span>
           <span className="active">Settings</span>
         </div>
@@ -668,7 +812,7 @@ const Profile = () => {
           <button
             type="button"
             className="btn btn-primary"
-            onClick={displayAlert}
+            onClick={() => displayAlert("Password updated successfully!")}
           >
             <i className="bi bi-check-circle-fill"></i>
             Update Password

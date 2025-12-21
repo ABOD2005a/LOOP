@@ -51,7 +51,31 @@ function NavbarAfter() {
     localStorage.removeItem("userLastName");
     localStorage.removeItem("userEmail");
 
-    navigate("/");
+    navigate("/"); // يروح للصفحة الرئيسية بعد الـ Logout
+  };
+
+  const getInitials = () => {
+    if (!user) return "?";
+    const firstInitial = user.first_name?.charAt(0)?.toUpperCase() || "";
+    const lastInitial = user.last_name?.charAt(0)?.toUpperCase() || "";
+    return `${firstInitial}${lastInitial}` || "?";
+  };
+
+  const getAvatarColor = () => {
+    if (!user) return "#6366f1";
+    const name = `${user.first_name}${user.last_name}`;
+    const colors = [
+      "#6366f1",
+      "#8b5cf6", 
+      "#ec4899", 
+      "#f59e0b", 
+      "#10b981", 
+      "#3b82f6",
+      "#ef4444", 
+      "#06b6d4", 
+    ];
+    const index = name.length % colors.length;
+    return colors[index];
   };
 
   return (
@@ -91,21 +115,24 @@ function NavbarAfter() {
 
           <div className="user-menu" ref={dropdownRef}>
             <button className="avatar-button" onClick={toggleDropdown}>
-              <img
-                src="https://avatar.iran.liara.run/public/9"
-                alt="User Avatar"
-                className="avatar-image"
-              />
+              <div
+                className="avatar-initials"
+                style={{ backgroundColor: getAvatarColor() }}
+              >
+                {getInitials()}
+              </div>
             </button>
 
             {isDropdownOpen && (
               <div className="dropdown-menu">
                 <div className="dropdown-header">
                   <div className="dropdown-avatar">
-                    <img
-                      src="https://avatar.iran.liara.run/public/9"
-                      alt="User Avatar"
-                    />
+                    <div
+                      className="avatar-initials"
+                      style={{ backgroundColor: getAvatarColor() }}
+                    >
+                      {getInitials()}
+                    </div>
                   </div>
                   <div className="dropdown-user-info">
                     <p className="dropdown-name">
@@ -123,22 +150,31 @@ function NavbarAfter() {
 
                 <ul className="dropdown-list">
                   <li>
-                    <a href="/profile" className="dropdown-item">
+                    <button 
+                      onClick={() => navigate('/profile')} 
+                      className="dropdown-item"
+                    >
                       <i className="fas fa-user"></i>
                       <span>Profile</span>
-                    </a>
+                    </button>
                   </li>
                   <li>
-                    <a href="/bookings" className="dropdown-item">
+                    <button 
+                      onClick={() => navigate('/bookings')} 
+                      className="dropdown-item"
+                    >
                       <i className="fas fa-calendar-alt"></i>
                       <span>My Bookings</span>
-                    </a>
+                    </button>
                   </li>
                   <li>
-                    <a href="/settings" className="dropdown-item">
+                    <button 
+                      onClick={() => navigate('/settings')} 
+                      className="dropdown-item"
+                    >
                       <i className="fas fa-cog"></i>
                       <span>Settings</span>
-                    </a>
+                    </button>
                   </li>
                 </ul>
 
