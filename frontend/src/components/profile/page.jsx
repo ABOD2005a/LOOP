@@ -6,10 +6,6 @@ import logoImage from "../../assets/loopNav.png";
 
 const Profile = () => {
   const [activePage, setActivePage] = useState("profile");
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState(
-    "Changes saved successfully!"
-  );
   const [editMode, setEditMode] = useState({ personal: false, address: false });
   const [avatar, setAvatar] = useState(
     "https://avatar.iran.liara.run/username?username=User"
@@ -84,9 +80,7 @@ const Profile = () => {
     },
   ];
 
-  // Fetch user data on component mount
   useEffect(() => {
-    // تم إزالة التحويل للـ login - دلوقتي هيفتح الصفحة عادي
     fetchUserData();
     if (userId) {
       fetchAddressData();
@@ -95,7 +89,6 @@ const Profile = () => {
 
   const fetchUserData = async () => {
     try {
-      // Get user data from localStorage
       const user = localStorage.getItem("user");
 
       if (user) {
@@ -113,7 +106,6 @@ const Profile = () => {
         setPersonalData(data);
         setOriginalData((prev) => ({ ...prev, personal: data }));
 
-        // Update avatar with user's name
         setAvatar(
           `https://avatar.iran.liara.run/username?username=${firstName}+${lastName}`
         );
@@ -194,13 +186,12 @@ const Profile = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Update localStorage
+        
         const user = JSON.parse(localStorage.getItem("user"));
         user.first_name = personalData.firstName;
         user.last_name = personalData.lastName;
         localStorage.setItem("user", JSON.stringify(user));
 
-        // Update avatar
         setAvatar(
           `https://avatar.iran.liara.run/username?username=${personalData.firstName}+${personalData.lastName}`
         );
@@ -219,7 +210,6 @@ const Profile = () => {
 
   const saveAddressData = async () => {
     try {
-      // Check if address exists
       const checkResponse = await fetch(
         `http://localhost:8081/address/${userId}`
       );
@@ -271,12 +261,6 @@ const Profile = () => {
     toggleEdit(section);
   };
 
-  const handleLogout = () => {
-    if (window.confirm("Are you sure you want to logout?")) {
-      localStorage.clear();
-      navigate("/");
-    }
-  };
 
   const Sidebar = () => (
     <aside className="sidebar">
@@ -332,7 +316,8 @@ const Profile = () => {
         className="nav-link logout"
         onClick={(e) => {
           e.preventDefault();
-          handleLogout();
+          localStorage.clear();
+          navigate("/");
         }}
       >
         <i className="bi bi-box-arrow-right"></i>
@@ -341,15 +326,6 @@ const Profile = () => {
     </aside>
   );
 
-  const Alert = () => (
-    <div className={`alert ${showAlert ? "show" : ""}`}>
-      <div className="alert-icon">✓</div>
-      <span className="alert-text">{alertMessage}</span>
-      <button className="alert-close" onClick={() => setShowAlert(false)}>
-        ×
-      </button>
-    </div>
-  );
 
   const DashboardPage = () => (
     <div className="page-content">
@@ -824,7 +800,6 @@ const Profile = () => {
   return (
     <div className="profile-page">
       <Sidebar />
-      <Alert />
       <main className="main-content">
         {activePage === "dashboard" && <DashboardPage />}
         {activePage === "profile" && <ProfilePage />}
