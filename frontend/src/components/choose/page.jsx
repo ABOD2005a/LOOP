@@ -759,7 +759,7 @@ const MaterialCalculator = ({ cartItems, setCartItems }) => {
 
   return (
     <section style={{  borderRadius: '1.5rem', padding: '1.5rem' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', alignItems: 'flex-start' }}>
+     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
         <div style={{ background: 'var(--card)', borderRadius: '1.5rem', padding: '1.5rem', boxShadow: 'var(--shadow-lg)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
             <h3 style={{ fontSize: '1.25rem', fontWeight: '700' }}>Add Materials</h3>
@@ -798,7 +798,7 @@ const MaterialCalculator = ({ cartItems, setCartItems }) => {
             Add to Cart
           </Button>
         </div>
-        <div>
+        
           {cartItems.length > 0 ? (
             <Cart items={cartItems} onRemoveItem={(id) => { setCartItems(cartItems.filter((item) => item.id !== id)); toast.info("Item removed from cart"); }} onClearAll={() => { setCartItems([]); toast.info("Cart cleared"); }} />
           ) : (
@@ -810,7 +810,7 @@ const MaterialCalculator = ({ cartItems, setCartItems }) => {
               <p style={{ color: 'var(--muted-foreground)' }}>Select materials and add them to your cart to schedule a pickup.</p>
             </div>
           )}
-        </div>
+        
       </div>
     </section>
   );
