@@ -758,9 +758,9 @@ const MaterialCalculator = ({ cartItems, setCartItems }) => {
   const canAddToCart = currentMaterial && weight > 0 && (!currentMaterial.subTypes || currentSubType);
 
   return (
-    <section style={{ background: 'var(--muted)', borderRadius: '1.5rem', padding: '1.5rem' }}>
+    <section style={{  borderRadius: '1.5rem', padding: '1.5rem' }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', alignItems: 'flex-start' }}>
-        <div style={{ background: 'var(--card)', borderRadius: '1.5rem', padding: '1.5rem', boxShadow: 'var(--shadow-lg)', border: '1px solid rgba(var(--border-rgb, 0, 0, 0), 0.5)' }}>
+        <div style={{ background: 'var(--card)', borderRadius: '1.5rem', padding: '1.5rem', boxShadow: 'var(--shadow-lg)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
             <h3 style={{ fontSize: '1.25rem', fontWeight: '700' }}>Add Materials</h3>
             <span style={{ padding: '0.375rem 0.75rem', background: 'var(--muted)', borderRadius: '9999px', fontSize: '0.875rem', fontWeight: '600', color: 'var(--muted-foreground)' }}>
@@ -802,7 +802,7 @@ const MaterialCalculator = ({ cartItems, setCartItems }) => {
           {cartItems.length > 0 ? (
             <Cart items={cartItems} onRemoveItem={(id) => { setCartItems(cartItems.filter((item) => item.id !== id)); toast.info("Item removed from cart"); }} onClearAll={() => { setCartItems([]); toast.info("Cart cleared"); }} />
           ) : (
-            <div style={{ background: 'var(--card)', borderRadius: '1.5rem', padding: '2rem', boxShadow: 'var(--shadow-lg)', border: '1px solid rgba(var(--border-rgb, 0, 0, 0), 0.5)', textAlign: 'center' }}>
+            <div style={{ background: 'var(--card)', borderRadius: '1.5rem', padding: '2rem', boxShadow: 'var(--shadow-lg)',  textAlign: 'center' }}>
               <div style={{ width: '4rem', height: '4rem', margin: '0 auto 1rem', background: 'var(--muted)', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Wrench style={{ width: '2rem', height: '2rem', color: 'var(--muted-foreground)' }} />
               </div>
