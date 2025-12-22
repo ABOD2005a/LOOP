@@ -7,24 +7,18 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const supabaseUrl =
-  process.env.SUPABASE_URL || "https://xkhhilqskmxxemmcrnmg.supabase.co";
-const supabaseKey =
-  process.env.SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhraGhpbHFza214eGVtbWNybm1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjUyNjAsImV4cCI6MjA4MDYwMTI2MH0.xMEI9YPWvtjfIVYM9ImMW6HeZEBsOZ70ef5nQHsOhfg";
-
-const supabaseServiceKey =
-  process.env.SUPABASE_SERVICE_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhraGhpbHFza214eGVtbWNybm1nIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NTAyNTI2MCwiZXhwIjoyMDgwNjAxMjYwfQ.tq8yo41bLnHy2662n03kumzIbb2TofGFwgXHBeU1jZU";
+const supabaseUrl = process.env.SUPABASE_URL || "https://xkhhilqskmxxemmcrnmg.supabase.co";
+const supabaseKey = process.env.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhraGhpbHFza214eGVtbWNybm1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjUyNjAsImV4cCI6MjA4MDYwMTI2MH0.xMEI9YPWvtjfIVYM9ImMW6HeZEBsOZ70ef5nQHsOhfg";
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhraGhpbHFza214eGVtbWNybm1nIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NTAyNTI2MCwiZXhwIjoyMDgwNjAxMjYwfQ.tq8yo41bLnHy2662n03kumzIbb2TofGFwgXHBeU1jZU";
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
-// SIGNUP ENDPOINT
+// ==================== AUTH ENDPOINTS ====================
+
 app.post("/signup", async (req, res) => {
   try {
-    const { first_name, last_name, gmail, password, confirm_password } =
-      req.body;
+    const { first_name, last_name, gmail, password, confirm_password } = req.body;
 
     if (!first_name || !last_name || !gmail || !password) {
       return res.status(400).json({ message: "All fields are required" });
@@ -39,17 +33,11 @@ app.post("/signup", async (req, res) => {
       return res.status(400).json({ message: "Invalid email format" });
     }
 
-    const { data: existingUser, error: checkError } = await supabase
+    const { data: existingUser } = await supabase
       .from("login")
       .select("gmail")
       .eq("gmail", gmail)
       .maybeSingle();
-
-    if (checkError) {
-      return res
-        .status(500)
-        .json({ message: "Error checking email availability" });
-    }
 
     if (existingUser) {
       return res.status(409).json({
@@ -61,26 +49,11 @@ app.post("/signup", async (req, res) => {
 
     const { data, error } = await supabase
       .from("login")
-      .insert([
-        {
-          first_name,
-          last_name,
-          gmail,
-          password: hash,
-        },
-      ])
+      .insert([{ first_name, last_name, gmail, password: hash }])
       .select();
 
     if (error) {
-      if (error.code === "23505") {
-        return res.status(409).json({
-          message: "This email is already registered. Please login instead.",
-        });
-      }
-
-      return res
-        .status(500)
-        .json({ message: "Signup failed", error: error.message });
+      return res.status(500).json({ message: "Signup failed", error: error.message });
     }
 
     return res.status(201).json({
@@ -93,21 +66,16 @@ app.post("/signup", async (req, res) => {
       },
     });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ message: "Signup failed", error: err.message });
+    return res.status(500).json({ message: "Signup failed", error: err.message });
   }
 });
 
-// LOGIN ENDPOINT
 app.post("/login", async (req, res) => {
   try {
     const { gmail: inputEmail, password: inputPassword } = req.body;
 
     if (!inputEmail || !inputPassword) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
+      return res.status(400).json({ message: "Email and password are required" });
     }
 
     const { data, error } = await supabase
@@ -116,11 +84,7 @@ app.post("/login", async (req, res) => {
       .eq("gmail", inputEmail)
       .maybeSingle();
 
-    if (error) {
-      return res.status(500).json({ message: "Server error during login" });
-    }
-
-    if (!data) {
+    if (error || !data) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
@@ -140,26 +104,14 @@ app.post("/login", async (req, res) => {
 
     return res.status(401).json({ message: "Invalid email or password" });
   } catch (err) {
-    return res.status(500).json({
-      message: "Login failed due to server error",
-      error: err.message,
-    });
+    return res.status(500).json({ message: "Login failed", error: err.message });
   }
 });
 
-// UPDATE USER NAME ENDPOINT
 app.put("/user/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
     const { first_name, last_name } = req.body;
-
-    console.log("Received update request for user:", user_id);
-    console.log("Request body:", { first_name, last_name });
-
-    if (!user_id) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
-
     const userIdInt = parseInt(user_id);
 
     if (isNaN(userIdInt)) {
@@ -167,86 +119,33 @@ app.put("/user/:user_id", async (req, res) => {
     }
 
     if (!first_name || !last_name) {
-      return res
-        .status(400)
-        .json({ message: "First name and last name are required" });
+      return res.status(400).json({ message: "First name and last name are required" });
     }
 
-    if (first_name.trim().length === 0 || last_name.trim().length === 0) {
-      return res
-        .status(400)
-        .json({ message: "Names cannot be empty or only whitespace" });
-    }
-
-    const { data: existingUser, error: checkError } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("login")
-      .select("id")
-      .eq("id", userIdInt)
-      .single();
-
-    if (checkError || !existingUser) {
-      console.error("User not found:", userIdInt);
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    console.log("User exists, proceeding with update");
-
-    const { data: updateData, error: updateError } = await supabaseAdmin
-      .from("login")
-      .update({
-        first_name: first_name.trim(),
-        last_name: last_name.trim(),
-      })
+      .update({ first_name: first_name.trim(), last_name: last_name.trim() })
       .eq("id", userIdInt)
       .select();
 
-    console.log("Update result:", { data: updateData, error: updateError });
-
-    if (updateError) {
-      console.error("Supabase update error:", updateError);
-      return res.status(500).json({
-        message: "Failed to update user name",
-        error: updateError.message,
-      });
+    if (error) {
+      return res.status(500).json({ message: "Failed to update user", error: error.message });
     }
-
-    const { data: updatedUser, error: fetchError } = await supabase
-      .from("login")
-      .select("id, first_name, last_name, gmail")
-      .eq("id", userIdInt)
-      .single();
-
-    if (fetchError) {
-      console.error("Error fetching updated user:", fetchError);
-      return res.status(500).json({
-        message: "Update may have succeeded but failed to fetch updated data",
-        error: fetchError.message,
-      });
-    }
-
-    console.log("Successfully updated user:", updatedUser);
 
     return res.status(200).json({
       message: "User name updated successfully",
-      user: updatedUser,
+      user: data[0],
     });
   } catch (err) {
-    console.error("Server error:", err);
-    return res
-      .status(500)
-      .json({ message: "User update failed", error: err.message });
+    return res.status(500).json({ message: "User update failed", error: err.message });
   }
 });
 
-// GET ADDRESS ENDPOINT
+// ==================== ADDRESS ENDPOINTS ====================
+
 app.get("/address/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
-
-    if (!user_id) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
-
     const userIdInt = parseInt(user_id);
 
     if (isNaN(userIdInt)) {
@@ -260,17 +159,11 @@ app.get("/address/:user_id", async (req, res) => {
       .maybeSingle();
 
     if (error) {
-      console.error("Supabase error:", error);
-      return res
-        .status(500)
-        .json({ message: "Failed to fetch address", error: error.message });
+      return res.status(500).json({ message: "Failed to fetch address", error: error.message });
     }
 
     if (!data) {
-      return res.status(404).json({
-        message: "No address found for this user",
-        hasAddress: false,
-      });
+      return res.status(404).json({ message: "No address found", hasAddress: false });
     }
 
     return res.status(200).json({
@@ -279,238 +172,96 @@ app.get("/address/:user_id", async (req, res) => {
       address: data,
     });
   } catch (err) {
-    console.error("Server error:", err);
-    return res
-      .status(500)
-      .json({ message: "Failed to fetch address", error: err.message });
+    return res.status(500).json({ message: "Failed to fetch address", error: err.message });
   }
 });
 
-// POST ADDRESS ENDPOINT
 app.post("/address", async (req, res) => {
   try {
-    const { user_id, governorate, city, building_number, floor, apartment } =
-      req.body;
+    const { user_id, governorate, city, building_number, floor, apartment } = req.body;
 
-    console.log("Address save request:", {
-      user_id,
-      governorate,
-      city,
-      building_number,
-      floor,
-      apartment,
-    });
-
-    if (!user_id) {
-      return res
-        .status(400)
-        .json({ message: "User ID is required. Please login first." });
-    }
-    if (!governorate) {
-      return res.status(400).json({ message: "Governorate is required" });
-    }
-    if (!city) {
-      return res.status(400).json({ message: "City is required" });
-    }
-    if (!building_number) {
-      return res.status(400).json({ message: "Building number is required" });
-    }
-    if (floor === undefined || floor === null || floor === "") {
-      return res.status(400).json({ message: "Floor is required" });
-    }
-    if (apartment === undefined || apartment === null || apartment === "") {
-      return res.status(400).json({ message: "Apartment is required" });
-    }
-
-    const floorInt = parseInt(floor);
-    const apartmentInt = parseInt(apartment);
-
-    if (isNaN(floorInt)) {
-      return res.status(400).json({ message: "Floor must be a valid number" });
-    }
-    if (isNaN(apartmentInt)) {
-      return res
-        .status(400)
-        .json({ message: "Apartment must be a valid number" });
+    if (!user_id || !governorate || !city || !building_number || floor === undefined || apartment === undefined) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
     const userIdInt = parseInt(user_id);
+    const floorInt = parseInt(floor);
+    const apartmentInt = parseInt(apartment);
 
-    if (isNaN(userIdInt)) {
-      return res.status(400).json({ message: "Invalid user ID format" });
+    if (isNaN(userIdInt) || isNaN(floorInt) || isNaN(apartmentInt)) {
+      return res.status(400).json({ message: "Invalid format for numeric fields" });
     }
 
-    // Use admin client to bypass RLS
     const { data: existingAddress } = await supabaseAdmin
       .from("address")
       .select("*")
       .eq("user_id", userIdInt)
       .maybeSingle();
 
-    console.log("Existing address:", existingAddress);
-
     if (existingAddress) {
-      // Update existing address using admin client
       const { data, error } = await supabaseAdmin
         .from("address")
-        .update({
-          governorate: governorate,
-          city: city,
-          building_number: building_number,
-          floor: floorInt,
-          apartment: apartmentInt,
-        })
+        .update({ governorate, city, building_number, floor: floorInt, apartment: apartmentInt })
         .eq("user_id", userIdInt)
         .select();
 
-      console.log("Update result:", { data, error });
-
       if (error) {
-        console.error("Update error:", error);
-        return res
-          .status(500)
-          .json({ message: "Failed to update address", error: error.message });
+        return res.status(500).json({ message: "Failed to update address", error: error.message });
       }
 
-      return res
-        .status(200)
-        .json({ message: "Address updated successfully", data });
+      return res.status(200).json({ message: "Address updated successfully", data });
     } else {
-      // Insert new address using admin client
       const { data, error } = await supabaseAdmin
         .from("address")
-        .insert([
-          {
-            user_id: userIdInt,
-            governorate: governorate,
-            city: city,
-            building_number: building_number,
-            floor: floorInt,
-            apartment: apartmentInt,
-          },
-        ])
+        .insert([{ user_id: userIdInt, governorate, city, building_number, floor: floorInt, apartment: apartmentInt }])
         .select();
 
-      console.log("Insert result:", { data, error });
-
       if (error) {
-        console.error("Insert error:", error);
-        return res
-          .status(500)
-          .json({ message: "Failed to save address", error: error.message });
+        return res.status(500).json({ message: "Failed to save address", error: error.message });
       }
 
-      return res
-        .status(201)
-        .json({ message: "Address saved successfully", data });
+      return res.status(201).json({ message: "Address saved successfully", data });
     }
   } catch (err) {
-    console.error("Server error:", err);
-    return res
-      .status(500)
-      .json({ message: "Address save failed", error: err.message });
+    return res.status(500).json({ message: "Address save failed", error: err.message });
   }
 });
 
-// PUT ADDRESS ENDPOINT
 app.put("/address/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
     const { governorate, city, building_number, floor, apartment } = req.body;
-
-    console.log("Address update request:", {
-      user_id,
-      governorate,
-      city,
-      building_number,
-      floor,
-      apartment,
-    });
-
-    if (!user_id) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
-
     const userIdInt = parseInt(user_id);
 
     if (isNaN(userIdInt)) {
       return res.status(400).json({ message: "Invalid user ID format" });
     }
 
-    if (
-      !governorate ||
-      !city ||
-      !building_number ||
-      floor === undefined ||
-      apartment === undefined
-    ) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    const floorInt = parseInt(floor);
-    const apartmentInt = parseInt(apartment);
-
-    if (isNaN(floorInt) || isNaN(apartmentInt)) {
-      return res
-        .status(400)
-        .json({ message: "Floor and apartment must be valid numbers" });
-    }
-
-    // Use admin client to bypass RLS
     const { data, error } = await supabaseAdmin
       .from("address")
-      .update({
-        governorate: governorate,
-        city: city,
-        building_number: building_number,
-        floor: floorInt,
-        apartment: apartmentInt,
-      })
+      .update({ governorate, city, building_number, floor: parseInt(floor), apartment: parseInt(apartment) })
       .eq("user_id", userIdInt)
       .select();
 
-    console.log("Update result:", { data, error });
-
     if (error) {
-      console.error("Update error:", error);
-      return res
-        .status(500)
-        .json({ message: "Failed to update address", error: error.message });
+      return res.status(500).json({ message: "Failed to update address", error: error.message });
     }
 
-    if (!data || data.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Address not found for this user" });
-    }
-
-    return res
-      .status(200)
-      .json({ message: "Address updated successfully", data });
+    return res.status(200).json({ message: "Address updated successfully", data });
   } catch (err) {
-    console.error("Server error:", err);
-    return res
-      .status(500)
-      .json({ message: "Address update failed", error: err.message });
+    return res.status(500).json({ message: "Address update failed", error: err.message });
   }
 });
 
-// DELETE ADDRESS ENDPOINT
 app.delete("/address/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
-
-    if (!user_id) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
-
     const userIdInt = parseInt(user_id);
 
     if (isNaN(userIdInt)) {
       return res.status(400).json({ message: "Invalid user ID format" });
     }
 
-    // Use admin client to bypass RLS
     const { data, error } = await supabaseAdmin
       .from("address")
       .delete()
@@ -518,27 +269,291 @@ app.delete("/address/:user_id", async (req, res) => {
       .select();
 
     if (error) {
-      return res
-        .status(500)
-        .json({ message: "Failed to delete address", error: error.message });
-    }
-
-    if (!data || data.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Address not found for this user" });
+      return res.status(500).json({ message: "Failed to delete address", error: error.message });
     }
 
     return res.status(200).json({ message: "Address deleted successfully" });
   } catch (err) {
-    console.error("Server error:", err);
-    return res
-      .status(500)
-      .json({ message: "Address deletion failed", error: err.message });
+    return res.status(500).json({ message: "Address deletion failed", error: err.message });
   }
 });
 
-// Health check endpoint
+// ==================== BOOKING ENDPOINTS ====================
+
+app.post("/booking", async (req, res) => {
+  try {
+    const {
+      user_id,
+      street,
+      building_number,
+      floor,
+      apartment,
+      area,
+      landmark,
+      pickup_date,
+      pickup_time,
+      notes,
+      total_weight,
+      total_earnings,
+      total_co2_saved,
+      items
+    } = req.body;
+
+    // Validation
+    if (!user_id) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+    if (!street || !building_number || !area) {
+      return res.status(400).json({ message: "Address fields are required" });
+    }
+    if (!pickup_date || !pickup_time) {
+      return res.status(400).json({ message: "Pickup date and time are required" });
+    }
+    if (!items || items.length === 0) {
+      return res.status(400).json({ message: "At least one item is required" });
+    }
+
+    const userIdInt = parseInt(user_id);
+    if (isNaN(userIdInt)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+
+    // Insert booking
+    const { data: bookingData, error: bookingError } = await supabaseAdmin
+      .from("bookings")
+      .insert([
+        {
+          user_id: userIdInt,
+          street,
+          building_number,
+          floor: floor || null,
+          apartment: apartment || null,
+          area,
+          landmark: landmark || null,
+          pickup_date,
+          pickup_time,
+          notes: notes || null,
+          total_weight: parseFloat(total_weight),
+          total_earnings: parseFloat(total_earnings),
+          total_co2_saved: parseFloat(total_co2_saved),
+          status: "pending"
+        }
+      ])
+      .select();
+
+    if (bookingError) {
+      console.error("Booking error:", bookingError);
+      return res.status(500).json({ 
+        message: "Failed to create booking", 
+        error: bookingError.message 
+      });
+    }
+
+    const bookingId = bookingData[0].id;
+
+    // Insert booking items
+    const itemsToInsert = items.map(item => ({
+      booking_id: bookingId,
+      material_name: item.materialName,
+      subtype_name: item.subTypeName || null,
+      weight: parseFloat(item.weight),
+      price_per_kg: parseFloat(item.pricePerKg),
+      total_price: parseFloat(item.total)
+    }));
+
+    const { data: itemsData, error: itemsError } = await supabaseAdmin
+      .from("booking_items")
+      .insert(itemsToInsert)
+      .select();
+
+    if (itemsError) {
+      // Rollback booking if items fail
+      await supabaseAdmin.from("bookings").delete().eq("id", bookingId);
+      console.error("Items error:", itemsError);
+      return res.status(500).json({ 
+        message: "Failed to add booking items", 
+        error: itemsError.message 
+      });
+    }
+
+    return res.status(201).json({
+      message: "Booking created successfully",
+      booking: {
+        ...bookingData[0],
+        items: itemsData
+      }
+    });
+  } catch (err) {
+    console.error("Server error:", err);
+    return res.status(500).json({ 
+      message: "Booking creation failed", 
+      error: err.message 
+    });
+  }
+});
+
+app.get("/bookings/:user_id", async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const userIdInt = parseInt(user_id);
+
+    if (isNaN(userIdInt)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+
+    const { data: bookings, error: bookingsError } = await supabase
+      .from("bookings")
+      .select("*")
+      .eq("user_id", userIdInt)
+      .order("created_at", { ascending: false });
+
+    if (bookingsError) {
+      return res.status(500).json({ 
+        message: "Failed to fetch bookings", 
+        error: bookingsError.message 
+      });
+    }
+
+    const bookingsWithItems = await Promise.all(
+      bookings.map(async (booking) => {
+        const { data: items } = await supabase
+          .from("booking_items")
+          .select("*")
+          .eq("booking_id", booking.id);
+
+        return { ...booking, items: items || [] };
+      })
+    );
+
+    return res.status(200).json({
+      message: "Bookings fetched successfully",
+      bookings: bookingsWithItems
+    });
+  } catch (err) {
+    return res.status(500).json({ 
+      message: "Failed to fetch bookings", 
+      error: err.message 
+    });
+  }
+});
+
+app.get("/booking/:booking_id", async (req, res) => {
+  try {
+    const { booking_id } = req.params;
+    const bookingIdInt = parseInt(booking_id);
+
+    if (isNaN(bookingIdInt)) {
+      return res.status(400).json({ message: "Invalid booking ID format" });
+    }
+
+    const { data: booking, error: bookingError } = await supabase
+      .from("bookings")
+      .select("*")
+      .eq("id", bookingIdInt)
+      .single();
+
+    if (bookingError || !booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    const { data: items } = await supabase
+      .from("booking_items")
+      .select("*")
+      .eq("booking_id", bookingIdInt);
+
+    return res.status(200).json({
+      message: "Booking fetched successfully",
+      booking: { ...booking, items: items || [] }
+    });
+  } catch (err) {
+    return res.status(500).json({ 
+      message: "Failed to fetch booking", 
+      error: err.message 
+    });
+  }
+});
+
+app.put("/booking/:booking_id/status", async (req, res) => {
+  try {
+    const { booking_id } = req.params;
+    const { status } = req.body;
+    const bookingIdInt = parseInt(booking_id);
+
+    if (isNaN(bookingIdInt)) {
+      return res.status(400).json({ message: "Invalid booking ID format" });
+    }
+
+    const validStatuses = ["pending", "confirmed", "in_progress", "completed", "cancelled"];
+    if (!status || !validStatuses.includes(status)) {
+      return res.status(400).json({ 
+        message: "Invalid status. Must be one of: " + validStatuses.join(", ")
+      });
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from("bookings")
+      .update({ status })
+      .eq("id", bookingIdInt)
+      .select();
+
+    if (error) {
+      return res.status(500).json({ 
+        message: "Failed to update booking status", 
+        error: error.message 
+      });
+    }
+
+    return res.status(200).json({
+      message: "Booking status updated successfully",
+      booking: data[0]
+    });
+  } catch (err) {
+    return res.status(500).json({ 
+      message: "Status update failed", 
+      error: err.message 
+    });
+  }
+});
+
+app.delete("/booking/:booking_id", async (req, res) => {
+  try {
+    const { booking_id } = req.params;
+    const bookingIdInt = parseInt(booking_id);
+
+    if (isNaN(bookingIdInt)) {
+      return res.status(400).json({ message: "Invalid booking ID format" });
+    }
+
+    // Delete items first
+    await supabaseAdmin
+      .from("booking_items")
+      .delete()
+      .eq("booking_id", bookingIdInt);
+
+    const { data, error } = await supabaseAdmin
+      .from("bookings")
+      .delete()
+      .eq("id", bookingIdInt)
+      .select();
+
+    if (error) {
+      return res.status(500).json({ 
+        message: "Failed to delete booking", 
+        error: error.message 
+      });
+    }
+
+    return res.status(200).json({ 
+      message: "Booking deleted successfully" 
+    });
+  } catch (err) {
+    return res.status(500).json({ 
+      message: "Booking deletion failed", 
+      error: err.message 
+    });
+  }
+});
+
 app.get("/", (req, res) => {
   res.status(200).json({
     message: "Server is running",
@@ -550,6 +565,11 @@ app.get("/", (req, res) => {
       createAddress: "POST /address",
       updateAddress: "PUT /address/:user_id",
       deleteAddress: "DELETE /address/:user_id",
+      createBooking: "POST /booking",
+      getUserBookings: "GET /bookings/:user_id",
+      getSingleBooking: "GET /booking/:booking_id",
+      updateBookingStatus: "PUT /booking/:booking_id/status",
+      deleteBooking: "DELETE /booking/:booking_id"
     },
   });
 });
