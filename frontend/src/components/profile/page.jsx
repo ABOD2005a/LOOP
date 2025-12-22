@@ -338,7 +338,7 @@ const Profile = () => {
               </div>
               <div className="stat-card danger">
                 <h3>890</h3>
-                <p>Reward Points</p>
+                <p>your wallet</p>
               </div>
             </div>
 
@@ -401,8 +401,8 @@ const Profile = () => {
           </div>
         )}
 
-        {activePage === "profile" && (
-          loading ? (
+        {activePage === "profile" &&
+          (loading ? (
             <div className="page-content">
               <div style={{ textAlign: "center", padding: "3rem" }}>
                 <p>Loading...</p>
@@ -465,7 +465,10 @@ const Profile = () => {
               </div>
 
               <div className="content-card">
-                <button className="edit-btn" onClick={() => toggleEdit("personal")}>
+                <button
+                  className="edit-btn"
+                  onClick={() => toggleEdit("personal")}
+                >
                   <i className="bi bi-pencil-fill"></i>
                   <span>Edit</span>
                 </button>
@@ -498,7 +501,10 @@ const Profile = () => {
                       className="form-input"
                       value={personalData.lastName}
                       onChange={(e) =>
-                        setPersonalData({ ...personalData, lastName: e.target.value })
+                        setPersonalData({
+                          ...personalData,
+                          lastName: e.target.value,
+                        })
                       }
                       disabled={!editMode.personal}
                     />
@@ -537,7 +543,10 @@ const Profile = () => {
               </div>
 
               <div className="content-card">
-                <button className="edit-btn" onClick={() => toggleEdit("address")}>
+                <button
+                  className="edit-btn"
+                  onClick={() => toggleEdit("address")}
+                >
                   <i className="bi bi-pencil-fill"></i>
                   <span>Edit</span>
                 </button>
@@ -600,7 +609,10 @@ const Profile = () => {
                       className="form-input"
                       value={addressData.floor}
                       onChange={(e) =>
-                        setAddressData({ ...addressData, floor: e.target.value })
+                        setAddressData({
+                          ...addressData,
+                          floor: e.target.value,
+                        })
                       }
                       disabled={!editMode.address}
                       placeholder="e.g., 3"
@@ -613,7 +625,10 @@ const Profile = () => {
                       className="form-input"
                       value={addressData.apartment}
                       onChange={(e) =>
-                        setAddressData({ ...addressData, apartment: e.target.value })
+                        setAddressData({
+                          ...addressData,
+                          apartment: e.target.value,
+                        })
                       }
                       disabled={!editMode.address}
                       placeholder="e.g., 5"
@@ -643,8 +658,7 @@ const Profile = () => {
                 )}
               </div>
             </div>
-          )
-        )}
+          ))}
 
         {activePage === "settings" && (
           <div className="page-content">
@@ -760,10 +774,7 @@ const Profile = () => {
                 </div>
               </div>
               <div className="btn-group">
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                >
+                <button type="button" className="btn btn-primary">
                   <i className="bi bi-check-circle-fill"></i>
                   Update Password
                 </button>
