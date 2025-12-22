@@ -193,7 +193,7 @@ export default function Login() {
 
               {/* Collector Login Button */}
               <button
-                onClick={() => navigate("/collector-login")}
+                onClick={() => navigate("/collectorLogin")}
                 className="collector-btn"
                 disabled={loading}
               >
