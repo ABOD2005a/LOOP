@@ -1,4 +1,4 @@
-:root {
+/* :root {
     --primary: #10b981;
     --primary-dark: #059669;
     --primary-light: #d1fae5;
@@ -24,7 +24,9 @@
 body {
     background: var(--bg-gray);
     min-height: 100vh;
-}
+} */
+
+@import '../../variables.css';
 
 .app-container {
     display: flex;
