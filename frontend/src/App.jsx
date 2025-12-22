@@ -41,11 +41,9 @@ function AnimatedRoutes() {
         <Route path="/NavbarAfter" element={<NavbarAfter />} />
         <Route path="/homeAfter" element={<HomeAfter />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/NavbarAfter" element={<NavbarAfter/>} />
-        <Route path="/NavbarTest" element={<NavbarTest/>} />
-        <Route path="/homeAfter" element={<HomeAfter/>} />
-        <Route path="/AdminDashboard" element={<AdminDashboard/>} />
-        <Route path="/CollectorDashboard" element={<CollectorDashboard/>} />
+        <Route path="/NavbarTest" element={<NavbarTest />} />
+        <Route path="/AdminDashboard" element={<AdminDashboard />} />
+        <Route path="/CollectorDashboard" element={<CollectorDashboard />} />
         {/* <Route path="/booking" element={<Booking />} /> */}
         {/* <Route path="/settings" element={<Settings />} /> */}
         {/* <Route path="/bookings" element={<Bookings />} /> */}
@@ -57,19 +55,31 @@ function AnimatedRoutes() {
 function App() {
   const location = useLocation();
 
-  const isProfilePage = location.pathname === "/profile";
+  const hideNavbarPages = [
+    "/profile",
+    "/CollectorDashboard",
+    "/AdminDashboard",
+  ];
+  const hideFooterPages = [
+    "/profile",
+    "/CollectorDashboard",
+    "/AdminDashboard",
+  ];
+
+  const shouldShowNavbar = !hideNavbarPages.includes(location.pathname);
+  const shouldShowFooter = !hideFooterPages.includes(location.pathname);
 
   return (
     <div
       style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
     >
-      {!isProfilePage && <Navbar />}
+      {shouldShowNavbar && <Navbar />}
 
       <main style={{ flex: "1" }}>
         <AnimatedRoutes />
       </main>
 
-      {!isProfilePage && <Footer />}
+      {shouldShowFooter && <Footer />}
     </div>
   );
 }

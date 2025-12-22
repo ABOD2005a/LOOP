@@ -89,10 +89,7 @@ const CollectorDashboard = () => {
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
       
       <aside className="sidebar">
-        <div className="sidebar-header">
-          <div className="sidebar-title">LOOP</div>
-        </div>
-
+        
         <a href="#" className={`nav-link ${activePage === 'profile' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); handleNavigation('profile'); }}>
           <i className="bi bi-person-circle"></i>
           <span>Profile</span>
