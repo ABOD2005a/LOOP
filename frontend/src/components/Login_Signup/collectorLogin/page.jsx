@@ -1,18 +1,17 @@
 import { useState } from "react";
-import { Eye, EyeOff, Check } from "lucide-react";
-import "./login.css";
+import { Eye, EyeOff } from "lucide-react";
+import "./collectorLogin.css";
 import Navbar from "../../Header_Footer/Navbar/page";
 import Footer from "../../Header_Footer/Footer/page";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function CollectorLogin() {
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    collectorId: "",
     rememberMe: false,
   });
 
-  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -41,10 +40,8 @@ export default function Login() {
       newErrors.email = "Please enter a valid email";
     }
 
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+    if (!formData.collectorId.trim()) {
+      newErrors.collectorId = "Collector ID is required";
     }
 
     return newErrors;
@@ -59,40 +56,41 @@ export default function Login() {
       setErrors({});
 
       try {
-        const response = await fetch("http://localhost:8081/login", {
+        const response = await fetch("http://localhost:8081/collector-login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             gmail: formData.email,
-            password: formData.password,
+            collectorId: formData.collectorId,
           }),
         });
 
         const data = await response.json();
 
         if (response.ok) {
-          localStorage.setItem("userId", data.user.id.toString());
-          localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem("collectorId", data.collector.id.toString());
+          localStorage.setItem("collector", JSON.stringify(data.collector));
+          localStorage.setItem("userType", "collector");
 
           if (formData.rememberMe) {
             localStorage.setItem("rememberMe", "true");
           }
 
-          console.log("Login successful:", data);
+          console.log("Collector login successful:", data);
 
           setTimeout(() => {
-            navigate("/homeAfter"); 
+            navigate("/collector-dashboard"); 
           }, 2000);
         } else {
           // Login failed
           setErrors({
-            general: data.message || "Invalid email or password",
+            general: data.message || "Invalid email or collector ID",
           });
         }
       } catch (error) {
-        console.error("Login error:", error);
+        console.error("Collector login error:", error);
         setErrors({
           general: "Unable to connect to server. Please try again later.",
         });
@@ -110,9 +108,9 @@ export default function Login() {
       <div className="login-wrapper">
           <div className="login-card">
             <div className="login-header">
-              <h1 className="login-title">Login</h1>
+              <h1 className="login-title">Collector Login</h1>
               <p className="login-subtitle">
-                Welcome back! Please login to your account
+                Please enter your email and collector ID
               </p>
             </div>
 
@@ -131,37 +129,27 @@ export default function Login() {
                   className={`form-input ${
                     errors.email ? "form-input-error" : ""
                   }`}
-                  placeholder="john@example.com"
+                  placeholder="collector@example.com"
                   disabled={loading}
                 />
                 {errors.email && <p className="form-error">{errors.email}</p>}
               </div>
 
               <div className="form-group">
-                <label className="form-label">Password</label>
-                <div className="password-wrapper">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={`form-input ${
-                      errors.password ? "form-input-error" : ""
-                    }`}
-                    placeholder="At least 8 characters"
-                    disabled={loading}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="password-toggle"
-                    disabled={loading}
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-                {errors.password && (
-                  <p className="form-error">{errors.password}</p>
+                <label className="form-label">Collector ID</label>
+                <input
+                  type="text"
+                  name="collectorId"
+                  value={formData.collectorId}
+                  onChange={handleChange}
+                  className={`form-input ${
+                    errors.collectorId ? "form-input-error" : ""
+                  }`}
+                  placeholder="Enter your collector ID"
+                  disabled={loading}
+                />
+                {errors.collectorId && (
+                  <p className="form-error">{errors.collectorId}</p>
                 )}
               </div>
 
@@ -179,7 +167,7 @@ export default function Login() {
                   Remember me
                 </label>
                 <a href="#" className="forgot-link">
-                  Forgot Password?
+                  Forgot ID?
                 </a>
               </div>
 
@@ -188,25 +176,24 @@ export default function Login() {
                 className="submit-btn"
                 disabled={loading}
               >
-                {loading ? "Signing In..." : "Sign In"}
+                {loading ? "Signing In..." : "Sign In as Collector"}
               </button>
 
-              {/* Collector Login Button */}
               <button
-                onClick={() => navigate("/collector-login")}
-                className="collector-btn"
+                onClick={() => navigate("/login")}
+                className="back-btn"
                 disabled={loading}
               >
-                Login as Collector
+                Back to Regular Login
               </button>
 
               <p className="signup-text">
-                Don't have an account?{" "}
+                Don't have a collector account?{" "}
                 <span
                   className="signup-link"
-                  onClick={() => navigate("/signup")}
+                  onClick={() => navigate("/collector-signup")}
                 >
-                  Sign Up
+                  Register as Collector
                 </span>
               </p>
             </div>

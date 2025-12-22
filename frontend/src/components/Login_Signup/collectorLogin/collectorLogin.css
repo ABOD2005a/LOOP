@@ -1,0 +1,28 @@
+/* You can import your existing login.css or copy the styles */
+@import '../login/login.css';
+
+/* Additional styles specific to collector login if needed */
+.back-btn {
+  width: 100%;
+  padding: 14px;
+  background: white;
+  color: #718096;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.back-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

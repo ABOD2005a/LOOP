@@ -21,6 +21,7 @@ import Profile from "./components/profile/page";
 import NavbarTest from "./components/Header_Footer/NavbarTest/page";
 import AdminDashboard from "./components/AdminDashboard/page";
 import CollectorDashboard from "./components/CollectorDashboard/page";
+import CollectorLogin from "./components/Login_Signup/collectorLogin/page";
 // import Booking from "./components/booking/page";
 // import Settings from "./components/profile/settings/page";
 // import Bookings from "./components/profile/bookings/page";
@@ -44,6 +45,7 @@ function AnimatedRoutes() {
         <Route path="/NavbarTest" element={<NavbarTest />} />
         <Route path="/AdminDashboard" element={<AdminDashboard />} />
         <Route path="/CollectorDashboard" element={<CollectorDashboard />} />
+        <Route path="/CollectorLogin" element={<CollectorLogin />} />
         {/* <Route path="/booking" element={<Booking />} /> */}
         {/* <Route path="/settings" element={<Settings />} /> */}
         {/* <Route path="/bookings" element={<Bookings />} /> */}
