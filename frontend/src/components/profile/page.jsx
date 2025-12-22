@@ -10,6 +10,7 @@ const Profile = () => {
     "https://avatar.iran.liara.run/username?username=User"
   );
   const [loading, setLoading] = useState(true);
+  const [dashboardLoading, setDashboardLoading] = useState(false);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -34,50 +35,18 @@ const Profile = () => {
     address: { ...addressData },
   });
 
-  const orders = [
-    {
-      id: "#3933",
-      date: "4 April, 2021",
-      total: "$135.00",
-      items: 5,
-      status: "processing",
-    },
-    {
-      id: "#5045",
-      date: "27 Mar, 2021",
-      total: "$25.00",
-      items: 1,
-      status: "on-the-way",
-    },
-    {
-      id: "#5028",
-      date: "20 Mar, 2021",
-      total: "$250.00",
-      items: 4,
-      status: "completed",
-    },
-    {
-      id: "#4600",
-      date: "19 Mar, 2021",
-      total: "$35.00",
-      items: 1,
-      status: "completed",
-    },
-    {
-      id: "#4152",
-      date: "18 Mar, 2021",
-      total: "$578.00",
-      items: 13,
-      status: "completed",
-    },
-    {
-      id: "#8811",
-      date: "10 Mar, 2021",
-      total: "$345.00",
-      items: 7,
-      status: "completed",
-    },
-  ];
+  // Dashboard data from backend
+  const [bookings, setBookings] = useState([]);
+  const [stats, setStats] = useState({
+    totalOrders: 0,
+    pendingOrders: 0,
+    inProgressOrders: 0,
+    totalEarnings: 0,
+  });
+  
+  // Modal state
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchUserData();
@@ -85,6 +54,13 @@ const Profile = () => {
       fetchAddressData();
     }
   }, [userId]);
+
+  // Fetch bookings when dashboard page is active
+  useEffect(() => {
+    if (activePage === "dashboard" && userId) {
+      fetchBookingsData();
+    }
+  }, [activePage, userId]);
 
   const fetchUserData = async () => {
     try {
@@ -136,6 +112,70 @@ const Profile = () => {
     } catch (error) {
       console.error("Error fetching address:", error);
     }
+  };
+
+  const fetchBookingsData = async () => {
+    setDashboardLoading(true);
+    try {
+      const response = await fetch(`http://localhost:8081/bookings/${userId}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        setBookings(data.bookings || []);
+        calculateStats(data.bookings || []);
+      } else {
+        console.error("Failed to fetch bookings:", data.message);
+        setBookings([]);
+        calculateStats([]);
+      }
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+      setBookings([]);
+      calculateStats([]);
+    } finally {
+      setDashboardLoading(false);
+    }
+  };
+
+  const handleViewMaterials = (booking) => {
+    setSelectedBooking(booking);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedBooking(null);
+  };
+
+  const calculateStats = (bookingsData) => {
+    const stats = {
+      totalOrders: bookingsData.length,
+      pendingOrders: bookingsData.filter((b) => b.status === "pending").length,
+      inProgressOrders: bookingsData.filter((b) => b.status === "in_progress")
+        .length,
+      totalEarnings: bookingsData.reduce(
+        (sum, b) => sum + parseFloat(b.total_earnings || 0),
+        0
+      ),
+    };
+    setStats(stats);
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    return date.toLocaleDateString("en-US", options);
+  };
+
+  const getStatusLabel = (status) => {
+    const statusMap = {
+      pending: "Pending",
+      confirmed: "Confirmed",
+      in_progress: "In Progress",
+      completed: "Completed",
+      cancelled: "Cancelled",
+    };
+    return statusMap[status] || status;
   };
 
   const handleAvatarChange = (e) => {
@@ -323,81 +363,93 @@ const Profile = () => {
               </p>
             </div>
 
-            <div className="stats-grid">
-              <div className="stat-card primary">
-                <h3>45</h3>
-                <p>Total Orders</p>
+            {dashboardLoading ? (
+              <div style={{ textAlign: "center", padding: "3rem" }}>
+                <p>Loading dashboard...</p>
               </div>
-              <div className="stat-card secondary">
-                <h3>3</h3>
-                <p>Pending Orders</p>
-              </div>
-              <div className="stat-card warning">
-                <h3>1</h3>
-                <p>On the Way</p>
-              </div>
-              <div className="stat-card danger">
-                <h3>890</h3>
-                <p>your wallet</p>
-              </div>
-            </div>
+            ) : (
+              <>
+                <div className="stats-grid">
+                  <div className="stat-card primary">
+                    <h3>{stats.totalOrders}</h3>
+                    <p>Total Orders</p>
+                  </div>
+                  <div className="stat-card secondary">
+                    <h3>{stats.pendingOrders}</h3>
+                    <p>Pending Orders</p>
+                  </div>
+                  <div className="stat-card warning">
+                    <h3>{stats.inProgressOrders}</h3>
+                    <p>In Progress</p>
+                  </div>
+                  <div className="stat-card danger">
+                    <h3>EGP {stats.totalEarnings.toFixed(2)}</h3>
+                    <p>Total Earnings</p>
+                  </div>
+                </div>
 
-            <div className="content-card">
-              <h3 className="section-title">
-                <i className="bi bi-arrow-repeat"></i>
-                Order History
-              </h3>
+                <div className="content-card">
+                  <h3 className="section-title">
+                    <i className="bi bi-arrow-repeat"></i>
+                    Order History
+                  </h3>
 
-              <div className="table-container">
-                <table className="order-table">
-                  <thead>
-                    <tr>
-                      <th>ORDER ID</th>
-                      <th>DATE</th>
-                      <th>TOTAL</th>
-                      <th>STATUS</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {orders.map((order) => (
-                      <tr key={order.id}>
-                        <td className="order-id">{order.id}</td>
-                        <td>{order.date}</td>
-                        <td>
-                          {order.total} ({order.items} Products)
-                        </td>
-                        <td>
-                          <span className={`status ${order.status}`}>
-                            {order.status === "on-the-way"
-                              ? "On the way"
-                              : order.status.charAt(0).toUpperCase() +
-                                order.status.slice(1)}
-                          </span>
-                        </td>
-                        <td>
-                          <a href="#" className="view-btn">
-                            View Details
-                          </a>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="pagination">
-                <button disabled>
-                  <i className="bi bi-chevron-left"></i>
-                </button>
-                <button className="active">1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>
-                  <i className="bi bi-chevron-right"></i>
-                </button>
-              </div>
-            </div>
+                  {bookings.length === 0 ? (
+                    <div style={{ textAlign: "center", padding: "3rem" }}>
+                      <i className="bi bi-inbox" style={{ fontSize: "3rem", color: "#ccc" }}></i>
+                      <p style={{ marginTop: "1rem", color: "#666" }}>
+                        No bookings found. Start by creating your first booking!
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="table-container">
+                        <table className="order-table">
+                          <thead>
+                            <tr>
+                              <th>ORDER ID</th>
+                              <th>DATE</th>
+                              <th>AREA</th>
+                              <th>WEIGHT</th>
+                              <th>EARNINGS</th>
+                              <th>STATUS</th>
+                              <th>PICKUP</th>
+                              <th>ACTION</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {bookings.map((booking) => (
+                              <tr key={booking.id}>
+                                <td className="order-id">#{booking.id}</td>
+                                <td>{formatDate(booking.created_at)}</td>
+                                <td>{booking.area}</td>
+                                <td>{parseFloat(booking.total_weight).toFixed(2)} kg</td>
+                                <td>EGP {parseFloat(booking.total_earnings).toFixed(2)}</td>
+                                <td>
+                                  <span className={`status ${booking.status}`}>
+                                    {getStatusLabel(booking.status)}
+                                  </span>
+                                </td>
+                                <td>{formatDate(booking.pickup_date)}</td>
+                                <td>
+                                  <button
+                                    className="view-btn"
+                                    onClick={() => handleViewMaterials(booking)}
+                                    title="View Materials"
+                                  >
+                                    <i className="bi bi-eye-fill">VIEW</i>
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         )}
 
@@ -783,6 +835,123 @@ const Profile = () => {
           </div>
         )}
       </main>
+
+      {/* Materials Modal */}
+      {showModal && selectedBooking && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal_content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>
+                <i className="bi bi-recycle"></i>
+                Booking Materials - Order #{selectedBooking.id}
+              </h2>
+              <button className="close-btn" onClick={closeModal}>
+                <i className="bi bi-x-lg">close</i>
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="booking-details">
+                <div className="detail-row">
+                  <span className="detail-label">Pickup Date:</span>
+                  <span className="detail-value">{formatDate(selectedBooking.pickup_date)}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Pickup Time:</span>
+                  <span className="detail-value">{selectedBooking.pickup_time}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Area:</span>
+                  <span className="detail-value">{selectedBooking.area}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Address:</span>
+                  <span className="detail-value">
+                    {selectedBooking.street}, Building {selectedBooking.building_number}
+                    {selectedBooking.floor && `, Floor ${selectedBooking.floor}`}
+                    {selectedBooking.apartment && `, Apt ${selectedBooking.apartment}`}
+                  </span>
+                </div>
+                {selectedBooking.landmark && (
+                  <div className="detail-row">
+                    <span className="detail-label">Landmark:</span>
+                    <span className="detail-value">{selectedBooking.landmark}</span>
+                  </div>
+                )}
+                {selectedBooking.notes && (
+                  <div className="detail-row">
+                    <span className="detail-label">Notes:</span>
+                    <span className="detail-value">{selectedBooking.notes}</span>
+                  </div>
+                )}
+              </div>
+
+              <h3 className="materials-title">
+                <i className="bi bi-box-seam"></i>
+                Materials List
+              </h3>
+
+              {selectedBooking.items && selectedBooking.items.length > 0 ? (
+                <div className="materials-table-container">
+                  <table className="materials-table">
+                    <thead>
+                      <tr>
+                        <th>Material</th>
+                        <th>Subtype</th>
+                        <th>Weight (kg)</th>
+                        <th>Price/kg</th>
+                        <th>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedBooking.items.map((item, index) => (
+                        <tr key={index}>
+                          <td>{item.material_name}</td>
+                          <td>{item.subtype_name || "-"}</td>
+                          <td>{parseFloat(item.weight).toFixed(2)}</td>
+                          <td>EGP {parseFloat(item.price_per_kg).toFixed(2)}</td>
+                          <td>EGP {parseFloat(item.total_price).toFixed(2)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colSpan="2"><strong>Total</strong></td>
+                        <td><strong>{parseFloat(selectedBooking.total_weight).toFixed(2)} kg</strong></td>
+                        <td></td>
+                        <td><strong>EGP {parseFloat(selectedBooking.total_earnings).toFixed(2)}</strong></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              ) : (
+                <p className="no-materials">No materials found for this booking.</p>
+              )}
+
+              <div className="modal-stats">
+                <div className="modal-stat">
+                  <i className="bi bi-tree-fill"></i>
+                  <div>
+                    <span className="stat-value">{parseFloat(selectedBooking.total_co2_saved).toFixed(2)} kg</span>
+                    <span className="stat-label">CO₂ Saved</span>
+                  </div>
+                </div>
+                <div className="modal-stat">
+                  <span className={`status ${selectedBooking.status}`}>
+                    {getStatusLabel(selectedBooking.status)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button className="btn btn-secondary" onClick={closeModal}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
