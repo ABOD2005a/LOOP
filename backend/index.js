@@ -23,7 +23,6 @@ app.get("/", (req, res) => {
         updateUser: "PUT /user/:user_id",
       },
       collector: {
-        collectorSignup: "POST /collector/signup",
         collectorLogin: "POST /collector",
         getCollector: "GET /collector/:collector_id",
         updatePassword: "PUT /collector/:collector_id/password",
