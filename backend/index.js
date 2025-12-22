@@ -556,20 +556,26 @@ app.delete("/booking/:booking_id", async (req, res) => {
 
 app.get("/", (req, res) => {
   res.status(200).json({
-    message: "Server is running",
+    message: "Server is running ✅",
     endpoints: {
-      signup: "POST /signup",
-      login: "POST /login",
-      updateUser: "PUT /user/:user_id",
-      getAddress: "GET /address/:user_id",
-      createAddress: "POST /address",
-      updateAddress: "PUT /address/:user_id",
-      deleteAddress: "DELETE /address/:user_id",
-      createBooking: "POST /booking",
-      getUserBookings: "GET /bookings/:user_id",
-      getSingleBooking: "GET /booking/:booking_id",
-      updateBookingStatus: "PUT /booking/:booking_id/status",
-      deleteBooking: "DELETE /booking/:booking_id"
+      auth: {
+        signup: "POST /signup",
+        login: "POST /login",
+        updateUser: "PUT /user/:user_id"
+      },
+      address: {
+        getAddress: "GET /address/:user_id",
+        createAddress: "POST /address",
+        updateAddress: "PUT /address/:user_id",
+        deleteAddress: "DELETE /address/:user_id"
+      },
+      bookings: {
+        createBooking: "POST /booking",
+        getUserBookings: "GET /bookings/:user_id",
+        getSingleBooking: "GET /booking/:booking_id",
+        updateBookingStatus: "PUT /booking/:booking_id/status",
+        deleteBooking: "DELETE /booking/:booking_id"
+      }
     },
   });
 });
@@ -577,5 +583,6 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 8081;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server listening on port ${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`📍 http://localhost:${PORT}`);
 });

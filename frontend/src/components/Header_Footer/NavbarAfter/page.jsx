@@ -51,7 +51,7 @@ function NavbarAfter() {
     localStorage.removeItem("userLastName");
     localStorage.removeItem("userEmail");
 
-    navigate("/"); // يروح للصفحة الرئيسية بعد الـ Logout
+    navigate("/"); 
   };
 
   const getInitials = () => {
@@ -160,7 +160,7 @@ function NavbarAfter() {
                   </li>
                   <li>
                     <button 
-                      onClick={() => navigate('/bookings')} 
+                      onClick={() => navigate('/profile#dashboard')} 
                       className="dropdown-item"
                     >
                       <i className="fas fa-calendar-alt"></i>
@@ -169,7 +169,7 @@ function NavbarAfter() {
                   </li>
                   <li>
                     <button 
-                      onClick={() => navigate('/settings')} 
+                      onClick={() => navigate('/profile#settings')} 
                       className="dropdown-item"
                     >
                       <i className="fas fa-cog"></i>
