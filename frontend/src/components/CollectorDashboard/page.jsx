@@ -155,11 +155,6 @@ const CollectorDashboard = () => {
                 <h3>8</h3>
                 <p>Today's Tasks</p>
               </div>
-              <div className="stat-card warning">
-                <div className="icon"><i className="bi bi-star"></i></div>
-                <h3>4.8</h3>
-                <p>Performance Rating</p>
-              </div>
               <div className="stat-card success">
                 <div className="icon"><i className="bi bi-currency-dollar"></i></div>
                 <h3>$1,240</h3>
@@ -308,11 +303,6 @@ const CollectorDashboard = () => {
                 <div className="icon"><i className="bi bi-trophy"></i></div>
                 <h3>$150</h3>
                 <p>Bonuses & Incentives</p>
-              </div>
-              <div className="stat-card warning">
-                <div className="icon"><i className="bi bi-star-fill"></i></div>
-                <h3>4.8</h3>
-                <p>Average Rating</p>
               </div>
             </div>
 
