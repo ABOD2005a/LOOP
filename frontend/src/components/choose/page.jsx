@@ -1511,7 +1511,7 @@ const Cart = ({ items, onRemoveItem, onClearAll }) => {
           <CartItem
             key={item.id}
             item={item}
-            onRemove={() => onRemoveItem(item.id)}
+            onRemove={() => onRemove(item.id)}
           />
         ))}
       </div>
@@ -1899,91 +1899,86 @@ const Choose = () => {
     return true;
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const userId = getUserId();
-  if (!userId) { 
-    toast.error("Please login first"); 
-    navigate("/login"); 
-    return; 
-  }
-  if (!validateAddress()) return;
-  if (cartItems.length === 0) { 
-    toast.error("Please add at least one material to your cart"); 
-    return; 
-  }
-  if (!date) { 
-    toast.error("Please select a pickup date"); 
-    return; 
-  }
-  if (!selectedTime) { 
-    toast.error("Please select a preferred time slot"); 
-    return; 
-  }
-
-  setIsSubmitting(true);
-  try {
-    const bookingData = {
-      user_id: userId, 
-      street: address.street, 
-      building_number: address.buildingNumber, 
-      floor: address.floor || null, 
-      apartment: address.apartment || null, 
-      area: address.area, 
-      landmark: address.landmark || null,
-      pickup_date: format(date, "yyyy-MM-dd"), 
-      pickup_time: selectedTime, 
-      notes: notes || null,
-      total_weight: cartItems.reduce((sum, item) => sum + item.weight, 0), 
-      total_earnings: cartItems.reduce((sum, item) => sum + item.total, 0), 
-      total_co2_saved: cartItems.reduce((sum, item) => sum + item.co2Saved, 0),
-      items: cartItems.map(item => ({ 
-        materialName: item.materialName, 
-        subTypeName: item.subTypeName || null, 
-        weight: item.weight, 
-        pricePerKg: item.pricePerKg, 
-        total: item.total 
-      }))
-    };
-    
-    const response = await axios.post(`${API_URL}/booking`, bookingData);
-    
-    if (response.status === 201) {
-      toast.success("Booking confirmed successfully! 🎉");
-      setAddress({ street: "", buildingNumber: "", floor: "", apartment: "", area: "", landmark: "" });
-      setCartItems([]);
-      setDate(undefined);
-      setSelectedTime(null);
-      setNotes("");
-      setTimeout(() => {
-        navigate("/homeAfter");
-      }, 1500);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const userId = getUserId();
+    if (!userId) {
+      toast.error("Please login first");
+      navigate("/login");
+      return;
     }
-  } catch (error) {
-    console.error("Booking error:", error);
-    toast.error(error.response?.data?.message || "Failed to create booking. Please try again.");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    if (!validateAddress()) return;
+    if (cartItems.length === 0) {
+      toast.error("Please add at least one material to your cart");
+      return;
+    }
+    if (!date) {
+      toast.error("Please select a pickup date");
+      return;
+    }
+    if (!selectedTime) {
+      toast.error("Please select a preferred time slot");
+      return;
+    }
 
-  const handleBack = () => {
-    if (showSuccess) {
-      setShowSuccess(false);
-      setAddress({
-        street: "",
-        buildingNumber: "",
-        floor: "",
-        apartment: "",
-        area: "",
-        landmark: "",
-      });
-      setCartItems([]);
-      setDate(undefined);
-      setSelectedTime(null);
-      setNotes("");
-    } else {
-      navigate(-1);
+    setIsSubmitting(true);
+    try {
+      const bookingData = {
+        user_id: userId,
+        street: address.street,
+        building_number: address.buildingNumber,
+        floor: address.floor || null,
+        apartment: address.apartment || null,
+        area: address.area,
+        landmark: address.landmark || null,
+        pickup_date: format(date, "yyyy-MM-dd"),
+        pickup_time: selectedTime,
+        notes: notes || null,
+        total_weight: cartItems.reduce((sum, item) => sum + item.weight, 0),
+        total_earnings: cartItems.reduce((sum, item) => sum + item.total, 0),
+        total_co2_saved: cartItems.reduce(
+          (sum, item) => sum + item.co2Saved,
+          0
+        ),
+        items: cartItems.map((item) => ({
+          materialName: item.materialName,
+          subTypeName: item.subTypeName || null,
+          weight: item.weight,
+          pricePerKg: item.pricePerKg,
+          total: item.total,
+        })),
+      };
+
+      const response = await axios.post(`${API_URL}/booking`, bookingData);
+
+      if (response.status === 201) {
+        const details = {
+          address: formatAddress(),
+          date: format(date, "EEEE, MMMM d, yyyy"),
+          time: selectedTime,
+          items: cartItems.map((item) => ({
+            id: item.id,
+            materialName: item.materialName,
+            subTypeName: item.subTypeName,
+            weight: item.weight,
+          })),
+          totalWeight: cartItems.reduce((sum, item) => sum + item.weight, 0),
+          totalEarnings: cartItems.reduce((sum, item) => sum + item.total, 0),
+          totalCo2: cartItems.reduce((sum, item) => sum + item.co2Saved, 0),
+        };
+
+        setBookingDetails(details);
+        setShowSuccess(true);
+        toast.success("Booking confirmed successfully! 🎉");
+      }
+    } catch (error) {
+      console.error("Booking error:", error);
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to create booking. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -1991,15 +1986,22 @@ const handleSubmit = async (e) => {
     navigate("/bookings");
   };
 
-  if (showSuccess && bookingDetails) {
-    return (
-      <SuccessScreen
-        details={bookingDetails}
-        onViewBookings={handleViewBookings}
-        onBackHome={handleBack}
-      />
-    );
-  }
+  const handleBackHome = () => {
+    setShowSuccess(false);
+    setAddress({
+      street: "",
+      buildingNumber: "",
+      floor: "",
+      apartment: "",
+      area: "",
+      landmark: "",
+    });
+    setCartItems([]);
+    setDate(undefined);
+    setSelectedTime(null);
+    setNotes("");
+    navigate("/homeAfter");
+  };
 
   const totalEarnings = cartItems.reduce((sum, item) => sum + item.total, 0);
   const currentStep = useMemo(() => {
@@ -2008,6 +2010,16 @@ const handleSubmit = async (e) => {
     if (!date || !selectedTime) return 2;
     return 3;
   }, [address, cartItems, date, selectedTime]);
+
+  if (showSuccess && bookingDetails) {
+    return (
+      <SuccessScreen
+        details={bookingDetails}
+        onViewBookings={handleViewBookings}
+        onBackHome={handleBackHome}
+      />
+    );
+  }
 
   return (
     <div className="choose-page">

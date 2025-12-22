@@ -70,8 +70,7 @@ export default function CollectorLogin() {
         const data = await response.json();
 
         if (response.ok) {
-          // Store collector info in localStorage (but avoid storing sensitive data)
-          localStorage.setItem("collectorId", data.collector.id.toString());
+            localStorage.setItem("collectorId", data.collector.id.toString());
           localStorage.setItem("collectorEmail", formData.email);
           localStorage.setItem("collector", JSON.stringify(data.collector));
           localStorage.setItem("userType", "collector");
