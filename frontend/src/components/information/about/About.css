@@ -309,6 +309,345 @@
       color: var(--primary);
     }
 
+    /* ========== NEW SECTIONS STYLES ========== */
+
+    /* Egypt Stats Section */
+    .egypt-stats {
+      padding: 5rem 0;
+      background: linear-gradient(135deg, rgba(16, 184, 129, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
+    }
+
+    .stats-content {
+      margin-top: 2rem;
+    }
+
+    .stat-highlight {
+      text-align: center;
+      padding: 3rem 2.5rem;
+      background: white;
+      border-radius: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-lg);
+      border: 2px solid var(--primary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-highlight::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+    }
+
+    .highlight-number {
+      font-size: 4.5rem;
+      font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.75rem;
+      line-height: 1;
+    }
+
+    .highlight-text {
+      font-size: 1.25rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-item {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 1rem;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s;
+      border: 1px solid var(--border);
+    }
+
+    .stat-item:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--warning);
+    }
+
+    .stat-percentage {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .stat-item p {
+      color: var(--text-light);
+      font-size: 1.0625rem;
+      line-height: 1.6;
+    }
+
+    .insight-text {
+      text-align: center;
+      font-size: 1.125rem;
+      color: var(--text);
+      font-weight: 500;
+      max-width: 48rem;
+      margin: 0 auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 1rem;
+      border-left: 4px solid var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Environmental Impact Section */
+    .environmental-impact {
+      padding: 5rem 0;
+      background: var(--bg);
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .impact-card {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      transition: all 0.3s;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .impact-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--gradient-primary);
+      transform: scaleY(0);
+      transition: transform 0.3s;
+    }
+
+    .impact-card:hover::before {
+      transform: scaleY(1);
+    }
+
+    .impact-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+    }
+
+    .impact-icon {
+      width: 3.5rem;
+      height: 3.5rem;
+      background: var(--primary-light);
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .impact-icon svg {
+      width: 2rem;
+      height: 2rem;
+      stroke: var(--primary);
+      stroke-width: 2;
+    }
+
+    .impact-card h3 {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1rem;
+    }
+
+    .impact-card p {
+      color: var(--text-light);
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    /* Recycling Industry Section */
+    .recycling-industry {
+      padding: 5rem 0;
+      background: var(--bg-gray);
+    }
+
+    .industry-stats {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .industry-card {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .industry-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .industry-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .industry-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-6px);
+    }
+
+    .industry-value {
+      font-size: 3rem;
+      font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .industry-card p {
+      color: var(--text-light);
+      font-size: 1.0625rem;
+      line-height: 1.6;
+    }
+
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    /* Our Contribution Section */
+    .our-contribution {
+      padding: 5rem 0;
+      background: var(--bg);
+    }
+
+    .contribution-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .contribution-card {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      transition: all 0.3s;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contribution-card::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .contribution-card:hover::after {
+      transform: scaleX(1);
+    }
+
+    .contribution-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+    }
+
+    .contribution-icon {
+      width: 4rem;
+      height: 4rem;
+      background: var(--primary-light);
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      transition: all 0.3s;
+    }
+/* 
+    .contribution-card:hover .contribution-icon {
+      transform: scale(1.1) rotate(5deg);
+      background: var(--primary);
+    } */
+
+    .contribution-icon svg {
+      width: 2rem;
+      height: 2rem;
+      stroke: var(--primary);
+      stroke-width: 2;
+      transition: all 0.3s;
+    }
+/* 
+    .contribution-card:hover .contribution-icon svg {
+      stroke: white;
+    } */
+
+    .contribution-card h3 {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1rem;
+    }
+
+    .contribution-card p {
+      color: var(--text-light);
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
     /* Responsive */
     @media (min-width: 640px) {
       .values-grid {
@@ -318,6 +657,18 @@
       .cta-buttons {
         flex-direction: row;
         justify-content: center;
+      }
+
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .impact-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .contribution-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
@@ -333,11 +684,24 @@
       .stat-value {
         font-size: 2.5rem;
       }
+
+      .highlight-number {
+        font-size: 5.5rem;
+      }
+
+      .industry-stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
     }
 
     @media (min-width: 1024px) {
       .values-grid {
         grid-template-columns: repeat(4, 1fr);
+      }
+
+      .contribution-grid {
+        grid-template-columns: repeat(3, 1fr);
       }
     }
 
