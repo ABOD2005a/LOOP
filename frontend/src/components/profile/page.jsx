@@ -35,7 +35,6 @@ const Profile = () => {
     address: { ...addressData },
   });
 
-  // Dashboard data from backend
   const [bookings, setBookings] = useState([]);
   const [stats, setStats] = useState({
     totalOrders: 0,
@@ -44,7 +43,6 @@ const Profile = () => {
     totalEarnings: 0,
   });
   
-  // Modal state
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
@@ -55,7 +53,13 @@ const Profile = () => {
     }
   }, [userId]);
 
-  // Fetch bookings when dashboard page is active
+  useEffect(() => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash === 'dashboard' || hash === 'settings') {
+      setActivePage(hash);
+    }
+  }, []);
+
   useEffect(() => {
     if (activePage === "dashboard" && userId) {
       fetchBookingsData();
@@ -311,7 +315,7 @@ const Profile = () => {
           <span>Profile</span>
         </a>
         <a
-          href="#"
+          // href="#"
           className={`nav-link ${activePage === "dashboard" ? "active" : ""}`}
           onClick={(e) => {
             e.preventDefault();
