@@ -229,7 +229,7 @@ const CollectorDashboard = () => {
                 <div className="task-details">
                   <div className="detail-item">
                     <span className="detail-label">Waste Type</span>
-                    <span className="detail-value">Electronics</span>
+                    <span className="detail-value">Plastic & Paper</span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-label">Expected Quantity</span>
@@ -260,7 +260,7 @@ const CollectorDashboard = () => {
                 <div className="task-details">
                   <div className="detail-item">
                     <span className="detail-label">Waste Type</span>
-                    <span className="detail-value">Glass & Metal</span>
+                    <span className="detail-value">Organic Waste</span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-label">Expected Quantity</span>
@@ -458,7 +458,7 @@ const CollectorDashboard = () => {
                       <td>#REQ-2024-1231</td>
                       <td>Dec 21, 2025 - 09:00 AM</td>
                       <td>Nour Ahmed</td>
-                      <td>Plastic & Glass</td>
+                      <td>Plastic & Paper</td>
                       <td>12 kg</td>
                       <td>$4.20</td>
                       <td><span className="task-status completed">Completed</span></td>
@@ -467,7 +467,7 @@ const CollectorDashboard = () => {
                       <td>#REQ-2024-1230</td>
                       <td>Dec 20, 2025 - 03:45 PM</td>
                       <td>Youssef Hassan</td>
-                      <td>Electronics</td>
+                      <td>Organic Waste</td>
                       <td>8 kg</td>
                       <td>$5.00</td>
                       <td><span className="task-status completed">Completed</span></td>
@@ -485,7 +485,7 @@ const CollectorDashboard = () => {
                       <td>#REQ-2024-1228</td>
                       <td>Dec 20, 2025 - 10:30 AM</td>
                       <td>Ali Mostafa</td>
-                      <td>Metal & Glass</td>
+                      <td>Mixed Waste</td>
                       <td>15 kg</td>
                       <td>$5.25</td>
                       <td><span className="task-status completed">Completed</span></td>
@@ -671,8 +671,6 @@ const CollectorDashboard = () => {
                 >
                   <option value="">Select waste type</option>
                   <option value="plastic">Plastic & Paper</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="glass">Glass & Metal</option>
                   <option value="organic">Organic Waste</option>
                   <option value="mixed">Mixed Waste</option>
                 </select>

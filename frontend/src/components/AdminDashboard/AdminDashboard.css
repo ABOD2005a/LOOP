@@ -141,7 +141,7 @@
 .stat-card-purple .stat-bg-gradient {
   background: linear-gradient(to bottom right, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1), transparent);
 }
-
+/* 
 .stat-decoration {
   position: absolute;
   top: -2rem;
@@ -150,7 +150,7 @@
   height: 6rem;
   border-radius: 50%;
   background: linear-gradient(to bottom right, rgba(148, 163, 184, 0.5), transparent);
-}
+} */
 
 .stat-content {
   position: relative;

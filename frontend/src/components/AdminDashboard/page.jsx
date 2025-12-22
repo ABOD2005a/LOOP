@@ -31,7 +31,7 @@ const AdminDashboard = () => {
         pickup_date: '2025-01-16',
         pickup_time: '2:00 PM',
         address: '456 Oak Ave, Brooklyn, NY',
-        materials: ['electronics', 'glass'],
+        materials: ['metal', 'plastic'],
         status: 'in-progress',
         notes: null,
         created_at: '2025-01-11T14:20:00Z'
@@ -42,7 +42,7 @@ const AdminDashboard = () => {
         pickup_date: '2025-01-14',
         pickup_time: '11:30 AM',
         address: '789 Pine Rd, Queens, NY',
-        materials: ['textiles', 'paper'],
+        materials: ['metal', 'paper'],
         status: 'completed',
         notes: 'Large items',
         created_at: '2025-01-09T09:15:00Z'
@@ -125,12 +125,10 @@ const AdminDashboard = () => {
   }));
 
   const materialEmojis = {
-    metal: '🔩',
-    paper: '📄',
-    plastic: '♻️',
-    electronics: '📱',
-    glass: '🫙',
-    textiles: '👕'
+    metal: '',
+    paper: '',
+    plastic: '',
+    
   };
 
   const statusOptions = [
@@ -383,11 +381,9 @@ const AdminDashboard = () => {
                             {booking.address}
                           </div>
                           <div className="activity-materials">
-                            <svg className="activity-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                            </svg>
+                         
                             {booking.materials.slice(0, 3).map((material, i) => (
-                              <span key={i} className="material-emoji">{materialEmojis[material] || '📦'}</span>
+                              <span key={i} className="material-emoji">{materialEmojis[material] || ''}</span>
                             ))}
                             {booking.materials.length > 3 && (
                               <span className="materials-more">+{booking.materials.length - 3}</span>
@@ -518,7 +514,7 @@ const AdminDashboard = () => {
                               <div className="materials-cell">
                                 {booking.materials.map((material, i) => (
                                   <span key={i} className={`material-badge material-${material}`}>
-                                    <span className="material-emoji">{materialEmojis[material] || '📦'}</span>
+                                    <span className="material-emoji">{materialEmojis[material] || ''}</span>
                                     {material.charAt(0).toUpperCase() + material.slice(1)}
                                   </span>
                                 ))}
@@ -583,9 +579,7 @@ const getMaterialColor = (material) => {
     metal: '#10b981',
     paper: '#3b82f6',
     plastic: '#f59e0b',
-    electronics: '#8b5cf6',
-    glass: '#0ea5e9',
-    textiles: '#ec4899'
+   
   };
   return colors[material] || '#64748b';
 };
