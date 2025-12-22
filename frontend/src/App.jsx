@@ -19,6 +19,7 @@ import About from "./components/information/about/page";
 import HomeAfter from "./components/homeAfter/page";
 import Profile from "./components/profile/page";
 import NavbarTest from "./components/Header_Footer/NavbarTest/page";
+import AdminDashboard from "./components/AdminDashboard/page";
 // import Booking from "./components/booking/page";
 // import Settings from "./components/profile/settings/page";
 // import Bookings from "./components/profile/bookings/page";
@@ -42,6 +43,7 @@ function AnimatedRoutes() {
         <Route path="/NavbarAfter" element={<NavbarAfter/>} />
         <Route path="/NavbarTest" element={<NavbarTest/>} />
         <Route path="/homeAfter" element={<HomeAfter/>} />
+        <Route path="/AdminDashboard" element={<AdminDashboard/>} />
         {/* <Route path="/booking" element={<Booking />} /> */}
         {/* <Route path="/settings" element={<Settings />} /> */}
         {/* <Route path="/bookings" element={<Bookings />} /> */}
