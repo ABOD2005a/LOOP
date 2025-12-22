@@ -86,10 +86,10 @@ const AdminDashboard = () => {
     }, 500);
   };
 
-  const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => setLoading(false), 1000);
-  };
+  // const handleRefresh = () => {
+  //   setLoading(true);
+  //   setTimeout(() => setLoading(false), 1000);
+  // };
 
   // Calculate stats
   const stats = {
@@ -159,40 +159,7 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard">
       {/* Header */}
-      <header className="dashboard-header">
-        <div className="container">
-          <div className="header-content">
-            <div className="header-left">
-              <div className="logo-box">
-                <svg className="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <rect x="3" y="3" width="7" height="7" />
-                  <rect x="14" y="3" width="7" height="7" />
-                  <rect x="14" y="14" width="7" height="7" />
-                  <rect x="3" y="14" width="7" height="7" />
-                </svg>
-              </div>
-              <div>
-                <h1 className="header-title">Admin Dashboard</h1>
-                <p className="header-subtitle">Manage bookings and monitor activity</p>
-              </div>
-            </div>
-            <div className="header-actions">
-              <button className="btn btn-outline btn-refresh" onClick={handleRefresh} disabled={loading}>
-                <svg className={`icon ${loading ? 'spinning' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
-                </svg>
-                <span className="btn-text">Refresh</span>
-              </button>
-              <button className="btn btn-ghost">
-                <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
-                </svg>
-                <span className="btn-text">Sign Out</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+     
 
       {/* Main Content */}
       <main className="dashboard-main">
