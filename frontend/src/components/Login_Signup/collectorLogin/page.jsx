@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 export default function CollectorLogin() {
   const [formData, setFormData] = useState({
     email: "",
-    collectorId: "",
+    password: "", // Changed from collectorId to password
     rememberMe: false,
   });
 
@@ -40,8 +40,8 @@ export default function CollectorLogin() {
       newErrors.email = "Please enter a valid email";
     }
 
-    if (!formData.collectorId.trim()) {
-      newErrors.collectorId = "Collector ID is required";
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
     }
 
     return newErrors;
@@ -56,21 +56,23 @@ export default function CollectorLogin() {
       setErrors({});
 
       try {
-        const response = await fetch("http://localhost:8081/collector-login", {
+        const response = await fetch("http://localhost:8081/collector", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             gmail: formData.email,
-            collectorId: formData.collectorId,
+            password: formData.password,
           }),
         });
 
         const data = await response.json();
 
         if (response.ok) {
+          // Store collector info in localStorage (but avoid storing sensitive data)
           localStorage.setItem("collectorId", data.collector.id.toString());
+          localStorage.setItem("collectorEmail", formData.email);
           localStorage.setItem("collector", JSON.stringify(data.collector));
           localStorage.setItem("userType", "collector");
 
@@ -81,12 +83,11 @@ export default function CollectorLogin() {
           console.log("Collector login successful:", data);
 
           setTimeout(() => {
-            navigate("/collector-dashboard"); 
-          }, 2000);
+            navigate("/CollectorDashboard"); 
+          }, 500);
         } else {
-          // Login failed
           setErrors({
-            general: data.message || "Invalid email or collector ID",
+            general: data.message || "Invalid email or password",
           });
         }
       } catch (error) {
@@ -106,100 +107,89 @@ export default function CollectorLogin() {
     <div className="login-container">
       <Navbar />
       <div className="login-wrapper">
-          <div className="login-card">
-            <div className="login-header">
-              <h1 className="login-title">Collector Login</h1>
-              <p className="login-subtitle">
-                Please enter your email and collector ID
-              </p>
-            </div>
-
-            <div className="login-form">
-              {errors.general && (
-                <div className="form-error general-error">{errors.general}</div>
-              )}
-
-              <div className="form-group">
-                <label className="form-label">Email Address</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`form-input ${
-                    errors.email ? "form-input-error" : ""
-                  }`}
-                  placeholder="collector@example.com"
-                  disabled={loading}
-                />
-                {errors.email && <p className="form-error">{errors.email}</p>}
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Collector ID</label>
-                <input
-                  type="text"
-                  name="collectorId"
-                  value={formData.collectorId}
-                  onChange={handleChange}
-                  className={`form-input ${
-                    errors.collectorId ? "form-input-error" : ""
-                  }`}
-                  placeholder="Enter your collector ID"
-                  disabled={loading}
-                />
-                {errors.collectorId && (
-                  <p className="form-error">{errors.collectorId}</p>
-                )}
-              </div>
-
-              <div className="remember-wrapper">
-                <input
-                  type="checkbox"
-                  name="rememberMe"
-                  checked={formData.rememberMe}
-                  onChange={handleChange}
-                  className="remember-checkbox"
-                  id="remember"
-                  disabled={loading}
-                />
-                <label htmlFor="remember" className="remember-label">
-                  Remember me
-                </label>
-                <a href="#" className="forgot-link">
-                  Forgot ID?
-                </a>
-              </div>
-
-              <button
-                onClick={handleSubmit}
-                className="submit-btn"
-                disabled={loading}
-              >
-                {loading ? "Signing In..." : "Sign In as Collector"}
-              </button>
-
-              <button
-                onClick={() => navigate("/login")}
-                className="back-btn"
-                disabled={loading}
-              >
-                Back to Regular Login
-              </button>
-
-              <p className="signup-text">
-                Don't have a collector account?{" "}
-                <span
-                  className="signup-link"
-                  onClick={() => navigate("/collector-signup")}
-                >
-                  Register as Collector
-                </span>
-              </p>
-            </div>
+        <div className="login-card">
+          <div className="login-header">
+            <h1 className="login-title">Collector Login</h1>
+            <p className="login-subtitle">
+              Please enter your email and password
+            </p>
           </div>
+
+          <div className="login-form">
+            {errors.general && (
+              <div className="form-error general-error">{errors.general}</div>
+            )}
+
+            <div className="form-group">
+              <label className="form-label">Email Address</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={`form-input ${
+                  errors.email ? "form-input-error" : ""
+                }`}
+                placeholder="collector@example.com"
+                disabled={loading}
+              />
+              {errors.email && <p className="form-error">{errors.email}</p>}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Password</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className={`form-input ${
+                  errors.password ? "form-input-error" : ""
+                }`}
+                placeholder="Enter your password"
+                disabled={loading}
+              />
+              {errors.password && (
+                <p className="form-error">{errors.password}</p>
+              )}
+            </div>
+
+            <div className="remember-wrapper">
+              <input
+                type="checkbox"
+                name="rememberMe"
+                checked={formData.rememberMe}
+                onChange={handleChange}
+                className="remember-checkbox"
+                id="remember"
+                disabled={loading}
+              />
+              <label htmlFor="remember" className="remember-label">
+                Remember me
+              </label>
+              <a href="#" className="forgot-link">
+                Forgot Password?
+              </a>
+            </div>
+
+            <button
+              onClick={handleSubmit}
+              className="submit-btn"
+              disabled={loading}
+            >
+              {loading ? "Signing In..." : "Sign In as Collector"}
+            </button>
+
+            <button
+              onClick={() => navigate("/login")}
+              className="back-btn"
+              disabled={loading}
+            >
+              Back to Regular Login
+            </button>
+          </div>
+        </div>
       </div>
-      {/* <Footer /> */}
     </div>
   );
 }
