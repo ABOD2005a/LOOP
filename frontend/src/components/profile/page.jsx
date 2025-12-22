@@ -490,13 +490,6 @@ const Profile = () => {
                     <div className="avatar-overlay">
                       <i className="bi bi-camera-fill"></i>
                     </div>
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      className="avatar-input"
-                      accept="image/*"
-                      onChange={handleAvatarChange}
-                    />
                   </div>
                   <div className="profile-info">
                     <h2>
