@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useRef, useEffect } from "react";
 import "./Profile.css";
 import { useNavigate } from "react-router-dom";
@@ -441,7 +442,7 @@ const Profile = () => {
                                     onClick={() => handleViewMaterials(booking)}
                                     title="View Materials"
                                   >
-                                    <i className="bi bi-eye-fill">VIEW</i>
+                                    View
                                   </button>
                                 </td>
                               </tr>
@@ -842,9 +843,7 @@ const Profile = () => {
                 <i className="bi bi-recycle"></i>
                 Booking Materials - Order #{selectedBooking.id}
               </h2>
-              <button className="close-btn" onClick={closeModal}>
-                <i className="bi bi-x-lg">close</i>
-              </button>
+              {/* <button class="close-btn-red"></button> */}
             </div>
             
             <div className="modal-body">
@@ -929,23 +928,13 @@ const Profile = () => {
                 <div className="modal-stat">
                   <i className="bi bi-tree-fill"></i>
                   <div>
-                    <span className="stat-value">{parseFloat(selectedBooking.total_co2_saved).toFixed(2)} kg</span>
+                   
                     <span className="stat-label">CO₂ Saved</span>
                   </div>
-                </div>
-                <div className="modal-stat">
-                  <span className={`status ${selectedBooking.status}`}>
-                    {getStatusLabel(selectedBooking.status)}
-                  </span>
                 </div>
               </div>
             </div>
 
-            <div className="modal-footer">
-              <button className="btn btn-secondary" onClick={closeModal}>
-                Close
-              </button>
-            </div>
           </div>
         </div>
       )}
