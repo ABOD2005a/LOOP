@@ -106,11 +106,11 @@ const materials = [
 ];
 
 const metalIcons = {
-  iron: "🔩",
-  aluminum: "🥫",
-  copper: "🔶",
-  steel: "⚙️",
-  brass: "🔔",
+  iron: " ",
+  aluminum: " ",
+  copper: " ",
+  steel: " ",
+  brass: " ",
 };
 
 const HeroSection = () => (
