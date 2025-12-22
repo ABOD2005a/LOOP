@@ -160,20 +160,20 @@
   justify-content: space-between;
 }
 
-.stat-label {
+.stat-label-admin {
   font-size: 0.875rem;
   font-weight: 500;
   color: #64748b;
   margin-bottom: 0.5rem;
 }
 
-.stat-value-row {
+.stat-value-row-admin {
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
 }
 
-.stat-value {
+.stat-value-admin {
   font-size: 1.875rem;
   font-weight: 700;
   color: #0f172a;

@@ -171,9 +171,9 @@ const AdminDashboard = () => {
               <div className="stat-decoration"></div>
               <div className="stat-content">
                 <div className="stat-info">
-                  <p className="stat-label">Total Bookings</p>
-                  <div className="stat-value-row">
-                    <span className="stat-value">{stats.totalBookings}</span>
+                  <p className="stat-label-admin">Total Bookings</p>
+                  <div className="stat-value-row-admin">
+                    <span className="stat-value-admin">{stats.totalBookings}</span>
                     <span className="stat-trend stat-trend-up">
                       <svg className="trend-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path d="M22 7 13.5 15.5 8.5 10.5 2 17" />
@@ -198,9 +198,9 @@ const AdminDashboard = () => {
               <div className="stat-decoration"></div>
               <div className="stat-content">
                 <div className="stat-info">
-                  <p className="stat-label">Scheduled</p>
-                  <div className="stat-value-row">
-                    <span className="stat-value">{stats.scheduledBookings}</span>
+                  <p className="stat-label-admin">Scheduled</p>
+                  <div className="stat-value-row-admin">
+                    <span className="stat-value-admin">{stats.scheduledBookings}</span>
                     <span className="stat-trend stat-trend-up">
                       <svg className="trend-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path d="M22 7 13.5 15.5 8.5 10.5 2 17" />
@@ -228,9 +228,9 @@ const AdminDashboard = () => {
               <div className="stat-decoration"></div>
               <div className="stat-content">
                 <div className="stat-info">
-                  <p className="stat-label">Completed</p>
-                  <div className="stat-value-row">
-                    <span className="stat-value">{stats.completedBookings}</span>
+                  <p className="stat-label-admin">Completed</p>
+                  <div className="stat-value-row-admin">
+                    <span className="stat-value-admin">{stats.completedBookings}</span>
                     <span className="stat-trend stat-trend-up">
                       <svg className="trend-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path d="M22 7 13.5 15.5 8.5 10.5 2 17" />
@@ -256,9 +256,9 @@ const AdminDashboard = () => {
               <div className="stat-decoration"></div>
               <div className="stat-content">
                 <div className="stat-info">
-                  <p className="stat-label">Active Users</p>
-                  <div className="stat-value-row">
-                    <span className="stat-value">{stats.uniqueUsers}</span>
+                  <p className="stat-label-admin">Active Users</p>
+                  <div className="stat-value-row-admin">
+                    <span className="stat-value-admin">{stats.uniqueUsers}</span>
                     <span className="stat-trend stat-trend-up">
                       <svg className="trend-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path d="M22 7 13.5 15.5 8.5 10.5 2 17" />
