@@ -116,7 +116,7 @@ const AdminDashboard = () => {
     totalBookings: bookings.length,
     scheduledBookings: bookings.filter((b) => b.status === "scheduled").length,
     completedBookings: bookings.filter((b) => b.status === "completed").length,
-    uniqueUsers: new Set(bookings.map((b) => b.user_id)).size,
+    uniqueUsers: new Set(bookings.map((b) => String(b.user_id))).size,
   };
 
   const materialsCount = {};

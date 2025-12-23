@@ -100,7 +100,7 @@ const Profile = () => {
 
   const fetchAddressData = async () => {
     try {
-      const response = await fetch(`http://localhost:8081/address/${userId}`);
+      const response = await fetch(`http://localhost:8081/api/address/${userId}`);
       const data = await response.json();
 
       if (response.ok && data.hasAddress) {
@@ -122,7 +122,7 @@ const Profile = () => {
   const fetchBookingsData = async () => {
     setDashboardLoading(true);
     try {
-      const response = await fetch(`http://localhost:8081/bookings/${userId}`);
+      const response = await fetch(`http://localhost:8081/api/bookings/${userId}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -208,7 +208,7 @@ const Profile = () => {
 
   const savePersonalData = async () => {
     try {
-      const response = await fetch(`http://localhost:8081/user/${userId}`, {
+      const response = await fetch(`http://localhost:8081/api/user/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -242,14 +242,14 @@ const Profile = () => {
   const saveAddressData = async () => {
     try {
       const checkResponse = await fetch(
-        `http://localhost:8081/address/${userId}`
+        `http://localhost:8081/api/address/${userId}`
       );
       const checkData = await checkResponse.json();
 
       const method = checkData.hasAddress ? "PUT" : "POST";
       const url = checkData.hasAddress
-        ? `http://localhost:8081/address/${userId}`
-        : `http://localhost:8081/address`;
+        ? `http://localhost:8081/api/address/${userId}`
+        : `http://localhost:8081/api/address`;
 
       const body = {
         user_id: parseInt(userId),

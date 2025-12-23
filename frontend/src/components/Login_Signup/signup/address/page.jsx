@@ -125,7 +125,7 @@ export default function Address() {
 
       console.log("📦 Sending payload:", payload);
 
-      const response = await fetch("http://localhost:8081/address", {
+      const response = await fetch("http://localhost:8081/api/address", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
