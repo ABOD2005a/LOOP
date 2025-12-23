@@ -266,7 +266,6 @@ export default function Address() {
           </form>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
