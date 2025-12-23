@@ -1596,6 +1596,7 @@ const MaterialCalculator = ({ cartItems, setCartItems }) => {
             className="gradient-primary shadow-primary"
             style={{
               width: "100%",
+              color:"white",
               marginTop: "1.5rem",
               height: "3.5rem",
               fontSize: "1.125rem",
@@ -2018,6 +2019,8 @@ const Choose = () => {
                     className="gradient-primary shadow-primary"
                     style={{
                       width: "100%",
+              color:"white",
+
                       height: "3.5rem",
                       fontSize: "1.125rem",
                       fontWeight: "600",

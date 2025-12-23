@@ -156,7 +156,7 @@ const steps = [
 const buttons = [
   {
     text: "Schedule Pickup",
-    href: "/booking.html",
+    href: "/login",
     type: "primary",
     icon: (
       <svg
@@ -174,7 +174,7 @@ const buttons = [
   },
   {
     text: "Learn More",
-    href: "/about.html",
+    href: "/About",
     type: "outline",
     icon: null,
   },

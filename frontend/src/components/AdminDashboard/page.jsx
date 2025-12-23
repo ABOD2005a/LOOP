@@ -185,9 +185,9 @@ const AdminDashboard = () => {
   }));
 
   const materialEmojis = {
-    metal: "🔩",
-    paper: "📄",
-    plastic: "♻️",
+    metal: "",
+    paper: "",
+    plastic: "",
   };
 
   const statusOptions = [
@@ -639,7 +639,7 @@ const AdminDashboard = () => {
                                 .slice(0, 3)
                                 .map((material, i) => (
                                   <span key={i} className="material-emoji">
-                                    {materialEmojis[material] || "📦"}
+                                    {materialEmojis[material] || ""}
                                   </span>
                                 ))}
                             {booking.materials && booking.materials.length > 3 && (
@@ -722,6 +722,9 @@ const AdminDashboard = () => {
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
                   </div>
+                  <button onClick={handleRefresh} className="refresh-btn">
+                     Refresh
+                  </button>
                 </div>
               </div>
               <div className="card-content card-content-table">
@@ -835,7 +838,7 @@ const AdminDashboard = () => {
                                     className={`material-badge material-${material}`}
                                   >
                                     <span className="material-emoji">
-                                      {materialEmojis[material] || "📦"}
+                                      {materialEmojis[material] || ""}
                                     </span>
                                     {material.charAt(0).toUpperCase() +
                                       material.slice(1)}
