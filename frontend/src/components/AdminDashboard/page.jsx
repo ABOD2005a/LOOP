@@ -649,7 +649,7 @@ const AdminDashboard = () => {
                     />
                   </div>
                   <button onClick={handleRefresh} className="refresh-btn">
-                    🔄 Refresh
+                     Refresh
                   </button>
                 </div>
               </div>
