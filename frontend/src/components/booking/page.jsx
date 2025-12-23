@@ -19,6 +19,7 @@ import Navbar from "../Header_Footer/Navbar/page";
 import Footer from "../Header_Footer/Footer/page";
 import { useLocation, useNavigate } from "react-router-dom";
 import NavbarAfter from "../Header_Footer/NavbarAfter/page";
+import { API_URL } from "../../config";
 
 export default function Booking() {
   const location = useLocation();
@@ -69,7 +70,7 @@ export default function Booking() {
         }));
         try {
           const response = await fetch(
-            `http://localhost:8081/api/address/${user.id}`
+            `${API_URL}/api/address/${user.id}`
           );
           const data = await response.json();
 

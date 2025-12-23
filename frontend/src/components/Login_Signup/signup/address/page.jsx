@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import "./Address.css";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../../../config";
 
 export default function Address() {
   const [formData, setFormData] = useState({
@@ -123,7 +124,7 @@ export default function Address() {
 
       console.log("📦 Sending payload:", payload);
 
-      const response = await fetch("http://localhost:8081/api/address", {
+      const response = await fetch(`${API_URL}/api/address`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

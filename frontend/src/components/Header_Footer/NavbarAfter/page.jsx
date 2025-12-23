@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./navbarAfter.css";
+import "./NavbarAfter.css";
 import logoImage from "../../../assets/loopNav.png";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../../config";
 
 function NavbarAfter() {
   const navigate = useNavigate();
@@ -56,10 +57,10 @@ function NavbarAfter() {
     try {
       const userId = localStorage.getItem('userId');
       
-      await fetch('http://localhost:8081/api/logout', {
-        method: 'POST',
+      await fetch(`${API_URL}/api/logout`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ user_id: userId }),
       });

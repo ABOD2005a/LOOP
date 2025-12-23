@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import "./Profile.css";
 import { useNavigate } from "react-router-dom";
 import logoImage from "../../assets/loopNav.png";
+import { API_URL } from "../../config";
 
 const Profile = () => {
   const [activePage, setActivePage] = useState("profile");
@@ -74,10 +75,10 @@ const Profile = () => {
     try {
       const userId = localStorage.getItem('userId');
       
-      await fetch('http://localhost:8081/api/logout', {
-        method: 'POST',
+      await fetch(`${API_URL}/api/logout`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ user_id: userId }),
       });
@@ -126,7 +127,7 @@ const Profile = () => {
 
   const fetchAddressData = async () => {
     try {
-      const response = await fetch(`http://localhost:8081/api/address/${userId}`);
+      const response = await fetch(`${API_URL}/api/address/${userId}`);
       const data = await response.json();
 
       if (response.ok && data.hasAddress) {
@@ -148,7 +149,7 @@ const Profile = () => {
   const fetchBookingsData = async () => {
     setDashboardLoading(true);
     try {
-      const response = await fetch(`http://localhost:8081/api/bookings/${userId}`);
+      const response = await fetch(`${API_URL}/api/bookings/${userId}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -234,7 +235,7 @@ const Profile = () => {
 
   const savePersonalData = async () => {
     try {
-      const response = await fetch(`http://localhost:8081/api/user/${userId}`, {
+      const response = await fetch(`${API_URL}/api/user/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -268,14 +269,14 @@ const Profile = () => {
   const saveAddressData = async () => {
     try {
       const checkResponse = await fetch(
-        `http://localhost:8081/api/address/${userId}`
+        `${API_URL}/api/address/${userId}`
       );
       const checkData = await checkResponse.json();
 
       const method = checkData.hasAddress ? "PUT" : "POST";
       const url = checkData.hasAddress
-        ? `http://localhost:8081/api/address/${userId}`
-        : `http://localhost:8081/api/address`;
+        ? `${API_URL}/api/address/${userId}`
+        : `${API_URL}/api/address`;
 
       const body = {
         user_id: parseInt(userId),

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import "./collectorLogin.css";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../../config";
 
 export default function CollectorLogin() {
   const [formData, setFormData] = useState({
@@ -54,7 +55,7 @@ export default function CollectorLogin() {
       setErrors({});
 
       try {
-        const response = await fetch("http://localhost:8081/api/collector", {
+        const response = await fetch(`${API_URL}/api/collector`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

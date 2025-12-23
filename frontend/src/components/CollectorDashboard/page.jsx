@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./CollectorDashboard.css";
+import { API_URL } from "../../config";
 
-const API_BASE_URL = "http://localhost:8081/api";
+const API_BASE_URL = `${API_URL}/api`;
 
 const CollectorDashboard = () => {
   const [activePage, setActivePage] = useState("profile");

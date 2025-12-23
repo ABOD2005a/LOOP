@@ -22,6 +22,8 @@ import NavbarTest from "./components/Header_Footer/NavbarTest/page";
 import AdminDashboard from "./components/AdminDashboard/page";
 import CollectorDashboard from "./components/CollectorDashboard/page";
 import CollectorLogin from "./components/Login_Signup/collectorLogin/page";
+import { inject } from "@vercel/analytics";
+inject();
 // import Booking from "./components/booking/page";
 // import Settings from "./components/profile/settings/page";
 // import Bookings from "./components/profile/bookings/page";
@@ -70,8 +72,12 @@ function App() {
     "/admindashboard",
   ];
 
-  const shouldShowNavbar = !hideNavbarPages.some(page => page.toLowerCase() === location.pathname.toLowerCase());
-  const shouldShowFooter = !hideFooterPages.some(page => page.toLowerCase() === location.pathname.toLowerCase());
+  const shouldShowNavbar = !hideNavbarPages.some(
+    (page) => page.toLowerCase() === location.pathname.toLowerCase()
+  );
+  const shouldShowFooter = !hideFooterPages.some(
+    (page) => page.toLowerCase() === location.pathname.toLowerCase()
+  );
 
   return (
     <div

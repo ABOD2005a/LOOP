@@ -42,9 +42,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import ecoHero from "../../assets/Mnemonic-Device.png";
 import pickupTruck from "../../assets/pickup-truck.png";
 import NavbarAfter from "../Header_Footer/NavbarAfter/page";
+import { API_URL as BASE_URL } from "../../config";
 import "./Choose.css";
 
-const API_URL = "http://localhost:8081/api";
+const API_URL = `${BASE_URL}/api`;
 
 const metalSubTypes = [
   {
