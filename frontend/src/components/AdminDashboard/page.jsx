@@ -396,7 +396,7 @@ const AdminDashboard = () => {
                   className="stat-progress-bar"
                   style={{
                     width: `${Math.min(
-                      (stats.uniqueUsers / stats.totalBookings) * 100,
+                      stats.totalBookings > 0 ? (stats.uniqueUsers / stats.totalBookings) * 100 : 0,
                       100
                     )}%`,
                   }}

@@ -44,7 +44,7 @@ import pickupTruck from "../../assets/pickup-truck.png";
 import NavbarAfter from "../Header_Footer/NavbarAfter/page";
 import "./Choose.css";
 
-const API_URL = "http://localhost:8081";
+const API_URL = "http://localhost:8081/api";
 
 const metalSubTypes = [
   {
