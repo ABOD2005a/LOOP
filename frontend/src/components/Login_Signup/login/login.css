@@ -7,23 +7,25 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  min-height: 130vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 20px;
   width: 100%;
   margin: 0;
   position: relative;
-  /* top: 20px; */
+  box-sizing: border-box;
+  top: 40px;
 }
 
 .login-wrapper {
   width: 100%;
   max-width: 520px;
   animation: slideIn 0.5s ease-out;
-  margin: 2rem 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 @keyframes slideIn {
@@ -38,13 +40,15 @@
 }
 
 .login-card {
-  margin-top: 57px;
+  margin-top: 67px;
   margin-bottom: 50px;
   background: var(--bg);
   border-radius: 16px;
   padding: 30px;
   box-shadow: var(--shadow-xl);
   animation: slideIn 0.5s ease-out;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .login-card.success-card {
@@ -108,6 +112,8 @@
   color: var(--text);
   background: var(--bg-gray);
   transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-input:focus {
@@ -292,79 +298,80 @@
 
 @media (max-width: 768px) {
   .login-container {
-    padding: 1rem;
+    padding: 15px;
+    min-height: 100vh;
   }
 
   .login-card {
-    padding: 2rem;
-    max-width: 100%;
+    padding: 25px 20px;
+    margin: 10px auto;
   }
 
   .login-title {
-    font-size: 1.75rem;
+    font-size: 24px;
+  }
+
+  .login-subtitle {
+    font-size: 13px;
   }
 
   .form-group {
-    margin-bottom: 1.25rem;
+    gap: 8px;
   }
 
-  .input-field {
-    padding: 0.875rem;
-    font-size: 1rem;
+  .form-input {
+    padding: 12px 14px;
+    font-size: 14px;
   }
 
   .submit-btn {
-    padding: 0.875rem 1.5rem;
-    font-size: 1rem;
-  }
-
-  .social-login {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .social-btn {
-    width: 100%;
-    justify-content: center;
+    padding: 14px 24px;
+    font-size: 14px;
   }
 
   .remember-wrapper {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .forgot-link {
-    align-self: center;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 }
 
 @media (max-width: 480px) {
   .login-container {
-    padding: 0.75rem;
+    padding: 10px;
+    min-height: 100vh;
   }
 
   .login-card {
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    padding: 20px 15px;
+    margin: 5px auto;
+    border-radius: 12px;
   }
 
   .login-title {
-    font-size: 1.5rem;
+    font-size: 22px;
+  }
+
+  .login-subtitle {
+    font-size: 12px;
   }
 
   .form-group {
-    margin-bottom: 1rem;
+    gap: 6px;
   }
 
-  .input-field {
-    padding: 0.75rem;
-    font-size: 0.95rem;
+  .form-label {
+    font-size: 14px;
+  }
+
+  .form-input {
+    padding: 10px 12px;
+    font-size: 14px;
   }
 
   .submit-btn {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.95rem;
+    padding: 12px 20px;
+    font-size: 14px;
   }
 
   .remember-wrapper {
@@ -377,9 +384,42 @@
     align-self: flex-end;
   }
 
-  .login-footer {
-    flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
+  .signup-text {
+    font-size: 13px;
+    margin-top: 12px;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  .login-container {
+    padding: 8px;
+  }
+
+  .login-card {
+    padding: 15px 10px;
+    border-radius: 10px;
+  }
+
+  .login-title {
+    font-size: 20px;
+  }
+
+  .login-subtitle {
+    font-size: 11px;
+  }
+
+  .login-form {
+    gap: 16px;
+  }
+
+  .form-input {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .submit-btn {
+    padding: 10px 16px;
+    font-size: 13px;
   }
 }
