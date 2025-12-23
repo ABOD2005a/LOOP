@@ -46,6 +46,8 @@ const Profile = () => {
   
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMenuAnimating, setIsMenuAnimating] = useState(false);
 
   useEffect(() => {
     fetchUserData();
@@ -279,18 +281,59 @@ const Profile = () => {
     }
   };
 
-  const cancelEdit = (section) => {
-    if (section === "personal") {
-      setPersonalData({ ...originalData.personal });
-    } else {
-      setAddressData({ ...originalData.address });
-    }
-    toggleEdit(section);
+  const handleNavClick = (page) => {
+    setActivePage(page);
+    setIsMobileMenuOpen(false); // Close mobile menu when navigating
+  };
+
+  const toggleMobileMenu = () => {
+    if (isMenuAnimating) return; // Prevent multiple clicks during animation
+    
+    setIsMenuAnimating(true);
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+    
+    // Reset animation flag after transition
+    setTimeout(() => {
+      setIsMenuAnimating(false);
+    }, 350); // Slightly longer than CSS transition
+  };
+
+  const closeMobileMenu = () => {
+    if (isMenuAnimating) return;
+    
+    setIsMenuAnimating(true);
+    setIsMobileMenuOpen(false);
+    
+    setTimeout(() => {
+      setIsMenuAnimating(false);
+    }, 350);
   };
 
   return (
     <div className="profile-page">
-      <aside className="sidebar">
+      {/* Mobile Menu Button */}
+      <button 
+        className={`mobile-menu-btn ${isMobileMenuOpen ? 'active' : ''} ${isMenuAnimating ? 'animating' : ''}`}
+        onClick={toggleMobileMenu}
+        disabled={isMenuAnimating}
+        aria-label="Toggle menu"
+        aria-expanded={isMobileMenuOpen}
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="mobile-menu-overlay"
+          onClick={closeMobileMenu}
+          aria-hidden="false"
+        ></div>
+      )}
+
+      <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-header">
           <div className="logo-icon" onClick={() => navigate("/homeAfter")}>
             <span className="logo-text">
@@ -304,51 +347,53 @@ const Profile = () => {
           </div>
         </div>
 
-        <a
-          href="#"
-          className={`nav-link ${activePage === "profile" ? "active" : ""}`}
-          onClick={(e) => {
-            e.preventDefault();
-            setActivePage("profile");
-          }}
-        >
-          <i className="bi bi-person-circle"></i>
-          <span>Profile</span>
-        </a>
-        <a
-          // href="#"
-          className={`nav-link ${activePage === "dashboard" ? "active" : ""}`}
-          onClick={(e) => {
-            e.preventDefault();
-            setActivePage("dashboard");
-          }}
-        >
-          <i className="bi bi-speedometer2"></i>
-          <span>Dashboard</span>
-        </a>
-        <a
-          href="#"
-          className={`nav-link ${activePage === "settings" ? "active" : ""}`}
-          onClick={(e) => {
-            e.preventDefault();
-            setActivePage("settings");
-          }}
-        >
-          <i className="bi bi-gear"></i>
-          <span>Settings</span>
-        </a>
-        <a
-          href="#"
-          className="nav-link logout"
-          onClick={(e) => {
-            e.preventDefault();
-            localStorage.clear();
-            navigate("/");
-          }}
-        >
-          <i className="bi bi-box-arrow-right"></i>
-          <span>Log-out</span>
-        </a>
+        <nav className="sidebar-nav">
+          <a
+            href="#"
+            className={`nav-link ${activePage === "profile" ? "active" : ""}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavClick("profile");
+            }}
+          >
+            <i className="bi bi-person-circle"></i>
+            <span>Profile</span>
+          </a>
+          <a
+            // href="#"
+            className={`nav-link ${activePage === "dashboard" ? "active" : ""}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavClick("dashboard");
+            }}
+          >
+            <i className="bi bi-speedometer2"></i>
+            <span>Dashboard</span>
+          </a>
+          <a
+            href="#"
+            className={`nav-link ${activePage === "settings" ? "active" : ""}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavClick("settings");
+            }}
+          >
+            <i className="bi bi-gear"></i>
+            <span>Settings</span>
+          </a>
+          <a
+            href="#"
+            className="nav-link logout"
+            onClick={(e) => {
+              e.preventDefault();
+              localStorage.clear();
+              navigate("/");
+            }}
+          >
+            <i className="bi bi-box-arrow-right"></i>
+            <span>Log-out</span>
+          </a>
+        </nav>
       </aside>
 
       <main className="main-content">

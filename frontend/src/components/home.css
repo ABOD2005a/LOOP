@@ -1,5 +1,6 @@
+@import '../variables.css';
+
 .container {  max-width: 100%;  margin: 0 auto;  padding: 0 2rem;}
-@import '../../variables.css';
 
 .btn {
   display: inline-flex;
@@ -1533,8 +1534,29 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+
+  .hero {
+    padding: 6rem 1.5rem 3rem;
+  }
+
+  .hero__title {
+    font-size: 3.5rem;
+  }
+
+  .hero__description {
+    font-size: 1.15rem;
+  }
+
+  .hero__stats {
+    gap: 2rem;
+  }
+
   .calculator__wrapper {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .impact-grid {
@@ -1554,20 +1576,68 @@
   .footer-grid {
     grid-template-columns: 1fr 1fr;
   }
+
+  .features__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .steps-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 5rem 1rem 2rem;
+  }
+
+  .hero__badge {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+
   .hero__title {
     font-size: 2.5rem;
+    margin-bottom: 1rem;
   }
 
   .hero__description {
     font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 2rem 0;
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
   }
 
   .hero__stats {
     grid-template-columns: 1fr;
     gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
   }
 
   .section-title {
@@ -1582,12 +1652,20 @@
     grid-template-columns: 1fr;
   }
 
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
   .quick-weights {
     grid-template-columns: repeat(3, 1fr);
   }
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .calculator__materials {
+    padding: 2rem;
   }
 
   .footer-grid {
@@ -1597,15 +1675,90 @@
   .nav-links {
     display: none;
   }
+
+  .notification {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
+  .container {
+    padding: 0 0.75rem;
+  }
+
+  .hero {
+    padding: 4rem 0.75rem 1.5rem;
+  }
+
   .hero__title {
     font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero__description {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero__badge {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero__actions {
+    margin: 1.5rem 0;
+  }
+
+  .hero__actions .btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .hero__stats {
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
   }
 
   .amount {
     font-size: 3rem;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .features__grid {
+    gap: 1.5rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+  }
+
+  .quick-weights {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .calculator__materials {
+    padding: 1.5rem;
+  }
+
+  .materials-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
   }
 
   .notification {
