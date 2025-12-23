@@ -52,16 +52,38 @@ function NavbarAfter() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const handleLogout = () => {
-    console.log("✅ Logging out...");
+  const handleLogout = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      
+      await fetch('http://localhost:8081/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id: userId }),
+      });
+      
+      // Clear local storage
+      localStorage.removeItem("userId");
+      localStorage.removeItem("user");
+      localStorage.removeItem("userFirstName");
+      localStorage.removeItem("userLastName");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem('rememberMe');
 
-    localStorage.removeItem("userId");
-    localStorage.removeItem("user");
-    localStorage.removeItem("userFirstName");
-    localStorage.removeItem("userLastName");
-    localStorage.removeItem("userEmail");
-
-    navigate("/"); 
+      navigate("/"); 
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Clear local storage even if API call fails
+      localStorage.removeItem("userId");
+      localStorage.removeItem("user");
+      localStorage.removeItem("userFirstName");
+      localStorage.removeItem("userLastName");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem('rememberMe');
+      navigate("/");
+    }
   };
 
   const getInitials = () => {

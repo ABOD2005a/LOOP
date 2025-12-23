@@ -81,7 +81,11 @@ export default function Login() {
           console.log("Login successful:", data);
 
           setTimeout(() => {
-            navigate("/homeAfter"); 
+            if (data.user.isAdmin) {
+              navigate("/AdminDashboard");
+            } else {
+              navigate("/homeAfter");
+            }
           }, 2000);
         } else {
           // Login failed
@@ -209,7 +213,6 @@ export default function Login() {
             </div>
           </div>
       </div>
-      {/* <Footer /> */}
     </div>
   );
 }
