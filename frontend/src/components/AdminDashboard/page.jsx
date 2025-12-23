@@ -154,9 +154,9 @@ const AdminDashboard = () => {
   }));
 
   const materialEmojis = {
-    metal: "🔩",
-    paper: "📄",
-    plastic: "♻️",
+    metal: "",
+    paper: "",
+    plastic: "",
   };
 
   const statusOptions = [
@@ -565,7 +565,7 @@ const AdminDashboard = () => {
                                 .slice(0, 3)
                                 .map((material, i) => (
                                   <span key={i} className="material-emoji">
-                                    {materialEmojis[material] || "📦"}
+                                    {materialEmojis[material] || ""}
                                   </span>
                                 ))}
                             {booking.materials && booking.materials.length > 3 && (
