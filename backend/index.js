@@ -3,43 +3,46 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const collectorRoutes = require("./routes/collector");
 const addressRoutes = require("./routes/address");
-const bookingRoutes = require("./routes/booking");
+const bookingRoutes = require("./routes/bookings");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(authRoutes);
-app.use(collectorRoutes);
-app.use(addressRoutes);
-app.use(bookingRoutes);
+
+app.use("/api", authRoutes);
+app.use("/api", collectorRoutes);
+app.use("/api", addressRoutes);
+app.use("/api", bookingRoutes);
+
 app.get("/", (req, res) => {
   res.status(200).json({
     message: "Server is running ✅",
     endpoints: {
       auth: {
-        signup: "POST /signup",
-        login: "POST /login",
-        updateUser: "PUT /user/:user_id",
+        signup: "POST /api/signup",
+        login: "POST /api/login",
+        updateUser: "PUT /api/user/:user_id",
       },
       collector: {
-        collectorLogin: "POST /collector",
-        getCollector: "GET /collector/:collector_id",
-        updatePassword: "PUT /collector/:collector_id/password",
-        deleteCollector: "DELETE /collector/:collector_id",
+        collectorLogin: "POST /api/collector",
+        getCollector: "GET /api/collector/:collector_id",
+        updatePassword: "PUT /api/collector/:collector_id/password",
+        deleteCollector: "DELETE /api/collector/:collector_id",
       },
       address: {
-        getAddress: "GET /address/:user_id",
-        createAddress: "POST /address",
-        updateAddress: "PUT /address/:user_id",
-        deleteAddress: "DELETE /address/:user_id",
+        getAddress: "GET /api/address/:user_id",
+        createAddress: "POST /api/address",
+        updateAddress: "PUT /api/address/:user_id",
+        deleteAddress: "DELETE /api/address/:user_id",
       },
       bookings: {
-        createBooking: "POST /booking",
-        getUserBookings: "GET /bookings/:user_id",
-        getSingleBooking: "GET /booking/:booking_id",
-        updateBookingStatus: "PUT /booking/:booking_id/status",
-        deleteBooking: "DELETE /booking/:booking_id",
+        createBooking: "POST /api/booking",
+        getAllBookings: "GET /api/bookings",
+        getUserBookings: "GET /api/bookings/:user_id",
+        getSingleBooking: "GET /api/booking/:booking_id",
+        updateBookingStatus: "PUT /api/bookings/:booking_id/status",
+        deleteBooking: "DELETE /api/booking/:booking_id",
       },
     },
   });

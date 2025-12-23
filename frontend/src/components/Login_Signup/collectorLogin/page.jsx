@@ -56,7 +56,7 @@ export default function CollectorLogin() {
       setErrors({});
 
       try {
-        const response = await fetch("http://localhost:8081/collector", {
+        const response = await fetch("http://localhost:8081/api/collector", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
