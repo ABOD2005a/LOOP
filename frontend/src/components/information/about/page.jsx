@@ -2,6 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import "./About.css";
 import NavbarAfter from "../../Header_Footer/NavbarAfter/page";
 import Navbar from "../../Header_Footer/Navbar/page";
+import amrImage from '../../../assets/amr.png';
+import yousefImage from '../../../assets/yousef.png';
+import ramadanImage from '../../../assets/ramadan.png';
+import yousryImage from '../../../assets/yousry.png';
+import wasifyImage from '../../../assets/wasify.png';
 
 export default function About() {
   const observerRef = useRef(null);
@@ -12,25 +17,25 @@ export default function About() {
   const teamMembers = [
     { 
      name: "Amr Mohamed", role: "CEO & Founder", initial: "AM",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=faces"
+      image: amrImage
     },
     { 
       name: "Abdallah Elwasify", role: "Operations Director", initial: "AE",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=faces"
+      image:wasifyImage
     },
     { 
      name: "Abdallah Ramadan", role: "Tech Lead", initial: "AR",
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=faces"
+      image: ramadanImage
     },
     { 
      name: "Ahmed Yousry", role: "Community Manager", initial: "AY" ,
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=faces"
+      image: yousryImage
     },
     { 
       name: "Mohamed Youssef", 
       role: "Marketing Director", 
       initial: "MY",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=faces"
+      image:yousefImage
     }
   ];
 
