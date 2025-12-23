@@ -70,6 +70,29 @@ const Profile = () => {
     }
   }, [activePage, userId]);
 
+  const handleLogout = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      
+      await fetch('http://localhost:8081/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id: userId }),
+      });
+      
+      // Clear local storage
+      localStorage.clear();
+      navigate("/"); 
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Clear local storage even if API call fails
+      localStorage.clear();
+      navigate("/");
+    }
+  };
+
   const fetchUserData = async () => {
     try {
       const user = localStorage.getItem("user");
@@ -387,8 +410,7 @@ const Profile = () => {
             className="nav-link logout"
             onClick={(e) => {
               e.preventDefault();
-              localStorage.clear();
-              navigate("/");
+              handleLogout();
             }}
           >
             <i className="bi bi-box-arrow-right"></i>

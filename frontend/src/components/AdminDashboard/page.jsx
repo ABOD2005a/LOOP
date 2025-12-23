@@ -13,9 +13,15 @@ const AdminDashboard = () => {
   const [updatingId, setUpdatingId] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [error, setError] = useState(null);
+  const [activeUsers, setActiveUsers] = useState(0);
 
   useEffect(() => {
     fetchBookings();
+    fetchActiveUsers();
+    
+    // Refresh active users every 30 seconds
+    const interval = setInterval(fetchActiveUsers, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const fetchBookings = async () => {
@@ -56,6 +62,29 @@ const AdminDashboard = () => {
       setFilteredBookings([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchActiveUsers = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/active`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setActiveUsers(data.activeUsers || 0);
+      console.log("Active users:", data.activeUsers);
+      console.log("Total sessions:", data.totalSessions);
+    } catch (error) {
+      console.error("Error fetching active users:", error);
+      // Keep previous value on error
     }
   };
 
@@ -119,13 +148,15 @@ const AdminDashboard = () => {
 
   const handleRefresh = () => {
     fetchBookings();
+    fetchActiveUsers();
   };
 
   const stats = {
     totalBookings: bookings.length,
     scheduledBookings: bookings.filter((b) => b.status === "scheduled").length,
     completedBookings: bookings.filter((b) => b.status === "completed").length,
-    uniqueUsers: new Set(bookings.map((b) => String(b.user_id))).size,
+    // Active users from backend (logged in users)
+    uniqueUsers: activeUsers,
   };
 
   const materialsCount = {};
@@ -209,6 +240,49 @@ const AdminDashboard = () => {
     <div className="admin-dashboard">
       <main className="dashboard-main">
         <div className="container">
+          {/* Header with Refresh Button */}
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "2rem"
+          }}>
+            <div>
+              <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#1e293b" }}>
+                Admin Dashboard
+              </h1>
+              <p style={{ color: "#64748b", marginTop: "0.5rem" }}>
+                Real-time overview of bookings and active users
+              </p>
+            </div>
+            <button
+              onClick={handleRefresh}
+              style={{
+                padding: "0.75rem 1.5rem",
+                background: "#3b82f6",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                fontSize: "0.95rem",
+                fontWeight: "500"
+              }}
+            >
+              <svg
+                style={{ width: "20px", height: "20px" }}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
+                <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+              </svg>
+              Refresh Data
+            </button>
+          </div>
+
           {/* Error Message */}
           {error && (
             <div style={{
@@ -381,9 +455,9 @@ const AdminDashboard = () => {
                         fill="none"
                         stroke="currentColor"
                       >
-                        <path d="M22 7 13.5 15.5 8.5 10.5 2 17" />
+                        <circle cx="12" cy="12" r="2" />
                       </svg>
-                      +8%
+                      Live
                     </span>
                   </div>
                 </div>

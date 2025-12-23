@@ -67,23 +67,93 @@ router.post("/login", async (req, res) => {
   try {
     const { gmail: inputEmail, password: inputPassword } = req.body;
 
+    console.log('=== LOGIN ATTEMPT ===');
+    console.log('Email:', inputEmail);
+    console.log('Password length:', inputPassword?.length);
+
     if (!inputEmail || !inputPassword) {
       return handleError(res, 400, "Email and password are required");
     }
 
+    // First check if it's an admin login
+    console.log('Checking admin table...');
+    const { data: adminData, error: adminError } = await supabase
+      .from("admin")
+      .select("*")
+      .eq("gmail", inputEmail)
+      .maybeSingle();
+
+    console.log('Admin found:', !!adminData);
+
+    if (adminData && !adminError) {
+      console.log('Comparing admin password...');
+      const isValidPassword = await bcrypt.compare(inputPassword, adminData.password);
+      console.log('Admin password valid:', isValidPassword);
+      
+      if (isValidPassword) {
+        // 🆕 Create admin session
+        console.log('Creating admin session for user_id:', adminData.id);
+        const { data: sessionData, error: sessionError } = await supabase
+          .from("user_sessions")
+          .insert([{ user_id: adminData.id, is_active: true }])
+          .select();
+        
+        if (sessionError) {
+          console.error('❌ Session creation error:', sessionError);
+          console.error('Error details:', JSON.stringify(sessionError, null, 2));
+        } else {
+          console.log('✅ Admin session created:', sessionData);
+        }
+
+        console.log('✓ Admin login successful');
+        return res.status(200).json({
+          message: "Admin login successfully",
+          user: {
+            id: adminData.id,
+            gmail: adminData.gmail,
+            isAdmin: true,
+          },
+        });
+      } else {
+        console.log('✗ Admin password incorrect');
+      }
+    }
+
+    // If not admin, check regular user login
+    console.log('Checking login table...');
     const { data, error } = await supabase
       .from("login")
       .select("*")
       .eq("gmail", inputEmail)
       .maybeSingle();
 
+    console.log('User found:', !!data);
+
     if (error || !data) {
+      console.log('✗ User not found');
       return handleError(res, 401, "Invalid email or password");
     }
 
+    console.log('Comparing user password...');
     const result = await bcrypt.compare(inputPassword, data.password);
+    console.log('User password valid:', result);
 
     if (result) {
+      // 🆕 Create user session
+      console.log('Creating user session for user_id:', data.id);
+      const { data: sessionData, error: sessionError } = await supabase
+        .from("user_sessions")
+        .insert([{ user_id: data.id, is_active: true }])
+        .select();
+      
+      if (sessionError) {
+        console.error('❌ Session creation error:', sessionError);
+        console.error('Error details:', JSON.stringify(sessionError, null, 2));
+      } else {
+        console.log('✅ User session created:', sessionData);
+      }
+
+      console.log('✓ User login successful');
       return res.status(200).json({
         message: "Login successfully",
         user: {
@@ -91,13 +161,131 @@ router.post("/login", async (req, res) => {
           first_name: data.first_name,
           last_name: data.last_name,
           gmail: data.gmail,
+          isAdmin: false,
         },
       });
     }
 
+    console.log('✗ Password incorrect');
     return handleError(res, 401, "Invalid email or password");
   } catch (err) {
+    console.error('LOGIN ERROR:', err);
     return handleError(res, 500, "Login failed", err);
+  }
+});
+
+// ==================== LOGOUT ====================
+router.post("/logout", async (req, res) => {
+  try {
+    const { user_id } = req.body;
+
+    console.log('=== LOGOUT ATTEMPT ===');
+    console.log('User ID:', user_id);
+
+    if (!user_id) {
+      return handleError(res, 400, "User ID is required");
+    }
+
+    const userIdInt = parseInt(user_id);
+    if (isNaN(userIdInt)) {
+      return handleError(res, 400, "Invalid user ID format");
+    }
+
+    // Update active sessions to inactive
+    const { data, error } = await supabase
+      .from("user_sessions")
+      .update({ 
+        is_active: false, 
+        logout_time: new Date().toISOString() 
+      })
+      .eq("user_id", userIdInt)
+      .eq("is_active", true)
+      .select();
+
+    if (error) {
+      console.error('Logout error:', error);
+      return handleError(res, 500, "Logout failed", error);
+    }
+
+    console.log('✓ Logout successful, sessions closed:', data?.length || 0);
+
+    return res.status(200).json({
+      message: "Logout successful",
+      sessions_closed: data?.length || 0,
+    });
+  } catch (err) {
+    console.error('LOGOUT ERROR:', err);
+    return handleError(res, 500, "Logout failed", err);
+  }
+});
+
+// ==================== GET ACTIVE USERS ====================
+router.get("/users/active", async (req, res) => {
+  try {
+    console.log('=== FETCHING ACTIVE USERS ===');
+
+    // Get count of unique active users
+    const { data, error } = await supabase
+      .from("user_sessions")
+      .select("user_id")
+      .eq("is_active", true);
+
+    if (error) {
+      console.error('Active users fetch error:', error);
+      return handleError(res, 500, "Failed to fetch active users", error);
+    }
+
+    // Count unique user_ids
+    const uniqueUsers = new Set(data.map(session => session.user_id));
+    const activeUsers = uniqueUsers.size;
+
+    console.log('✓ Active users count:', activeUsers);
+    console.log('Total active sessions:', data.length);
+
+    return res.status(200).json({
+      activeUsers: activeUsers,
+      totalSessions: data.length,
+    });
+  } catch (err) {
+    console.error('ACTIVE USERS ERROR:', err);
+    return handleError(res, 500, "Failed to fetch active users", err);
+  }
+});
+
+// ==================== CLEANUP STALE SESSIONS ====================
+router.post("/sessions/cleanup", async (req, res) => {
+  try {
+    console.log('=== CLEANING UP STALE SESSIONS ===');
+
+    // Calculate 24 hours ago
+    const twentyFourHoursAgo = new Date();
+    twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+
+    // Close sessions older than 24 hours
+    const { data, error } = await supabase
+      .from("user_sessions")
+      .update({ 
+        is_active: false, 
+        logout_time: new Date().toISOString() 
+      })
+      .eq("is_active", true)
+      .lt("login_time", twentyFourHoursAgo.toISOString())
+      .select();
+
+    if (error) {
+      console.error('Cleanup error:', error);
+      return handleError(res, 500, "Cleanup failed", error);
+    }
+
+    console.log('✓ Cleaned up sessions:', data?.length || 0);
+
+    return res.status(200).json({
+      message: "Stale sessions cleaned up",
+      sessions_closed: data?.length || 0,
+    });
+  } catch (err) {
+    console.error('CLEANUP ERROR:', err);
+    return handleError(res, 500, "Cleanup failed", err);
   }
 });
 
