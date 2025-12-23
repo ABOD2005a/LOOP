@@ -6,8 +6,10 @@ import { useNavigate } from "react-router-dom";
 function NavbarAfter() {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const dropdownRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -21,6 +23,9 @@ function NavbarAfter() {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setIsMobileMenuOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -31,6 +36,7 @@ function NavbarAfter() {
     const handleEscape = (event) => {
       if (event.key === "Escape") {
         setIsDropdownOpen(false);
+        setIsMobileMenuOpen(false);
       }
     };
 
@@ -40,6 +46,10 @@ function NavbarAfter() {
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const handleLogout = () => {
@@ -190,7 +200,31 @@ function NavbarAfter() {
               </div>
             )}
           </div>
+
+          <button className="navbar__toggle" onClick={toggleMobileMenu}>
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
         </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <div className={`navbar__mobile-menu ${isMobileMenuOpen ? 'active' : ''}`} ref={mobileMenuRef}>
+        <ul className="navbar__mobile-links">
+          <li>
+            <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)}>How it Works</a>
+          </li>
+          <li>
+            <a href="#impact" onClick={() => setIsMobileMenuOpen(false)}>Impact</a>
+          </li>
+          <li>
+            <a href="./contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
+          </li>
+          <li>
+            <a href="./About" onClick={() => setIsMobileMenuOpen(false)}>About</a>
+          </li>
+        </ul>
       </div>
     </nav>
   );

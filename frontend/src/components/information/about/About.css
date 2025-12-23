@@ -703,6 +703,123 @@
       }
     }
 
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      h3 {
+        font-size: 1.25rem;
+      }
+
+      .hero-section {
+        padding: 3rem 0;
+      }
+
+      .hero-content {
+        text-align: center;
+      }
+
+      .mission-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .values-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .impact-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .contribution-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .industry-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+      }
+
+      .highlight-number {
+        font-size: 4rem;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 0.75rem;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      h3 {
+        font-size: 1.1rem;
+      }
+
+      .hero-section {
+        padding: 2rem 0;
+      }
+
+      .hero-content p {
+        font-size: 1rem;
+      }
+
+      .stat-value {
+        font-size: 1.75rem;
+      }
+
+      .highlight-number {
+        font-size: 3rem;
+      }
+
+      .contribution-card {
+        padding: 1.5rem;
+      }
+
+      .contribution-card h3 {
+        font-size: 1.1rem;
+      }
+    }
+
     /* Animation classes */
     .fade-in {
       opacity: 0;

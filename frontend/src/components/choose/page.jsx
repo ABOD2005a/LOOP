@@ -1815,7 +1815,7 @@ const Choose = () => {
   };
 
   const handleViewBookings = () => {
-    navigate("/bookings");
+    navigate("/profile");
   };
 
   const handleBackHome = () => {
@@ -1832,7 +1832,7 @@ const Choose = () => {
     setDate(undefined);
     setSelectedTime(null);
     setNotes("");
-    navigate("/homeAfter");
+    navigate("/choose");
   };
 
   const totalEarnings = cartItems.reduce((sum, item) => sum + item.total, 0);

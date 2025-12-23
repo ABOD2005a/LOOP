@@ -685,4 +685,313 @@ tbody tr:hover {
         width: 100%;
         justify-content: center;
     }
+
+    .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .dashboard-title {
+        font-size: 1.5rem;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+    }
+
+    .tasks-section {
+        padding: 1rem;
+    }
+
+    .tasks-header {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+    }
+
+    .tasks-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .filter-buttons {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .filter-btn {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .task-card {
+        padding: 1rem;
+    }
+
+    .task-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+
+    .task-title {
+        font-size: 1rem;
+    }
+
+    .task-meta {
+        font-size: 0.85rem;
+    }
+
+    .task-location {
+        font-size: 0.9rem;
+    }
+
+    .task-actions {
+        gap: 0.5rem;
+    }
+
+    .earnings-section {
+        padding: 1rem;
+    }
+
+    .earnings-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .earnings-summary {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .earnings-card {
+        padding: 1rem;
+    }
+
+    .earnings-amount {
+        font-size: 1.25rem;
+    }
+
+    .earnings-label {
+        font-size: 0.9rem;
+    }
+
+    .earnings-chart {
+        height: 200px;
+    }
+
+    .recent-activity {
+        padding: 1rem;
+    }
+
+    .activity-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .activity-list {
+        gap: 0.75rem;
+    }
+
+    .activity-item {
+        padding: 0.875rem;
+    }
+
+    .activity-content h4 {
+        font-size: 0.95rem;
+    }
+
+    .activity-content p {
+        font-size: 0.85rem;
+    }
+
+    .activity-time {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 0.75rem;
+    }
+
+    .sidebar {
+        width: 60px;
+    }
+
+    .nav-link {
+        padding: 0.75rem;
+    }
+
+    .main-content {
+        margin-left: 60px;
+        padding: 1rem;
+    }
+
+    .dashboard-header {
+        padding: 1rem 0;
+    }
+
+    .dashboard-title {
+        font-size: 1.25rem;
+    }
+
+    .dashboard-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .dashboard-stats {
+        gap: 0.75rem;
+    }
+
+    .stat-card {
+        padding: 0.875rem;
+    }
+
+    .stat-value {
+        font-size: 1.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+    }
+
+    .tasks-section {
+        padding: 0.875rem;
+    }
+
+    .tasks-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .filter-buttons {
+        gap: 0.375rem;
+    }
+
+    .filter-btn {
+        min-width: 100px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .task-card {
+        padding: 0.875rem;
+    }
+
+    .task-title {
+        font-size: 0.95rem;
+    }
+
+    .task-meta {
+        font-size: 0.8rem;
+    }
+
+    .task-location {
+        font-size: 0.85rem;
+    }
+
+    .task-description {
+        font-size: 0.9rem;
+    }
+
+    .task-actions {
+        flex-direction: column;
+        gap: 0.375rem;
+    }
+
+    .earnings-section {
+        padding: 0.875rem;
+    }
+
+    .earnings-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .earnings-summary {
+        gap: 0.75rem;
+    }
+
+    .earnings-card {
+        padding: 0.875rem;
+    }
+
+    .earnings-amount {
+        font-size: 1.1rem;
+    }
+
+    .earnings-label {
+        font-size: 0.85rem;
+    }
+
+    .earnings-chart {
+        height: 150px;
+    }
+
+    .recent-activity {
+        padding: 0.875rem;
+    }
+
+    .activity-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .activity-list {
+        gap: 0.5rem;
+    }
+
+    .activity-item {
+        padding: 0.75rem;
+    }
+
+    .activity-content h4 {
+        font-size: 0.9rem;
+    }
+
+    .activity-content p {
+        font-size: 0.8rem;
+    }
+
+    .activity-time {
+        font-size: 0.75rem;
+    }
+
+    .profile-card {
+        padding: 1rem;
+    }
+
+    .profile-avatar {
+        width: 60px;
+        height: 60px;
+    }
+
+    .profile-info h3 {
+        font-size: 1.1rem;
+    }
+
+    .profile-info p {
+        font-size: 0.85rem;
+    }
+
+    .profile-stats {
+        gap: 0.75rem;
+    }
+
+    .stat-item h4 {
+        font-size: 0.9rem;
+    }
+
+    .stat-item p {
+        font-size: 0.8rem;
+    }
 }
