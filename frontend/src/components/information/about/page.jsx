@@ -8,6 +8,32 @@ export default function About() {
   const statsObserverRef = useRef(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // Team members data
+  const teamMembers = [
+    { 
+     name: "Amr Mohamed", role: "CEO & Founder", initial: "AM",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=faces"
+    },
+    { 
+      name: "Abdallah Elwasify", role: "Operations Director", initial: "AE",
+      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=faces"
+    },
+    { 
+     name: "Abdallah Ramadan", role: "Tech Lead", initial: "AR",
+      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=faces"
+    },
+    { 
+     name: "Ahmed Yousry", role: "Community Manager", initial: "AY" ,
+      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=faces"
+    },
+    { 
+      name: "Mohamed Youssef", 
+      role: "Marketing Director", 
+      initial: "MY",
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=faces"
+    }
+  ];
+
   useEffect(() => {
     const checkAuthStatus = () => {
       const authToken = localStorage.getItem("authToken");
@@ -284,7 +310,6 @@ export default function About() {
               <p>Potential economic value increase with proper sorting</p>
             </div>
           </div>
-        
         </div>
       </section>
 
@@ -347,6 +372,42 @@ export default function About() {
               <h3>Supporting Vision 2030</h3>
               <p>Aligning with Egypt Vision 2030 environmental sustainability goals</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW TEAM SECTION */}
+      <section className="team-section">
+        <div className="container">
+          <div className="section-header fade-in">
+            <h2>Meet Our Team</h2>
+            <p>
+              Passionate individuals dedicated to making recycling accessible and rewarding for everyone.
+            </p>
+          </div>
+          <div className="team-grid">
+            {teamMembers.map((member, index) => (
+              <div key={index} className="team-member fade-in">
+                <div className="team-avatar">
+                  {member.image ? (
+                    <img 
+                      src={member.image} 
+                      alt={member.name}
+                      className="avatar-image"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <span className="avatar-initial" style={{ display: member.image ? 'none' : 'flex' }}>
+                    {member.initial}
+                  </span>
+                </div>
+                <h3 className="member-name">{member.name}</h3>
+                <p className="member-role">{member.role}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
