@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import "./collectorLogin.css";
-import Navbar from "../../Header_Footer/Navbar/page";
-import Footer from "../../Header_Footer/Footer/page";
 import { useNavigate } from "react-router-dom";
 
 export default function CollectorLogin() {
@@ -104,7 +102,6 @@ export default function CollectorLogin() {
 
   return (
     <div className="login-container">
-      <Navbar />
       <div className="login-wrapper">
         <div className="login-card">
           <div className="login-header">

@@ -61,15 +61,17 @@ function App() {
     "/profile",
     "/CollectorDashboard",
     "/AdminDashboard",
+    "/admindashboard",
   ];
   const hideFooterPages = [
     "/profile",
     "/CollectorDashboard",
     "/AdminDashboard",
+    "/admindashboard",
   ];
 
-  const shouldShowNavbar = !hideNavbarPages.includes(location.pathname);
-  const shouldShowFooter = !hideFooterPages.includes(location.pathname);
+  const shouldShowNavbar = !hideNavbarPages.some(page => page.toLowerCase() === location.pathname.toLowerCase());
+  const shouldShowFooter = !hideFooterPages.some(page => page.toLowerCase() === location.pathname.toLowerCase());
 
   return (
     <div

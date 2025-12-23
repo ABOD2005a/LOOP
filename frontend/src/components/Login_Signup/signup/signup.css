@@ -1,6 +1,6 @@
 @import '../../../variables.css';
 
-.signup-container {
+.signup_container {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #d1fae5 100%);
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)),
     url("../../../assets/looppattern.jpg");
@@ -24,7 +24,7 @@
   animation: slideIn 0.5s ease-out;
 }
 
-.signup-card {
+.signup_card {
   margin-top: 67px;
   margin-bottom: 50px;
   background: var(--bg);
@@ -33,9 +33,10 @@
   box-shadow: var(--shadow-xl);
   animation: slideIn 0.5s ease-out;
   min-height: auto;
+  max-width: 100%;
 }
 
-.signup-card.success-card {
+.signup_card.success-card {
   text-align: center;
 }
 
@@ -261,11 +262,11 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .signup-container {
+  .signup_container {
     padding: 1rem;
   }
 
-  .signup-card {
+  .signup_card {
     padding: 2rem;
     max-width: 100%;
   }
@@ -311,11 +312,11 @@
 }
 
 @media (max-width: 480px) {
-  .signup-container {
+  .signup_container {
     padding: 0.75rem;
   }
 
-  .signup-card {
+  .signup_card {
     padding: 1.5rem;
   }
 

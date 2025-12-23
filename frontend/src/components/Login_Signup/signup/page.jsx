@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff, Check } from "lucide-react";
 import "./signup.css";
-import Navbar from "../../Header_Footer/Navbar/page";
-import Footer from "../../Header_Footer/Footer/page";
 import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
@@ -122,10 +120,9 @@ export default function SignUp() {
   };
 
   return (
-    <div className="signup-container">
-      <Navbar />
+    <div className="signup_container">
       <div className="signup-wrapper">
-        <div className="signup-card">
+        <div className="signup_card">
           <div className="signup-header">
             <h1 className="signup-title">Create Account</h1>
             <p className="signup-subtitle">

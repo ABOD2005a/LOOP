@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff, Check } from "lucide-react";
 import "./login.css";
-import Navbar from "../../Header_Footer/Navbar/page";
-import Footer from "../../Header_Footer/Footer/page";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
@@ -106,7 +104,6 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <Navbar />
       <div className="login-wrapper">
           <div className="login-card">
             <div className="login-header">

@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import "./Address.css";
-import Navbar from "../../../Header_Footer/Navbar/page";
-import Footer from "../../../Header_Footer/Footer/page";
 import { useNavigate } from "react-router-dom";
 
 export default function Address() {
@@ -158,7 +156,6 @@ export default function Address() {
 
   return (
     <div className="signup-container">
-      <Navbar />
       <div className="signup-wrapper">
         <div className="signup-card">
           <div className="signup-header">

@@ -35,9 +35,18 @@ const AdminDashboard = () => {
 
       const data = await response.json();
       console.log("Fetched bookings:", data);
+      console.log("Number of bookings:", data.bookings?.length || 0);
       
       // Backend returns { message, bookings }
       const bookingsData = data.bookings || [];
+      
+      // Debug: Check user IDs
+      const userIds = bookingsData.map(b => b.user_id);
+      const uniqueUserIds = [...new Set(userIds.map(id => String(id)))];
+      console.log("All user IDs:", userIds);
+      console.log("Unique user IDs:", uniqueUserIds);
+      console.log("Unique users count:", uniqueUserIds.length);
+      
       setBookings(bookingsData);
       setFilteredBookings(bookingsData);
     } catch (error) {
