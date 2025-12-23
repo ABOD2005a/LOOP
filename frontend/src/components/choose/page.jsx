@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-vars */
 import { useState, useMemo } from "react";
@@ -801,205 +802,73 @@ const NotesSection = ({ notes, setNotes }) => (
   </section>
 );
 
+
 const SuccessScreen = ({ details, onViewBookings, onBackHome }) => (
-  <div
-    style={{
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "1rem",
-      position: "relative",
-    }}
-  >
-    <div
-      style={{
-        position: "absolute",
-        inset: "0",
-        opacity: "0.05",
-        backgroundImage: `url(${ecoHero})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    />
-    <div
-      style={{
-        position: "relative",
-        zIndex: "10",
-        width: "100%",
-        maxWidth: "28rem",
-      }}
-      className="animate-scale-in"
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "1.5rem",
-        }}
-      >
-        <div
-          className="gradient-primary shadow-primary animate-pulse-soft"
-          style={{
-            width: "5rem",
-            height: "5rem",
-            borderRadius: "9999px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Check
-            style={{
-              width: "2.5rem",
-              height: "2.5rem",
-              color: "white",
-              strokeWidth: "3",
-            }}
-          />
+  <div className="success-screen">
+    <div className="success-screen__background" />
+    
+    <div className="success-screen__container animate-scale-in">
+      <div className="success-screen__check-icon-wrapper">
+        <div className="success-screen__check-icon gradient-primary shadow-primary animate-pulse-soft">
+          <Check />
         </div>
       </div>
-      <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-        <h1
-          className="text-gradient"
-          style={{
-            fontSize: "1.875rem",
-            fontWeight: "800",
-            marginBottom: "0.5rem",
-          }}
-        >
+
+      <div className="success-screen__header">
+        <h1 className="success-screen__title text-gradient">
           Booking Confirmed!
         </h1>
-        <p style={{ color: "var(--muted-foreground)" }}>
+        <p className="success-screen__subtitle">
           Your pickup has been scheduled successfully.
         </p>
       </div>
-      <div
-        style={{
-          background: "var(--card)",
-          borderRadius: "1.5rem",
-          padding: "1.5rem",
-          boxShadow: "var(--shadow-lg)",
-          border: "1px solid var(--border)",
-          marginBottom: "1.5rem",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "1rem",
-              padding: "0.75rem",
-              background: "var(--muted)",
-              borderRadius: "0.75rem",
-            }}
-          >
-            <MapPin
-              style={{
-                width: "1.25rem",
-                height: "1.25rem",
-                color: "var(--primary)",
-                marginTop: "0.125rem",
-              }}
-            />
-            <div>
-              <span
-                style={{
-                  display: "block",
-                  fontSize: "0.875rem",
-                  color: "var(--muted-foreground)",
-                }}
-              >
+
+      <div className="success-screen__details-card">
+        <div className="success-screen__details-list">
+          
+          {/* Address */}
+          <div className="success-screen__detail-item">
+            <MapPin className="success-screen__detail-icon" />
+            <div className="success-screen__detail-content">
+              <span className="success-screen__detail-label">
                 Pickup Address
               </span>
-              <span style={{ fontWeight: "600" }}>{details.address}</span>
+              <span className="success-screen__detail-value">
+                {details.address}
+              </span>
             </div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "1rem",
-              padding: "0.75rem",
-              background: "var(--muted)",
-              borderRadius: "0.75rem",
-            }}
-          >
-            <CalendarIcon
-              style={{
-                width: "1.25rem",
-                height: "1.25rem",
-                color: "var(--primary)",
-                marginTop: "0.125rem",
-              }}
-            />
-            <div>
-              <span
-                style={{
-                  display: "block",
-                  fontSize: "0.875rem",
-                  color: "var(--muted-foreground)",
-                }}
-              >
+
+          {/* Date & Time */}
+          <div className="success-screen__detail-item">
+            <CalendarIcon className="success-screen__detail-icon" />
+            <div className="success-screen__detail-content">
+              <span className="success-screen__detail-label">
                 Date & Time
               </span>
-              <span style={{ fontWeight: "600" }}>{details.date}</span>
-              <span
-                style={{
-                  display: "block",
-                  fontSize: "0.875rem",
-                  color: "var(--muted-foreground)",
-                }}
-              >
+              <span className="success-screen__detail-value">
+                {details.date}
+              </span>
+              <span className="success-screen__detail-subvalue">
                 {details.time}
               </span>
             </div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "1rem",
-              padding: "0.75rem",
-              background: "var(--muted)",
-              borderRadius: "0.75rem",
-            }}
-          >
-            <Package
-              style={{
-                width: "1.25rem",
-                height: "1.25rem",
-                color: "var(--primary)",
-                marginTop: "0.125rem",
-              }}
-            />
-            <div style={{ flex: "1" }}>
-              <span
-                style={{
-                  display: "block",
-                  fontSize: "0.875rem",
-                  color: "var(--muted-foreground)",
-                }}
-              >
+
+          {/* Materials */}
+          <div className="success-screen__detail-item">
+            <Package className="success-screen__detail-icon" />
+            <div className="success-screen__detail-content">
+              <span className="success-screen__detail-label">
                 Materials
               </span>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.25rem",
-                }}
-              >
+              <div className="success-screen__materials-list">
                 {details.items.map((item) => (
-                  <div
-                    key={item.id}
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <span style={{ fontWeight: "600" }}>
+                  <div key={item.id} className="success-screen__material-item">
+                    <span className="success-screen__material-name">
                       {item.subTypeName || item.materialName}
                     </span>
-                    <span style={{ color: "var(--muted-foreground)" }}>
+                    <span className="success-screen__material-weight">
                       {item.weight} kg
                     </span>
                   </div>
@@ -1007,88 +876,51 @@ const SuccessScreen = ({ details, onViewBookings, onBackHome }) => (
               </div>
             </div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "1rem",
-              padding: "0.75rem",
-              background: "rgba(34, 197, 94, 0.1)",
-              borderRadius: "0.75rem",
-            }}
-          >
-            <Leaf
-              style={{
-                width: "1.25rem",
-                height: "1.25rem",
-                color: "var(--primary)",
-                marginTop: "0.125rem",
-              }}
-            />
-            <div>
-              <span
-                style={{
-                  display: "block",
-                  fontSize: "0.875rem",
-                  color: "var(--primary)",
-                }}
-              >
+
+          {/* Environmental Impact */}
+          <div className="success-screen__detail-item success-screen__detail-item--impact">
+            <Leaf className="success-screen__detail-icon" />
+            <div className="success-screen__detail-content">
+              <span className="success-screen__detail-label success-screen__detail-label--primary">
                 Environmental Impact
               </span>
-              <span style={{ fontWeight: "600", color: "var(--primary)" }}>
+              <span className="success-screen__detail-value success-screen__detail-value--primary">
                 {details.totalCo2.toFixed(1)} kg CO₂ saved
               </span>
             </div>
           </div>
-          <div
-            className="gradient-primary"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "1rem",
-              borderRadius: "0.75rem",
-              color: "white",
-            }}
-          >
-            <div>
-              <span style={{ display: "block", fontWeight: "600" }}>
-                Estimated Earnings
-              </span>
-              <span style={{ fontSize: "0.875rem", opacity: "0.8" }}>
-                {details.totalWeight} kg total
+
+          {/* Earnings */}
+          <div className="success-screen__detail-item success-screen__detail-item--earnings gradient-primary">
+            <div className="success-screen__earnings-container">
+              <div>
+                <span className="success-screen__earnings-label">
+                  Estimated Earnings
+                </span>
+                <span className="success-screen__earnings-subtext">
+                  {details.totalWeight} kg total
+                </span>
+              </div>
+              <span className="success-screen__earnings-amount">
+                {details.totalEarnings} EGP
               </span>
             </div>
-            <span style={{ fontSize: "1.5rem", fontWeight: "800" }}>
-              {details.totalEarnings} EGP
-            </span>
           </div>
+
         </div>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+
+      <div className="success-screen__actions">
         <Button
           onClick={onViewBookings}
-          className="gradient-primary shadow-primary"
-          style={{
-            flex: "1",
-            height: "3rem",
-            fontWeight: "600",
-            borderRadius: "0.75rem",
-          }}
+          className="success-screen__button success-screen__button--primary gradient-primary shadow-primary"
         >
           View My Bookings
         </Button>
         <Button
           onClick={onBackHome}
           variant="outline"
-          style={{
-            flex: "1",
-            height: "3rem",
-            border: "2px solid var(--primary)",
-            color: "var(--primary)",
-            fontWeight: "600",
-            borderRadius: "0.75rem",
-          }}
+          className="success-screen__button success-screen__button--outline"
         >
           New Booking
         </Button>
