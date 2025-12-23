@@ -764,7 +764,7 @@ const AdminDashboard = () => {
                                     className={`material-badge material-${material}`}
                                   >
                                     <span className="material-emoji">
-                                      {materialEmojis[material] || "📦"}
+                                      {materialEmojis[material] || ""}
                                     </span>
                                     {material.charAt(0).toUpperCase() +
                                       material.slice(1)}
