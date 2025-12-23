@@ -185,7 +185,7 @@ export default function Login() {
                 className="submit-btn"
                 disabled={loading}
               >
-                {loading ? "Signing In..." : "Sign In"}
+                {loading ? "Signing In..." : "login"}
               </button>
 
               {/* Collector Login Button */}
