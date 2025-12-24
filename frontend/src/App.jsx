@@ -24,9 +24,6 @@ import CollectorDashboard from "./components/CollectorDashboard/page";
 import CollectorLogin from "./components/Login_Signup/collectorLogin/page";
 import { inject } from "@vercel/analytics";
 inject();
-// import Booking from "./components/booking/page";
-// import Settings from "./components/profile/settings/page";
-// import Bookings from "./components/profile/bookings/page";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -48,9 +45,7 @@ function AnimatedRoutes() {
         <Route path="/AdminDashboard" element={<AdminDashboard />} />
         <Route path="/CollectorDashboard" element={<CollectorDashboard />} />
         <Route path="/CollectorLogin" element={<CollectorLogin />} />
-        {/* <Route path="/booking" element={<Booking />} /> */}
-        {/* <Route path="/settings" element={<Settings />} /> */}
-        {/* <Route path="/bookings" element={<Bookings />} /> */}
+        
       </Routes>
     </AnimatePresence>
   );
