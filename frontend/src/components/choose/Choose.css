@@ -467,6 +467,94 @@ body {
   height: 2rem;
   border-radius: 8px;
   cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.cart-item__remove:hover {
+  background: var(--destructive);
+  color: white;
+}
+
+/* ============= DATE PICKER BUTTON ============= */
+.date-picker-button {
+  width: 100%;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.75rem 1rem;
+  background: white !important;
+  border: 2px solid var(--border);
+  border-radius: 0.75rem;
+  font-weight: 600;
+  color: var(--foreground) !important;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.date-picker-button:hover {
+  border-color: var(--primary);
+}
+
+/* ============= CALENDAR POPOVER ============= */
+[data-radix-popper-content-wrapper] {
+  z-index: 9999 !important;
+}
+
+.calendar-popover {
+  z-index: 9999 !important;
+  position: relative;
+  background: white !important;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Calendar Styling */
+.calendar-popover .rdp,
+.calendar-popover .rdp *,
+.calendar-popover [class*="rdp"] {
+  /* background: white !important; */
+}
+
+.calendar-popover .rdp {
+  padding: 1rem;
+}
+
+.calendar-popover .rdp-months {
+  background: white !important;
+}
+
+.calendar-popover .rdp-month {
+  background: white !important;
+}
+
+.calendar-popover .rdp-table {
+  background: white !important;
+}
+
+.calendar-popover .rdp-head {
+  background: white !important;
+}
+
+.calendar-popover .rdp-tbody {
+  background: white !important;
+}
+
+.calendar-popover .rdp-row {
+  background: white !important;
+}
+
+.calendar-popover .rdp-caption {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  position: relative;
+  background: white !important;
+}
+
+.calendar-popover .rdp-caption_label {
   font-size: 1rem;
   font-weight: 600;
   transition: all 0.2s;
