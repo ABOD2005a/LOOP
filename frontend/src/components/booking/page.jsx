@@ -69,7 +69,7 @@ export default function Booking() {
         }));
         try {
           const response = await fetch(
-            `http://localhost:8081/address/${user.id}`
+            `http://localhost:8081/api/address/${user.id}`
           );
           const data = await response.json();
 
