@@ -7,16 +7,25 @@ const bookingRoutes = require("./routes/bookings");
 
 const app = express();
 
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:5174' , 'https://loop2030.vercel.app'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:3000",
+      "http://localhost:5174",
+      "https://loop2030.vercel.app",
+      "https://localhost:8081",
+      "https://localhost:8080",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
-app.options('*', cors());
+app.options("*", cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", authRoutes);
 app.use("/api", collectorRoutes);
@@ -30,9 +39,9 @@ app.get("/", (req, res) => {
       auth: {
         signup: "POST /api/signup",
         login: "POST /api/login",
-        logout: "POST /api/logout", 
+        logout: "POST /api/logout",
         updateUser: "PUT /api/user/:user_id",
-        getActiveUsers: "GET /api/users/active", 
+        getActiveUsers: "GET /api/users/active",
       },
       collector: {
         collectorLogin: "POST /api/collector",
