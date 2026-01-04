@@ -30,7 +30,6 @@ router.post("/signup", async (req, res) => {
 
     console.log("✅ Validations passed");
 
-    // استخدام supabaseAdmin للتحقق من المستخدم الموجود
     const { data: existingUser, error: checkError } = await supabaseAdmin
       .from("login")
       .select("gmail")
