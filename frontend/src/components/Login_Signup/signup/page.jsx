@@ -18,6 +18,7 @@ export default function SignUp() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(""); // ✅ إضافة
 
   const navigate = useNavigate();
 
@@ -27,10 +28,18 @@ export default function SignUp() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+    // مسح الخطأ عند الكتابة
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
         [name]: "",
+      }));
+    }
+    // مسح الخطأ العام
+    if (errors.general) {
+      setErrors((prev) => ({
+        ...prev,
+        general: "",
       }));
     }
   };
@@ -40,7 +49,8 @@ export default function SignUp() {
 
     if (!formData.firstName.trim())
       newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+    if (!formData.lastName.trim()) 
+      newErrors.lastName = "Last name is required";
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -65,59 +75,110 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // مسح الرسائل السابقة
+    setErrors({});
+    setSuccessMessage("");
+    
     const newErrors = validateForm();
 
     if (Object.keys(newErrors).length === 0) {
       setLoading(true);
-      setErrors({});
 
       try {
+        console.log("📤 Sending signup request...");
+        
         const response = await fetch(`${API_URL}/api/signup`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            gmail: formData.email,
+            first_name: formData.firstName.trim(),
+            last_name: formData.lastName.trim(),
+            gmail: formData.email.trim().toLowerCase(),
             password: formData.password,
             confirm_password: formData.confirmPassword,
           }),
         });
 
-        const data = await response.json();
+        console.log("📥 Response status:", response.status);
+
+        // محاولة قراءة الـ response
+        let data;
+        try {
+          data = await response.json();
+          console.log("📄 Response data:", data);
+        } catch (jsonError) {
+          console.error("❌ Failed to parse JSON:", jsonError);
+          throw new Error("Invalid response from server");
+        }
 
         if (response.ok) {
-          console.log("✅ Signup successful:", data);
-          console.log("👤 User ID:", data.user.id);
-
+          console.log("✅ Signup successful!");
+          
+          setSuccessMessage("Account created successfully! Redirecting...");
+          
+          // حفظ بيانات المستخدم
           localStorage.setItem("userId", data.user.id);
           localStorage.setItem("user", JSON.stringify(data.user));
 
           console.log("✅ User saved to localStorage");
 
+          // الانتقال لصفحة العنوان
           setTimeout(() => {
             navigate("/address");
           }, 1500);
+          
         } else {
+          // عرض الخطأ من السيرفر
+          console.error("❌ Signup failed:", data);
+          
+          let errorMessage = "Signup failed. Please try again.";
+          
+          // التعامل مع أنواع مختلفة من الأخطاء
+          if (data.message) {
+            errorMessage = data.message;
+          } else if (data.error) {
+            errorMessage = data.error;
+          }
+          
+          // أخطاء محددة
+          if (response.status === 409) {
+            errorMessage = "This email is already registered. Please login instead.";
+          } else if (response.status === 400) {
+            errorMessage = data.message || "Please check your input and try again.";
+          } else if (response.status === 500) {
+            errorMessage = "Server error. Please try again later.";
+          }
+          
           setErrors({
-            general: data.message,
+            general: errorMessage,
           });
         }
       } catch (error) {
-        console.error("❌ Signup error:", error);
+        console.error("❌ Network/Server error:", error);
+        
+        let errorMessage = "Unable to connect to server. Please check your internet connection.";
+        
+        if (error.message === "Failed to fetch") {
+          errorMessage = "Cannot reach server. Please check your internet connection.";
+        } else if (error.message === "Invalid response from server") {
+          errorMessage = "Server returned invalid response. Please try again.";
+        }
+        
         setErrors({
-          general: "Unable to connect to server. Please try again later.",
+          general: errorMessage,
         });
       } finally {
         setLoading(false);
       }
     } else {
       setErrors(newErrors);
+      console.log("❌ Validation errors:", newErrors);
     }
   };
-
+  
   return (
     <div className="signup_container">
       <div className="signup-wrapper">
