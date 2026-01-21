@@ -92,13 +92,11 @@ export default function SignUp() {
           console.log("✅ Signup successful:", data);
           console.log("👤 User ID:", data.user.id);
 
-          // ✅ احفظ اليوزر في localStorage
           localStorage.setItem("userId", data.user.id);
           localStorage.setItem("user", JSON.stringify(data.user));
 
           console.log("✅ User saved to localStorage");
 
-          // روح على صفحة Address
           setTimeout(() => {
             navigate("/address");
           }, 1500);

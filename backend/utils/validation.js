@@ -4,15 +4,27 @@ const validateEmail = (email) => {
 };
 
 const validateNumericId = (id) => {
-  const parsed = parseInt(id);
-  return !isNaN(parsed);
+  const numId = parseInt(id);
+  return !isNaN(numId) && numId > 0;
 };
 
 const handleError = (res, statusCode, message, error = null) => {
+  console.error(`❌ Error ${statusCode}:`, message);
+  if (error) {
+    console.error("Error details:", JSON.stringify(error, null, 2));
+  }
+  
   return res.status(statusCode).json({
-    message,
-    ...(error && { error: error.message || error }),
+    error: message,
+    message: message, 
+    ...(error && process.env.NODE_ENV !== 'production' && { 
+      details: error.message || error 
+    })
   });
 };
 
-module.exports = { validateEmail, validateNumericId, handleError };
+module.exports = {
+  validateEmail,
+  validateNumericId,
+  handleError,
+};

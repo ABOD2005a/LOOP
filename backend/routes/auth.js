@@ -11,25 +11,38 @@ router.post("/signup", async (req, res) => {
     const { first_name, last_name, gmail, password, confirm_password } =
       req.body;
 
+    console.log("📝 Signup attempt for:", gmail);
+
     if (!first_name || !last_name || !gmail || !password) {
+      console.log("❌ Missing fields");
       return handleError(res, 400, "All fields are required");
     }
 
     if (password !== confirm_password) {
+      console.log("❌ Password mismatch");
       return handleError(res, 400, "Passwords do not match");
     }
 
     if (!validateEmail(gmail)) {
+      console.log("❌ Invalid email");
       return handleError(res, 400, "Invalid email format");
     }
 
-    const { data: existingUser } = await supabase
+    console.log("✅ Validations passed");
+
+    const { data: existingUser, error: checkError } = await supabaseAdmin
       .from("login")
       .select("gmail")
       .eq("gmail", gmail)
       .maybeSingle();
 
+    if (checkError) {
+      console.error("❌ Check error:", checkError);
+      return handleError(res, 500, "Database error", checkError);
+    }
+
     if (existingUser) {
+      console.log("❌ User exists");
       return handleError(
         res,
         409,
@@ -37,16 +50,27 @@ router.post("/signup", async (req, res) => {
       );
     }
 
+    console.log("🔐 Hashing password");
     const hash = await bcrypt.hash(password, 10);
 
-    const { data, error } = await supabase
+    console.log("💾 Inserting user");
+    // ✅ استخدام supabaseAdmin للـ insert
+    const { data, error } = await supabaseAdmin
       .from("login")
       .insert([{ first_name, last_name, gmail, password: hash }])
       .select();
 
     if (error) {
+      console.error("❌ Insert error:", error);
       return handleError(res, 500, "Signup failed", error);
     }
+
+    if (!data || data.length === 0) {
+      console.error("❌ No data returned");
+      return handleError(res, 500, "Signup failed - no data returned");
+    }
+
+    console.log("✅ User created:", data[0].id);
 
     return res.status(201).json({
       message: "User registered successfully",
@@ -58,10 +82,10 @@ router.post("/signup", async (req, res) => {
       },
     });
   } catch (err) {
+    console.error("❌ Signup error:", err);
     return handleError(res, 500, "Signup failed", err);
   }
 });
-
 // ==================== LOGIN ====================
 router.post("/login", async (req, res) => {
   try {
