@@ -23,7 +23,9 @@ app.use(
   })
 );
 
-app.options("*", cors());
+// FIXED: Remove this line - cors middleware already handles OPTIONS
+// app.options("*", cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
