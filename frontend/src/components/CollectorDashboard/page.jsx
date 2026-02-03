@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./CollectorDashboard.css";
+import logoImage from "../../assets/loopNav.png";
 import { API_URL } from "../../config";
 
 const API_BASE_URL = `${API_URL}/api`;
@@ -13,6 +14,7 @@ const CollectorDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
   const [collectorData, setCollectorData] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
     actualQuantity: "",
     wasteType: "",
@@ -73,6 +75,11 @@ const CollectorDashboard = () => {
       return;
     }
     setActivePage(page);
+    setIsMobileMenuOpen(false); // Close mobile menu after navigation
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const startPickup = async (bookingId) => {
@@ -198,87 +205,115 @@ const CollectorDashboard = () => {
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
       />
 
-      <aside className="sidebar">
-        <a
-          href="#"
-          className={`nav-link ${activePage === "profile" ? "active" : ""}`}
-          onClick={(e) => {
-            e.preventDefault();
-            handleNavigation("profile");
-          }}
-        >
-          <i className="bi bi-person-circle"></i>
-          <span>Profile</span>
-        </a>
-        <a
-          href="#"
-          className={`nav-link ${activePage === "tasks" ? "active" : ""}`}
-          onClick={(e) => {
-            e.preventDefault();
-            handleNavigation("tasks");
-          }}
-        >
-          <i className="bi bi-list-check"></i>
-          <span>Assigned Pickups</span>
-        </a>
-        <a
-          href="#"
-          className={`nav-link ${activePage === "earnings" ? "active" : ""}`}
-          onClick={(e) => {
-            e.preventDefault();
-            handleNavigation("earnings");
-          }}
-        >
-          <i className="bi bi-currency-dollar"></i>
-          <span>Earnings</span>
-        </a>
-        <a
-          href="#"
-          className={`nav-link ${activePage === "history" ? "active" : ""}`}
-          onClick={(e) => {
-            e.preventDefault();
-            handleNavigation("history");
-          }}
-        >
-          <i className="bi bi-clock-history"></i>
-          <span>Pickup History</span>
-        </a>
-        <a
-          href="#"
-          className={`nav-link ${
-            activePage === "notifications" ? "active" : ""
-          }`}
-          onClick={(e) => {
-            e.preventDefault();
-            handleNavigation("notifications");
-          }}
-        >
-          <i className="bi bi-bell"></i>
-          <span>Notifications</span>
-          <span className="notification-badge">{pendingBookings.length}</span>
-        </a>
-        <a
-          href="#"
-          className={`nav-link ${activePage === "settings" ? "active" : ""}`}
-          onClick={(e) => {
-            e.preventDefault();
-            handleNavigation("settings");
-          }}
-        >
-          <i className="bi bi-gear"></i>
-          <span>Settings</span>
-        </a>
-        <a
-          href="#"
-          className="nav-link logout"
-          onClick={(e) => {
-            e.preventDefault();
-            handleNavigation("logout");
-          }}
-        >
-          <i className="bi bi-box-arrow-right"></i>
-          <span>Log-out</span>
-        </a>
+      {/* Mobile Menu Button */}
+      <button
+        className={`mobile-menu-btn ${isMobileMenuOpen ? "active" : ""}`}
+        onClick={toggleMobileMenu}
+        aria-label="Toggle menu"
+        aria-expanded={isMobileMenuOpen}
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="mobile-menu-overlay" onClick={toggleMobileMenu}></div>
+      )}
+
+      {/* Sidebar */}
+      <aside className={`sidebar ${isMobileMenuOpen ? "mobile-open" : ""}`}>
+        <div className="sidebar-header">
+          <div className="logo-icon">
+            <span className="logo-text">
+              <img src={logoImage} alt="Loop logo" className="logo-image" />
+            </span>
+          </div>
+        </div>
+
+        <nav className="sidebar-nav">
+          <a
+            href="#"
+            className={`nav-link ${activePage === "profile" ? "active" : ""}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavigation("profile");
+            }}
+          >
+            <i className="bi bi-person-circle"></i>
+            <span>Profile</span>
+          </a>
+          <a
+            href="#"
+            className={`nav-link ${activePage === "tasks" ? "active" : ""}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavigation("tasks");
+            }}
+          >
+            <i className="bi bi-list-check"></i>
+            <span>Assigned Pickups</span>
+          </a>
+          <a
+            href="#"
+            className={`nav-link ${activePage === "earnings" ? "active" : ""}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavigation("earnings");
+            }}
+          >
+            <i className="bi bi-currency-dollar"></i>
+            <span>Earnings</span>
+          </a>
+          <a
+            href="#"
+            className={`nav-link ${activePage === "history" ? "active" : ""}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavigation("history");
+            }}
+          >
+            <i className="bi bi-clock-history"></i>
+            <span>Pickup History</span>
+          </a>
+          <a
+            href="#"
+            className={`nav-link ${
+              activePage === "notifications" ? "active" : ""
+            }`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavigation("notifications");
+            }}
+          >
+            <i className="bi bi-bell"></i>
+            <span>Notifications</span>
+            <span className="notification-badge">{pendingBookings.length}</span>
+          </a>
+          <a
+            href="#"
+            className={`nav-link ${activePage === "settings" ? "active" : ""}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavigation("settings");
+            }}
+          >
+            <i className="bi bi-gear"></i>
+            <span>Settings</span>
+          </a>
+          <a
+            href="#"
+            className="nav-link logout"
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavigation("logout");
+            }}
+          >
+            <i className="bi bi-box-arrow-right"></i>
+            <span>Log-out</span>
+          </a>
+        </nav>
       </aside>
 
       <div className={`alert ${showAlert ? "show" : ""}`}>
@@ -629,25 +664,27 @@ const CollectorDashboard = () => {
 
         {activePage === "notifications" && (
           <div className="page-content">
-            <div className="page-header">
-              <h1 className="page-title">Notifications</h1>
-              <p className="page-subtitle">
-                Stay updated with real-time alerts
-              </p>
+            <div className="page-header-inline">
+              <div>
+                <h1 className="page-title">Notifications</h1>
+                <p className="page-subtitle">
+                  Stay updated with real-time alerts
+                </p>
+              </div>
             </div>
 
             <div className="content-card">
-              <h3 className="section-title">
-                <i className="bi bi-bell-fill"></i>
-                Recent Notifications
-              </h3>
+              <div className="notifications-header">
+                <i className="bi bi-bell-fill notification-bell-icon"></i>
+                <h3>Recent Notifications</h3>
+              </div>
 
               {pendingBookings.length > 0 && (
-                <div className="notification-item">
-                  <div className="notification-icon new">
+                <div className="notification-item-simple">
+                  <div className="notification-icon-simple new">
                     <i className="bi bi-plus-circle-fill"></i>
                   </div>
-                  <div className="notification-content">
+                  <div className="notification-content-simple">
                     <h4>New Pickup Requests</h4>
                     <p>
                       You have {pendingBookings.length} pending pickup
@@ -658,11 +695,11 @@ const CollectorDashboard = () => {
                 </div>
               )}
 
-              <div className="notification-item">
-                <div className="notification-icon update">
+              <div className="notification-item-simple">
+                <div className="notification-icon-simple update">
                   <i className="bi bi-chat-dots-fill"></i>
                 </div>
-                <div className="notification-content">
+                <div className="notification-content-simple">
                   <h4>System Status</h4>
                   <p>All systems operational. Have a great day!</p>
                   <span className="notification-time">Today</span>

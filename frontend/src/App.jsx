@@ -22,8 +22,6 @@ import NavbarTest from "./components/Header_Footer/NavbarTest/page";
 import AdminDashboard from "./components/AdminDashboard/page";
 import CollectorDashboard from "./components/CollectorDashboard/page";
 import CollectorLogin from "./components/Login_Signup/collectorLogin/page";
-import { inject } from "@vercel/analytics";
-inject();
 
 function AnimatedRoutes() {
   const location = useLocation();

@@ -1,40 +1,91 @@
-/* :root {
-    --primary: #10b981;
-    --primary-dark: #059669;
-    --primary-light: #d1fae5;
-    --secondary: #3b82f6;
-    --dark: #0f172a;
-    --text: #1e293b;
-    --text-light: #64748b;
-    --text-lighter: #94a3b8;
-    --bg: #ffffff;
-    --bg-gray: #f8fafc;
-    --border: #e2e8f0;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-    background: var(--bg-gray);
-    min-height: 100vh;
-} */
-
 @import '../../variables.css';
 
 .app-container {
     display: flex;
     min-height: 100vh;
+    background: var(--bg-gray);
+}
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-menu-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5);
+}
+
+.mobile-menu-btn:active {
+    transform: scale(0.95);
+}
+
+.mobile-menu-btn span {
+    display: block;
+    width: 24px;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform-origin: center;
+}
+
+.mobile-menu-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.mobile-menu-btn.active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.mobile-menu-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(8px, -8px);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9998;
+    backdrop-filter: blur(3px);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .sidebar {
-    width: 240px;
+    width: 260px;
     background: var(--bg);
     padding: 1.5rem 1rem;
     display: flex;
@@ -42,21 +93,89 @@ body {
     gap: 0.5rem;
     box-shadow: var(--shadow);
     position: fixed;
+    left: 0;
     height: 100vh;
     overflow-y: auto;
     border-right: 1px solid var(--border);
+    z-index: 1000;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Mobile Sidebar Header */
+.mobile-sidebar-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.mobile-close-btn {
+    background: var(--bg-gray);
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 1.25rem;
+    transition: all 0.2s;
+}
+
+.mobile-close-btn:hover {
+    background: var(--border);
+    color: var(--primary);
 }
 
 .sidebar-header {
     padding: 0.75rem;
     margin-bottom: 1rem;
+    text-align: center;
 }
 
-.sidebar-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 0.5rem;
+.logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    padding: 0.5rem;
+}
+
+.logo-icon:hover {
+    transform: scale(1.05);
+}
+
+.logo-image {
+    width: 100%;
+    max-width: 140px;
+    height: auto;
+    display: block;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    padding: 0;
+    margin: 0;
 }
 
 .nav-link {
@@ -88,6 +207,8 @@ body {
 .nav-link.logout {
     margin-top: auto;
     color: #dc2626;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
 }
 
 .nav-link.logout:hover {
@@ -112,7 +233,7 @@ body {
 
 .main-content {
     flex: 1;
-    margin-left: 240px;
+    margin-left: 260px;
     padding: 2rem;
     overflow-y: auto;
 }
@@ -140,6 +261,98 @@ body {
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border);
     margin-bottom: 1.5rem;
+}
+
+.page-header-inline {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.notifications-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+}
+
+.notification-bell-icon {
+    color: var(--primary);
+    font-size: 1.5rem;
+}
+
+.notifications-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.notification-item-simple {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.notification-item-simple:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.notification-item-simple:first-child {
+    padding-top: 0;
+}
+
+.notification-icon-simple {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.notification-icon-simple.new {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+.notification-icon-simple.update {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.notification-icon-simple.alert {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.notification-content-simple {
+    flex: 1;
+}
+
+.notification-content-simple h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+}
+
+.notification-content-simple p {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.notification-content-simple .notification-time {
+    font-size: 0.85rem;
+    color: var(--text-lighter);
 }
 
 .profile-card {
@@ -543,61 +756,6 @@ tbody tr:hover {
     background: var(--bg-gray);
 }
 
-.notification-item {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem;
-    border-bottom: 1px solid var(--border);
-    transition: all 0.2s;
-}
-
-.notification-item:hover {
-    background: var(--bg-gray);
-}
-
-.notification-item:last-child {
-    border-bottom: none;
-}
-
-.notification-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    flex-shrink: 0;
-}
-
-.notification-icon.new {
-    background: var(--primary-light);
-    color: var(--primary-dark);
-}
-
-.notification-icon.update {
-    background: #dbeafe;
-    color: #1e40af;
-}
-
-.notification-icon.alert {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
-.notification-content h4 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 0.25rem;
-}
-
-.notification-content p {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    margin-bottom: 0.25rem;
-}
-
 .notification-time {
     font-size: 0.8rem;
     color: var(--text-lighter);
@@ -642,30 +800,65 @@ tbody tr:hover {
     display: none;
 }
 
-@media (max-width: 768px) {
-    .sidebar {
-        width: 70px;
-    }
-
-    .sidebar-title,
-    .nav-link span {
-        display: none;
-    }
-
-    .nav-link {
-        justify-content: center;
-        padding: 0.875rem;
-    }
-
-    .notification-badge {
-        position: absolute;
-        right: 10px;
-        top: 10px;
-    }
-
+/* Tablet Responsive */
+@media (max-width: 1024px) {
     .main-content {
-        margin-left: 70px;
+        margin-left: auto;
         padding: 1.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    /* Show mobile menu button */
+    .mobile-menu-btn {
+        display: flex !important;
+        margin-left: auto !important;
+    }
+
+    /* Show overlay when menu is open */
+    .mobile-menu-overlay {
+        display: block !important;
+    }
+
+    /* Hide sidebar by default on mobile */
+    .sidebar {
+        position: fixed !important;
+        left: -280px !important;
+        width: 280px !important;
+        max-width: 85vw !important;
+        z-index: 9999 !important;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* Show sidebar when mobile-open class is added */
+    .sidebar.mobile-open {
+        left: 0 !important;
+        transform: translateX(0) !important;
+    }
+
+    /* Show mobile header in sidebar */
+    .mobile-sidebar-header {
+        display: flex;
+    }
+
+    /* Adjust main content */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 1.5rem 1rem !important;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
     }
 
     .profile-card {
@@ -686,55 +879,50 @@ tbody tr:hover {
         justify-content: center;
     }
 
-    .dashboard-header {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
+    .notification-badge {
+        position: static;
+    }
+}
+
+@media (max-width: 480px) {
+    .mobile-menu-btn {
+        width: 40px;
+        height: 40px;
+        margin-left: auto;
     }
 
-    .dashboard-title {
-        font-size: 1.5rem;
+    .sidebar {
+        width: 260px;
     }
 
-    .dashboard-stats {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+    .main-content {
+        padding: 4.5rem 0.75rem 0.75rem;
+    }
+
+    .page-title {
+        font-size: 1.25rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.85rem;
+    }
+
+    .content-card {
+        padding: 1rem;
+    }
+
+    .profile-avatar {
+        width: 70px;
+        height: 70px;
+        font-size: 2rem;
     }
 
     .stat-card {
         padding: 1rem;
     }
 
-    .stat-value {
+    .stat-card h3 {
         font-size: 1.5rem;
-    }
-
-    .stat-label {
-        font-size: 0.9rem;
-    }
-
-    .tasks-section {
-        padding: 1rem;
-    }
-
-    .tasks-header {
-        flex-direction: column;
-        gap: 0.75rem;
-        align-items: stretch;
-    }
-
-    .tasks-header h2 {
-        font-size: 1.25rem;
-    }
-
-    .filter-buttons {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-
-    .filter-btn {
-        flex: 1;
-        min-width: 120px;
     }
 
     .task-card {
@@ -744,254 +932,16 @@ tbody tr:hover {
     .task-header {
         flex-direction: column;
         gap: 0.5rem;
-        align-items: flex-start;
     }
 
-    .task-title {
-        font-size: 1rem;
+    .modal-content {
+        padding: 1.5rem;
     }
 
-    .task-meta {
-        font-size: 0.85rem;
-    }
-
-    .task-location {
-        font-size: 0.9rem;
-    }
-
-    .task-actions {
-        gap: 0.5rem;
-    }
-
-    .earnings-section {
-        padding: 1rem;
-    }
-
-    .earnings-header h2 {
-        font-size: 1.25rem;
-    }
-
-    .earnings-summary {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .earnings-card {
-        padding: 1rem;
-    }
-
-    .earnings-amount {
-        font-size: 1.25rem;
-    }
-
-    .earnings-label {
-        font-size: 0.9rem;
-    }
-
-    .earnings-chart {
-        height: 200px;
-    }
-
-    .recent-activity {
-        padding: 1rem;
-    }
-
-    .activity-header h2 {
-        font-size: 1.25rem;
-    }
-
-    .activity-list {
-        gap: 0.75rem;
-    }
-
-    .activity-item {
-        padding: 0.875rem;
-    }
-
-    .activity-content h4 {
-        font-size: 0.95rem;
-    }
-
-    .activity-content p {
-        font-size: 0.85rem;
-    }
-
-    .activity-time {
-        font-size: 0.8rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 0 0.75rem;
-    }
-
-    .sidebar {
-        width: 60px;
-    }
-
-    .nav-link {
-        padding: 0.75rem;
-    }
-
-    .main-content {
-        margin-left: 60px;
-        padding: 1rem;
-    }
-
-    .dashboard-header {
-        padding: 1rem 0;
-    }
-
-    .dashboard-title {
-        font-size: 1.25rem;
-    }
-
-    .dashboard-subtitle {
-        font-size: 0.9rem;
-    }
-
-    .dashboard-stats {
-        gap: 0.75rem;
-    }
-
-    .stat-card {
-        padding: 0.875rem;
-    }
-
-    .stat-value {
-        font-size: 1.25rem;
-    }
-
-    .stat-label {
-        font-size: 0.85rem;
-    }
-
-    .tasks-section {
-        padding: 0.875rem;
-    }
-
-    .tasks-header h2 {
-        font-size: 1.1rem;
-    }
-
-    .filter-buttons {
-        gap: 0.375rem;
-    }
-
-    .filter-btn {
-        min-width: 100px;
-        padding: 0.5rem 0.75rem;
-        font-size: 0.8rem;
-    }
-
-    .task-card {
-        padding: 0.875rem;
-    }
-
-    .task-title {
-        font-size: 0.95rem;
-    }
-
-    .task-meta {
-        font-size: 0.8rem;
-    }
-
-    .task-location {
-        font-size: 0.85rem;
-    }
-
-    .task-description {
-        font-size: 0.9rem;
-    }
-
-    .task-actions {
-        flex-direction: column;
-        gap: 0.375rem;
-    }
-
-    .earnings-section {
-        padding: 0.875rem;
-    }
-
-    .earnings-header h2 {
-        font-size: 1.1rem;
-    }
-
-    .earnings-summary {
-        gap: 0.75rem;
-    }
-
-    .earnings-card {
-        padding: 0.875rem;
-    }
-
-    .earnings-amount {
-        font-size: 1.1rem;
-    }
-
-    .earnings-label {
-        font-size: 0.85rem;
-    }
-
-    .earnings-chart {
-        height: 150px;
-    }
-
-    .recent-activity {
-        padding: 0.875rem;
-    }
-
-    .activity-header h2 {
-        font-size: 1.1rem;
-    }
-
-    .activity-list {
-        gap: 0.5rem;
-    }
-
-    .activity-item {
-        padding: 0.75rem;
-    }
-
-    .activity-content h4 {
-        font-size: 0.9rem;
-    }
-
-    .activity-content p {
-        font-size: 0.8rem;
-    }
-
-    .activity-time {
-        font-size: 0.75rem;
-    }
-
-    .profile-card {
-        padding: 1rem;
-    }
-
-    .profile-avatar {
-        width: 60px;
-        height: 60px;
-    }
-
-    .profile-info h3 {
-        font-size: 1.1rem;
-    }
-
-    .profile-info p {
-        font-size: 0.85rem;
-    }
-
-    .profile-stats {
-        gap: 0.75rem;
-    }
-
-    .stat-item h4 {
-        font-size: 0.9rem;
-    }
-
-    .stat-item p {
-        font-size: 0.8rem;
+    .alert {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        padding: 0.875rem 1rem;
     }
 }

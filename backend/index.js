@@ -13,7 +13,6 @@ app.use(
       "http://localhost:5173",
       "http://localhost:3000",
       "http://localhost:5174",
-      "https://loop2030.vercel.app",
       "https://localhost:8081",
       "https://localhost:8080",
     ],
@@ -23,8 +22,7 @@ app.use(
   })
 );
 
-// FIXED: Remove this line - cors middleware already handles OPTIONS
-// app.options("*", cors());
+// app.options('*', cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

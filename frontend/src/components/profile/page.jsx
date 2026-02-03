@@ -334,6 +334,15 @@ const Profile = () => {
     }, 350);
   };
 
+  const cancelEdit = (section) => {
+    if (section === "personal") {
+      setPersonalData(originalData.personal);
+    } else {
+      setAddressData(originalData.address);
+    }
+    toggleEdit(section);
+  };
+
   return (
     <div className="profile-page">
       {/* Mobile Menu Button */}
@@ -375,7 +384,8 @@ const Profile = () => {
         <nav className="sidebar-nav">
           <a
             href="#"
-            className={`nav-link ${activePage === "profile" ? "active" : ""}`}
+            className={`nav-link1
+               ${activePage === "profile" ? "active" : ""}`}
             onClick={(e) => {
               e.preventDefault();
               handleNavClick("profile");
@@ -385,8 +395,7 @@ const Profile = () => {
             <span>Profile</span>
           </a>
           <a
-            // href="#"
-            className={`nav-link ${activePage === "dashboard" ? "active" : ""}`}
+            className={`nav-link1 ${activePage === "dashboard" ? "active" : ""}`}
             onClick={(e) => {
               e.preventDefault();
               handleNavClick("dashboard");
@@ -397,7 +406,7 @@ const Profile = () => {
           </a>
           <a
             href="#"
-            className={`nav-link ${activePage === "settings" ? "active" : ""}`}
+            className={`nav-link1 ${activePage === "settings" ? "active" : ""}`}
             onClick={(e) => {
               e.preventDefault();
               handleNavClick("settings");
@@ -408,7 +417,7 @@ const Profile = () => {
           </a>
           <a
             href="#"
-            className="nav-link logout"
+            className="nav-link1 logout"
             onClick={(e) => {
               e.preventDefault();
               handleLogout();
@@ -906,32 +915,41 @@ const Profile = () => {
       {/* Materials Modal */}
       {showModal && selectedBooking && (
         <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal_content" onClick={(e) => e.stopPropagation()}>
+          <div 
+            className="modal_content" 
+            onClick={(e) => e.stopPropagation()}
+            style={{ background: 'white' }}
+          >
             <div className="modal-header">
-              <h2>
-                <i className="bi bi-recycle"></i>
+              <h2 style={{ color: 'white' }}>
+                <i className="bi bi-recycle" style={{ color: 'white' }}></i>
                 Booking Materials - Order #{selectedBooking.id}
               </h2>
-              {/* <button class="close-btn-red"></button> */}
             </div>
             
-            <div className="modal-body">
+            <div className="modal-body" style={{ color: '#1e293b', background: 'white' }}>
               <div className="booking-details">
                 <div className="detail-row">
-                  <span className="detail-label">Pickup Date:</span>
-                  <span className="detail-value">{formatDate(selectedBooking.pickup_date)}</span>
+                  <span className="detail-label" style={{ color: '#64748b' }}>Pickup Date:</span>
+                  <span className="detail-value" style={{ color: '#1e293b' }}>
+                    {formatDate(selectedBooking.pickup_date)}
+                  </span>
                 </div>
                 <div className="detail-row">
-                  <span className="detail-label">Pickup Time:</span>
-                  <span className="detail-value">{selectedBooking.pickup_time}</span>
+                  <span className="detail-label" style={{ color: '#64748b' }}>Pickup Time:</span>
+                  <span className="detail-value" style={{ color: '#1e293b' }}>
+                    {selectedBooking.pickup_time}
+                  </span>
                 </div>
                 <div className="detail-row">
-                  <span className="detail-label">Area:</span>
-                  <span className="detail-value">{selectedBooking.area}</span>
+                  <span className="detail-label" style={{ color: '#64748b' }}>Area:</span>
+                  <span className="detail-value" style={{ color: '#1e293b' }}>
+                    {selectedBooking.area}
+                  </span>
                 </div>
                 <div className="detail-row">
-                  <span className="detail-label">Address:</span>
-                  <span className="detail-value">
+                  <span className="detail-label" style={{ color: '#64748b' }}>Address:</span>
+                  <span className="detail-value" style={{ color: '#1e293b' }}>
                     {selectedBooking.street}, Building {selectedBooking.building_number}
                     {selectedBooking.floor && `, Floor ${selectedBooking.floor}`}
                     {selectedBooking.apartment && `, Apt ${selectedBooking.apartment}`}
@@ -939,20 +957,24 @@ const Profile = () => {
                 </div>
                 {selectedBooking.landmark && (
                   <div className="detail-row">
-                    <span className="detail-label">Landmark:</span>
-                    <span className="detail-value">{selectedBooking.landmark}</span>
+                    <span className="detail-label" style={{ color: '#64748b' }}>Landmark:</span>
+                    <span className="detail-value" style={{ color: '#1e293b' }}>
+                      {selectedBooking.landmark}
+                    </span>
                   </div>
                 )}
                 {selectedBooking.notes && (
                   <div className="detail-row">
-                    <span className="detail-label">Notes:</span>
-                    <span className="detail-value">{selectedBooking.notes}</span>
+                    <span className="detail-label" style={{ color: '#64748b' }}>Notes:</span>
+                    <span className="detail-value" style={{ color: '#1e293b' }}>
+                      {selectedBooking.notes}
+                    </span>
                   </div>
                 )}
               </div>
 
-              <h3 className="materials-title">
-                <i className="bi bi-box-seam"></i>
+              <h3 className="materials-title" style={{ color: '#1e293b' }}>
+                <i className="bi bi-box-seam" style={{ color: '#10b981' }}></i>
                 Materials List
               </h3>
 
@@ -961,49 +983,53 @@ const Profile = () => {
                   <table className="materials-table">
                     <thead>
                       <tr>
-                        <th>Material</th>
-                        <th>Subtype</th>
-                        <th>Weight (kg)</th>
-                        <th>Price/kg</th>
-                        <th>Total</th>
+                        <th style={{ color: '#64748b' }}>Material</th>
+                        <th style={{ color: '#64748b' }}>Subtype</th>
+                        <th style={{ color: '#64748b' }}>Weight (kg)</th>
+                        <th style={{ color: '#64748b' }}>Price/kg</th>
+                        <th style={{ color: '#64748b' }}>Total</th>
                       </tr>
                     </thead>
                     <tbody>
                       {selectedBooking.items.map((item, index) => (
                         <tr key={index}>
-                          <td>{item.material_name}</td>
-                          <td>{item.subtype_name || "-"}</td>
-                          <td>{parseFloat(item.weight).toFixed(2)}</td>
-                          <td>EGP {parseFloat(item.price_per_kg).toFixed(2)}</td>
-                          <td>EGP {parseFloat(item.total_price).toFixed(2)}</td>
+                          <td style={{ color: '#1e293b' }}>{item.material_name}</td>
+                          <td style={{ color: '#1e293b' }}>{item.subtype_name || "-"}</td>
+                          <td style={{ color: '#1e293b' }}>{parseFloat(item.weight).toFixed(2)}</td>
+                          <td style={{ color: '#1e293b' }}>EGP {parseFloat(item.price_per_kg).toFixed(2)}</td>
+                          <td style={{ color: '#1e293b' }}>EGP {parseFloat(item.total_price).toFixed(2)}</td>
                         </tr>
                       ))}
                     </tbody>
                     <tfoot>
                       <tr>
-                        <td colSpan="2"><strong>Total</strong></td>
-                        <td><strong>{parseFloat(selectedBooking.total_weight).toFixed(2)} kg</strong></td>
+                        <td colSpan="2" style={{ color: '#1e293b' }}><strong>Total</strong></td>
+                        <td style={{ color: '#1e293b' }}>
+                          <strong>{parseFloat(selectedBooking.total_weight).toFixed(2)} kg</strong>
+                        </td>
                         <td></td>
-                        <td><strong>EGP {parseFloat(selectedBooking.total_earnings).toFixed(2)}</strong></td>
+                        <td style={{ color: '#1e293b' }}>
+                          <strong>EGP {parseFloat(selectedBooking.total_earnings).toFixed(2)}</strong>
+                        </td>
                       </tr>
                     </tfoot>
                   </table>
                 </div>
               ) : (
-                <p className="no-materials">No materials found for this booking.</p>
+                <p className="no-materials" style={{ color: '#64748b' }}>
+                  No materials found for this booking.
+                </p>
               )}
 
               <div className="modal-stats">
                 <div className="modal-stat">
-                  <i className="bi bi-tree-fill"></i>
+                  <i className="bi bi-tree-fill" style={{ color: '#10b981' }}></i>
                   <div>
-                   
-                    <span className="stat-label">CO₂ Saved</span>
+                    <span className="stat-label" style={{ color: '#64748b' }}>CO₂ Saved</span>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       )}
