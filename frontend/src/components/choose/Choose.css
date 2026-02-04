@@ -506,7 +506,7 @@
 .calendar-popover .rdp,
 .calendar-popover .rdp *,
 .calendar-popover [class*="rdp"] {
-  background: white !important;
+  /* background: white !important; */
 }
 
 .calendar-popover .rdp {

@@ -1025,7 +1025,7 @@ const Profile = () => {
                 <div className="modal-stat">
                   <i className="bi bi-tree-fill" style={{ color: '#10b981' }}></i>
                   <div>
-                    <span className="stat-label" style={{ color: '#64748b' }}>CO₂ Saved</span>
+                    <span className="profile-stat-label" style={{ color: '#64748b' }}>CO₂ Saved</span>
                   </div>
                 </div>
               </div>

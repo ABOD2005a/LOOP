@@ -892,7 +892,7 @@ input:checked + .slider:before {
   color: var(--primary) !important;
 }
 
-.stat-label {
+.profile-stat-label {
   color: #64748b !important;
   font-size: 0.9rem;
   font-weight: 500;
